@@ -15,8 +15,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Frame;
-import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
@@ -119,25 +117,25 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 
 		// ********** Info Panel ********** //
 
-		infoPanel = new JPanel(new GridLayout(1,3));
+		infoPanel = new JPanel(new BorderLayout());
 		subLeftInfo = new JPanel(new FlowLayout());
 		stationPanel = new JPanel();
 
 		stationNameLabel = new JLabel("Station Name: ");
 		stationName = new JTextField();
-		stationName.setPreferredSize(new Dimension(125, 20));
+		stationName.setPreferredSize(new Dimension(200, 22));
 		stationName.setEditable(false);		
 
 		stationPanel.add(stationNameLabel);
 		stationPanel.add(stationName);
 		subLeftInfo.add(stationPanel);
 
-		infoPanel.add(subLeftInfo);
+		infoPanel.add(subLeftInfo, BorderLayout.WEST);
 
 
 		// ********** Status Bar ********** //
 
-		statusPanel = new JPanel(new GridLayout(1,3));
+		statusPanel = new JPanel(new BorderLayout());
 
 		subImageNamePanel = new JPanel(new FlowLayout());
 
@@ -149,7 +147,7 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 		subImageNamePanel.add(numPatients);
 
 		statusPanel.setBorder(BorderFactory.createTitledBorder("Status"));
-		statusPanel.add(subImageNamePanel);
+		statusPanel.add(subImageNamePanel, BorderLayout.WEST);
 
 		infoPanel.setPreferredSize(new Dimension(infoPanel.getPreferredSize().width, 80));
 		totalPanelSet.add(infoPanel, BorderLayout.NORTH);
@@ -171,7 +169,6 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 		setSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		setLocation(loc_width, loc_height);
 		setTitle("Nurse Station View Console v1.0");
-		setExtendedState(Frame.MAXIMIZED_BOTH);
 		setVisible(true);
 		//TODO figure out implications of closing window (dealing with unsubscribing)
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
@@ -195,8 +192,8 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 		fileMenu.setMnemonic(KeyEvent.VK_F);
 
 		// 1. Close command
-		exitItem = menuItemGenerator("Exit", "" /*TODO"icons/close-icon.png"*/, null, 
-				"exit", null);
+		exitItem = menuItemGenerator("Exit", "img/close-icon.png", null, 
+				"exit", new ExitListener());
 		fileMenu.add(exitItem);
 
 		// Add File menu to bar
@@ -209,7 +206,7 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 		helpMenu.setMnemonic(KeyEvent.VK_H);
 
 		// 1. About the program
-		aboutItem = menuItemGenerator("About Medical Image Viewing Console", "" /*TODO "icons/about-icon.png" */, 
+		aboutItem = menuItemGenerator("About Nurse Station View Console", "img/about-icon.png", 
 				null, "about", new AboutListener());
 		helpMenu.add(aboutItem);
 
@@ -233,6 +230,16 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 					"Anthony Barone, Chris Bentivenga, Ian Hunt, Jason Smith\n\n" +
 					"Copyright 2011 | Group 1\n" +
 			"All images are entitled to their respective owners. All rights reserved.");
+		}
+	}
+
+	/**
+	 * Inner class for listener on Exit button in toolbar
+	 */
+	private class ExitListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			//TODO figure this out
+			System.exit(0);
 		}
 	}
 
