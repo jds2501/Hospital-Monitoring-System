@@ -12,6 +12,7 @@ package nursestation.notificationservice;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import nursestation.notificationservice.NotificationService;
 
@@ -38,18 +39,13 @@ public class NotificationServiceImpl
      * Constructs a NotificationServiceImpl object with a vital sign message
      * queue and call button message queue.
      * 
-     * @param vitalSignMsgs the vital sign message queue
-     * @param callButtonMsgs the call button message queue
-     * 
      * @throws RemoteException If this service fails to deploy
      */
-    public NotificationServiceImpl(Queue<VitalSignMessage> vitalSignMsgs,
-                                   Queue<CallButtonMessage> callButtonMsgs) 
-                                              throws RemoteException {
+    public NotificationServiceImpl() throws RemoteException {
         super();
         
-        this.vitalSignMsgs = vitalSignMsgs;
-        this.callButtonMsgs = callButtonMsgs;
+        vitalSignMsgs = new LinkedBlockingQueue<VitalSignMessage>();
+        callButtonMsgs = new LinkedBlockingQueue<CallButtonMessage>();
     }
 
     /**
