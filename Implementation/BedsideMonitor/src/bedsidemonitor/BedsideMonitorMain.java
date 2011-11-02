@@ -9,9 +9,6 @@
 
 package bedsidemonitor;
 
-import java.util.Timer;
-
-
 /**
  * Main starting point to start up the bedside monitor.
  * 

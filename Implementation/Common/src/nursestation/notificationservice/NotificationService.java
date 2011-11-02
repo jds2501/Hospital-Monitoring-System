@@ -24,20 +24,16 @@ public interface NotificationService extends Remote {
      * Pushes a vital sign and its associated alarm status to the server
      * for a particular patient.
      * 
-     * @param patientID The patient making the push request
-     * @param vitalSign The vital sign changed
-     * @param alarmStatus The status of the alarm
+     * @param msg the VitalSignMessage to be pushed
      */
-    public void pushVitalSign(int patientID, double vitalSign,
-                              boolean alarmStatus) throws RemoteException;
+    public void pushVitalSign(VitalSignMessage msg) throws RemoteException;
     
     /**
      * Pushes a call button status to the server for a particular patient.
      * 
-     * @param patientID The patient making the push request
-     * @param callButtonStatus The status of the call button
+     * @param msg the CallButtonMessage to be pushed
      */
-    public void pushCallButton(int patientID, boolean callButtonStatus)
+    public void pushCallButton(CallButtonMessage msg)
         throws RemoteException;
     
 } // NotificationService
