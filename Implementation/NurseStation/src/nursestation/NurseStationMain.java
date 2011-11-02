@@ -5,6 +5,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 
 import nursestation.notificationservice.NotificationServiceImpl;
+import nursestation.userinterface.NurseStationView;
 
 /**
  * Main starting point to start up the nurse station
@@ -22,6 +23,9 @@ public class NurseStationMain {
 		try {
             NotificationServiceImpl service = new NotificationServiceImpl();
             Naming.rebind("nurse-station", service);
+            NurseStationView view = new NurseStationView();
+            view.setStationNameBox("Dummy Nurse Station");
+            view.setPatientNumber(0);
         } catch (RemoteException ex) {
             ex.printStackTrace();
         } catch (MalformedURLException ex) {
