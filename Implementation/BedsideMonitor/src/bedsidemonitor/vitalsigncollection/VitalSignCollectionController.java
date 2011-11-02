@@ -11,6 +11,8 @@ package bedsidemonitor.vitalsigncollection;
 import java.rmi.RemoteException;
 import java.util.Queue;
 
+import bedsidemonitor.sensor.SensorInterface;
+
 
 /**
  * Collection controller in charge of gathering data against a
