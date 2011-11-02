@@ -9,6 +9,8 @@
 
 package bedsidemonitor;
 
+import java.util.Timer;
+
 
 /**
  * Main starting point to start up the bedside monitor.
@@ -20,7 +22,7 @@ public class BedsideMonitorMain {
     /**
      * Main method of execution to startup the bedside monitor system.
      * 
-     * @param args (ignored)
+     * @param args[0] Number of sensors
      */
     public static void main(String[] args){
         
