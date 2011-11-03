@@ -31,11 +31,6 @@ public class NotificationServiceImpl
     private Queue<VitalSignMessage> vitalSignMsgs;
     
     /**
-     * The received call button message updates from clients
-     */
-    private Queue<CallButtonMessage> callButtonMsgs;
-    
-    /**
      * Constructs a NotificationServiceImpl object with a vital sign message
      * queue and call button message queue.
      * 
@@ -45,7 +40,6 @@ public class NotificationServiceImpl
         super();
         
         vitalSignMsgs = new LinkedBlockingQueue<VitalSignMessage>();
-        callButtonMsgs = new LinkedBlockingQueue<CallButtonMessage>();
     }
 
     /**
@@ -58,15 +52,6 @@ public class NotificationServiceImpl
     }
 
     /**
-     * Pushes a call button message onto the queue.
-     * 
-     * @param msg the call button message to push
-     */
-    public void pushCallButton(CallButtonMessage msg) throws RemoteException {
-        callButtonMsgs.offer(msg);
-    }
-
-    /**
      * Polls a vital sign message off of the vital sign message queue
      * 
      * @return The message at the top of vital sign queue if one exists,
@@ -74,16 +59,6 @@ public class NotificationServiceImpl
      */
     public VitalSignMessage pullVitalSign() {
         return vitalSignMsgs.poll();
-    }
-    
-    /**
-     * Polls a call button message off of the call button message queue
-     * 
-     * @return The message at the top of call button queue if one exists,
-     * null otherwise
-     */
-    public CallButtonMessage pullCallButton() {
-        return callButtonMsgs.poll();
     }
     
 } // NotificationServiceImpl
