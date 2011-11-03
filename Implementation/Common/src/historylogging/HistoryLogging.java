@@ -51,11 +51,16 @@ public class HistoryLogging extends Thread {
     /**
      * Constructs a HistoryLogging object with an empty queue.
      */
-    private HistoryLogging() throws IOException {
+    private HistoryLogging() {
         isAlive = true;
         logMessageQueue = new LinkedBlockingQueue<String>();
-        this.outputWriter = new BufferedWriter(new FileWriter(LOG_FILE_NAME));
-        this.start();
+        
+        try {
+            this.outputWriter = new BufferedWriter(new FileWriter(LOG_FILE_NAME));
+            this.start();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
     
     /**
@@ -83,7 +88,7 @@ public class HistoryLogging extends Thread {
      * @return the singleton instance of this class
      * @throws IOException if the logger instance cannot be created
      */
-    public static HistoryLogging getInstance() throws IOException {
+    public static HistoryLogging getInstance() {
         if(instance == null){
             instance = new HistoryLogging();
         }

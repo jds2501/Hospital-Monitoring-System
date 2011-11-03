@@ -8,6 +8,8 @@
  */
 package bedsidemonitor.vitalsigncollection;
 
+import historylogging.HistoryLogging;
+
 import java.util.Observable;
 import java.util.Queue;
 
@@ -25,19 +27,27 @@ public class VitalSignProcessing extends Observable {
     
     private Double vitalSignValue;
     
-    private VitalSignConfiguration converter;
+    private VitalSignConfiguration configuration;
     
     public VitalSignProcessing(Queue<Integer> vitalSignMsgQueue,
             VitalSignConfiguration converter){
         this.vitalSignMsgQueue = vitalSignMsgQueue;
         this.vitalSignValue = null;
-        this.converter = converter;
+        this.configuration = converter;
     }
     
     public void pullVitalSign(){
         int rawVitalSignReading = vitalSignMsgQueue.poll();
-        vitalSignValue = converter.convertRawVitalToActual(rawVitalSignReading);
-        // TODO: Finish the processing post conversion
+        vitalSignValue = configuration.convertRawVitalToActual(rawVitalSignReading);
+        HistoryLogging.getInstance().logMessage("New Vital Reading: " + vitalSignValue);
+        this.setChanged();
+        this.notifyObservers();
+        
+        if(!configuration.isVitalSignInRange(vitalSignValue)){
+            // TODO: Turn on alarm from controller
+        }
+        
+        // TODO: Push results to notification service
     }
     
 }
