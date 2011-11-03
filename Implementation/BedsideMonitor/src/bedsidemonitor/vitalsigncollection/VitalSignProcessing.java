@@ -18,7 +18,7 @@ import java.util.Queue;
  * @author Jason
  *
  */
-public class VitalSignProcessing extends Observable {
+public class VitalSignProcessing extends Observable implements Runnable {
 
     /**
      * Vital sign message queue to containing gathered sensor data
@@ -48,6 +48,10 @@ public class VitalSignProcessing extends Observable {
         this.setChanged();
         this.notifyObservers();        
         // TODO: Push results to notification service
+    }
+
+    public void run() {
+        
     }
     
 }

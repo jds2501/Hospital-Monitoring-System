@@ -31,6 +31,11 @@ public class VitalSignConfiguration {
     private double maxAllowedReading;
     
     /**
+     * The collection rate of the vital sign from the sensor
+     */
+    private long collectionRate;
+
+    /**
      * Constructs a VitalSignConfiguration object with a name, conversion
      * factor, and minimum/maximum allowed readings.
      * 
@@ -41,11 +46,12 @@ public class VitalSignConfiguration {
      */
     public VitalSignConfiguration(
             String name, double conversionFactor, double minAllowedReading,
-            double maxAllowedReading) {
+            double maxAllowedReading, long collectionRate) {
         this.name = name;
         this.conversionFactor = conversionFactor;
         this.minAllowedReading = minAllowedReading;
         this.maxAllowedReading = maxAllowedReading;
+        this.collectionRate = collectionRate;
     }
     
     /**
@@ -125,6 +131,14 @@ public class VitalSignConfiguration {
     public void setMaxAllowedReading(double maxAllowedReading) {
     
         this.maxAllowedReading = maxAllowedReading;
+    }
+    
+    /**
+     * @return the collectionRate
+     */
+    public long getCollectionRate() {
+    
+        return collectionRate;
     }
     
 } // VitalSignConfiguration

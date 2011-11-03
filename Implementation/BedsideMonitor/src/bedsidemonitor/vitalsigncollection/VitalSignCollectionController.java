@@ -10,6 +10,7 @@ package bedsidemonitor.vitalsigncollection;
 
 import java.rmi.RemoteException;
 import java.util.Queue;
+import java.util.TimerTask;
 
 import bedsidemonitor.sensor.SensorInterface;
 
@@ -21,7 +22,7 @@ import bedsidemonitor.sensor.SensorInterface;
  * 
  * @author Jason Smith
  */
-public class VitalSignCollectionController {
+public class VitalSignCollectionController extends TimerTask {
 
     /**
      * Sensor interface to poll data from
@@ -58,6 +59,10 @@ public class VitalSignCollectionController {
             //TODO: Need to properly handle a failure to connect
             ex.printStackTrace();
         }
+    }
+
+    public void run() {
+        pollSensorData();
     }
     
 } // VitalSignCollectionController
