@@ -40,13 +40,13 @@ public class VitalSignProcessing extends Observable {
         int rawVitalSignReading = vitalSignMsgQueue.poll();
         vitalSignValue = configuration.convertRawVitalToActual(rawVitalSignReading);
         HistoryLogging.getInstance().logMessage("New Vital Reading: " + vitalSignValue);
-        this.setChanged();
-        this.notifyObservers();
         
         if(!configuration.isVitalSignInRange(vitalSignValue)){
             // TODO: Turn on alarm from controller
         }
         
+        this.setChanged();
+        this.notifyObservers();        
         // TODO: Push results to notification service
     }
     
