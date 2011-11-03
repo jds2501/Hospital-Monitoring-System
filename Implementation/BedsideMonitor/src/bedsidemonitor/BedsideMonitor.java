@@ -8,6 +8,8 @@
  */
 package bedsidemonitor;
 
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +29,7 @@ import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
  * @author Jason
  *
  */
-public class BedsideMonitor {
+public class BedsideMonitor implements BedsideMonitorInterface {
 
     private CallButtonController callButtonController;
     private Map<String, VitalSignCollectionController> vitalSignCollections;
@@ -41,8 +43,8 @@ public class BedsideMonitor {
         notificationServices = new ArrayList<NotificationService>();
     }
     
-    public void addSensor(SensorInterface sensor, long millisecondDelay){
-        // TODO: Get the name of the sensor
+    public void addSensor(String sensorName, long millisecondDelay){
+        // TODO: Lookup sensor based on the name in the remote object registry
         // TODO: Build the configuration off the name
         // TODO: Build a message queue for vital sign collection
         // TODO: Build the controller

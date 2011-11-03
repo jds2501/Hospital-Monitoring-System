@@ -24,7 +24,8 @@ public interface SensorInterface extends Remote {
      * Gets the vital sign off of the sensor.
      * 
      * @return an integer value of 0 - 100 off of the sensor
+     * @throws RemoteException if the call fails
      */
     public int getVitalSign() throws RemoteException;
-
+    
 } // SensorInterface
