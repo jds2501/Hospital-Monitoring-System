@@ -8,11 +8,13 @@
  */
 package bedsidemonitor.callbutton;
 
+import java.util.Observable;
+
 
 /**
  * @author Jason
  *
  */
-public class CallButtonController {
+public class CallButtonController extends Observable {
 
 }

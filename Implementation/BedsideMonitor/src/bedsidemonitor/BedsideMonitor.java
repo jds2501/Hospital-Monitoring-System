@@ -50,12 +50,17 @@ public class BedsideMonitor {
         // TODO: Start the controller
     }
     
-    public void removeSensor(SensorInterface sensor){
-        
+    public void removeSensor(String sensorName){
+        // TODO: Remove the vital sign collection and processing objects
+        // TODO: Cancel the timer task for these vital sign objects
     }
     
     public void addListener(Observer observer){
-        // TODO: foreach vital sign processing, add the observer
+       for(VitalSignProcessing processing: vitalSignProcessings.values()){
+            processing.addObserver(observer);
+       }
+       
+       callButtonController.addObserver(observer);
     }
     
     public void subscribe(NotificationService service){
