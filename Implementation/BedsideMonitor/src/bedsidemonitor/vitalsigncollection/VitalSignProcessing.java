@@ -36,7 +36,7 @@ public class VitalSignProcessing extends Observable {
     
     public void pullVitalSign(){
         int rawVitalSignReading = vitalSignMsgQueue.poll();
-        vitalSignValue = converter.convert(rawVitalSignReading);
+        vitalSignValue = converter.convertRawVitalToActual(rawVitalSignReading);
         // TODO: Finish the processing post conversion
     }
     
