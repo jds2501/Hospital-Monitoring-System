@@ -46,7 +46,7 @@ public class BedsideMonitor implements BedsideMonitorInterface {
     public BedsideMonitor(String patientName){
         this.patientName = patientName;
         notificationServices = new ArrayList<NotificationService>();
-        callButtonController = new CallButtonController(notificationServices);
+        callButtonController = new CallButtonController();
         vitalSignCollections = new HashMap<String, VitalSignCollectionController>();
         vitalSignProcessings = new HashMap<String, VitalSignProcessing>();
         timer = new Timer();

@@ -31,9 +31,9 @@ public class CallButtonMessage {
      * @param patientName the patient name
      * @param callButtonStatus The call button status
      */
-    public CallButtonMessage(String patientName, boolean callButtonStatus){
+    public CallButtonMessage(String patientName, boolean callStatus){
         this.patientName = patientName;
-        this.callButtonStatus = callButtonStatus;
+        this.callButtonStatus = callStatus;
     }
     
     /**
