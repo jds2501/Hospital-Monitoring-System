@@ -40,7 +40,6 @@ public class BedsideMonitor implements BedsideMonitorInterface {
     private CallButtonController callButtonController;
     private Map<String, VitalSignCollectionController> vitalSignCollections;
     private Map<String, VitalSignProcessing> vitalSignProcessings;
-    private Map<String, Thread> vitalSignProcessingTasks;
     private List<NotificationService> notificationServices;
     private Timer timer;
     
@@ -70,7 +69,6 @@ public class BedsideMonitor implements BedsideMonitorInterface {
                     configuration.getCollectionRate());
             
             vitalSignProcessings.put(name, processor);
-            vitalSignProcessingTasks.put(name, processorTask);
             vitalSignCollections.put(name, controller);
             
         } else {
@@ -80,8 +78,10 @@ public class BedsideMonitor implements BedsideMonitorInterface {
     }
     
     public void removeSensor(String sensorName){
-        // TODO: Remove the vital sign collection and processing objects
-        // TODO: Cancel the timer task for these vital sign objects
+        VitalSignProcessing processor = vitalSignProcessings.remove(sensorName);
+        VitalSignCollectionController controller = vitalSignCollections.remove(sensorName);
+        controller.cancel();
+        processor.setActive(false);
     }
     
     public void addListener(Observer observer){

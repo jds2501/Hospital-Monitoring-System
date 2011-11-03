@@ -28,6 +28,8 @@ public class VitalSignProcessing extends Observable implements Runnable {
     private Double vitalSignValue;
     
     private VitalSignConfiguration configuration;
+
+    private boolean isActive;
     
     public VitalSignProcessing(Queue<Integer> vitalSignMsgQueue,
             VitalSignConfiguration converter){
@@ -50,6 +52,23 @@ public class VitalSignProcessing extends Observable implements Runnable {
         // TODO: Push results to notification service
     }
 
+    /**
+     * @return the isActive
+     */
+    public boolean isActive() {
+    
+        return isActive;
+    }
+
+    
+    /**
+     * @param isActive the isActive to set
+     */
+    public void setActive(boolean isActive) {
+    
+        this.isActive = isActive;
+    }
+    
     public void run() {
         
     }
