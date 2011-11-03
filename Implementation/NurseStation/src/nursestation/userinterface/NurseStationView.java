@@ -37,6 +37,7 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
@@ -149,7 +150,8 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 		statusPanel.setBorder(BorderFactory.createTitledBorder("Status"));
 		statusPanel.add(subImageNamePanel, BorderLayout.WEST);
 
-		infoPanel.setPreferredSize(new Dimension(infoPanel.getPreferredSize().width, 80));
+		infoPanel.setPreferredSize(new Dimension(infoPanel.getPreferredSize().width, 50));
+		infoPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		totalPanelSet.add(infoPanel, BorderLayout.NORTH);
 		totalPanelSet.add(statusPanel, BorderLayout.SOUTH);
 
@@ -338,9 +340,10 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 	 * 
 	 * @param display - the patient display to set to this interface
 	 */
-	public void setImageDisplay(PatientDisplay display) {
+	public void setPatientDisplay(PatientDisplay display) {
 		patientDisplay = display;
 		totalPanelSet.add(patientDisplay, BorderLayout.CENTER);
+		patientDisplay.setPreferredSize(new Dimension(patientDisplay.getPreferredSize().width, 20));
 		totalPanelSet.requestFocus();
 	}
 
@@ -378,4 +381,5 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 			}
 		}
 	}
-}
+	
+} // NurseStationView

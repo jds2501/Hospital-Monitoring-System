@@ -1,12 +1,12 @@
 /*
- * Package: alarm
+ * Package: nursestation.enums
  *
  * File: AlarmStatus.java
  *
  * Date: Nov 2, 2011
  * 
  */
-package alarm;
+package nursestation.enums;
 
 /**
  * Enumeration defining the three major statuses of an alarm.
