@@ -16,9 +16,9 @@ package nursestation.notificationservice;
 public class CallButtonMessage {
 
     /**
-     * The ID of the patient
+     * The patient name
      */
-    private int patientID;
+    private String patientName;
     
     /**
      * The status of the call button
@@ -28,20 +28,20 @@ public class CallButtonMessage {
     /**
      * Constructs a CallButtonMessage object.
      * 
-     * @param patientID The ID of the patient
+     * @param patientName the patient name
      * @param callButtonStatus The call button status
      */
-    public CallButtonMessage(int patientID, boolean callButtonStatus){
-        this.patientID = patientID;
+    public CallButtonMessage(String patientName, boolean callButtonStatus){
+        this.patientName = patientName;
         this.callButtonStatus = callButtonStatus;
     }
     
     /**
-     * @return the patientID
+     * @return the patient name
      */
-    public int getPatientID() {
+    public String getPatientName() {
     
-        return patientID;
+        return patientName;
     }
     
     /**

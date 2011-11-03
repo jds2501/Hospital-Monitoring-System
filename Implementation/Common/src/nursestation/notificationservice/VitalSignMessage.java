@@ -17,19 +17,19 @@ package nursestation.notificationservice;
 public class VitalSignMessage {
 
     /**
-     * The ID of the patient
+     * The patient's name
      */
-    private int patientID;
+    private String patientName;
     
     /**
      * The name of the vital sign
      */
-    private String name;
+    private String vitalSignName;
     
     /**
      * The vital sign updated value
      */
-    private double vitalSign;
+    private double vitalSignValue;
     
     /**
      * The status of the alarm for this vital sign
@@ -37,44 +37,42 @@ public class VitalSignMessage {
     private boolean alarmStatus;
     
     /**
-     * Constructs a VitalSignMessage object with a patient ID, vital sign
+     * Constructs a VitalSignMessage object with a patient name, vital sign
      * name, vital sign value, and an alarm status.
      * 
-     * @param patientID the ID of the patient
-     * @param name the name of the vital sign
+     * @param patientName the name of the patient
+     * @param vitalSignName the name of the vital sign
      * @param vitalSign the value of the vital sign
      * @param alarmStatus the status of the alarm for that vital sign
      */
-    public VitalSignMessage(int patientID, String name, double vitalSign, 
-                            boolean alarmStatus) {
-        this.patientID = patientID;
-        this.name = name;
-        this.vitalSign = vitalSign;
+    public VitalSignMessage(String patientName, String vitalSignName, 
+                            double vitalSign, boolean alarmStatus) {
+        this.patientName = patientName;
+        this.vitalSignName = vitalSignName;
+        this.vitalSignValue = vitalSign;
         this.alarmStatus = alarmStatus;
     }
     
     /**
-     * @return the patientID
+     * @return the patient's name
      */
-    public int getPatientID() {
-    
-        return patientID;
+    public String getPatientName() {
+        return patientName;
     }
     
     /**
-     * @return the name
+     * @return the name of the vital sign
      */
-    public String getName() {
-    
-        return name;
+    public String getVitalSignName() {
+        return vitalSignName;
     }
     
     /**
-     * @return the vitalSign
+     * @return the value of the vital sign
      */
     public double getVitalSign() {
     
-        return vitalSign;
+        return vitalSignValue;
     }
     
     /**
