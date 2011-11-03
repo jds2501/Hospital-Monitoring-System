@@ -142,7 +142,7 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 
 		numPatientsLabel = new JLabel("Number of Patients:   ");
 		numPatients = new JLabel("");
-		numPatients.setFont(new Font("Tahoma", Font.BOLD, 11));
+		numPatients.setFont(new Font("Tahoma", Font.BOLD, 12));
 
 		subImageNamePanel.add(numPatientsLabel);
 		subImageNamePanel.add(numPatients);

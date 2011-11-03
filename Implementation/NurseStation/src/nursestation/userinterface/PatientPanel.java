@@ -9,18 +9,20 @@
 
 package nursestation.userinterface;
 
-import java.awt.FlowLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import nursestation.enums.AlarmStatus;
-import nursestation.enums.CallStatus;
+import alarm.AlarmStatus;
 
 
 /**
@@ -32,18 +34,16 @@ import nursestation.enums.CallStatus;
 @SuppressWarnings("serial")
 public class PatientPanel extends JPanel {
 
-	private JPanel callPanel, alarmPanel;
-	private JButton acknowlCallButton, acknowlAlarmButton;
-	private JLabel alarmStatus, callStatus;
-
-	private String patientName, callState, alarmState;
+	private JPanel alarmPanel, alarmButtonPanel;
+	private JButton acknowlAlarmButton;
+	private JLabel alarmStatus;
 
 	/**
 	 * Constructor
 	 * @param display - the image display
 	 * @param img - the image to be displayed
 	 */
-	public PatientPanel(String patientName, String callState, String alarmState) {
+	public PatientPanel(String patientName, String alarmState) {
 		
 		// Call parent constructor
 		super();
@@ -54,48 +54,39 @@ public class PatientPanel extends JPanel {
 		
 		this.add(new JLabel("Patient Name: " + patientName));
 		
-		callPanel = new JPanel(new FlowLayout());
-		callPanel.add(new JLabel("Call state: "));
-		callStatus = new JLabel(callState);
-		callPanel.add(callStatus);
-		
-		acknowlCallButton = new JButton("Respond");
-		if (callState.equals(CallStatus.ACTIVE.name())) {
-			acknowlCallButton.setVisible(true);
-		} else {
-			acknowlCallButton.setVisible(false);
-		}
-		acknowlCallButton.addActionListener(new AcknowlCallListener());
-		callPanel.add(acknowlCallButton);
-		
-		alarmPanel = new JPanel(new FlowLayout());
+		alarmPanel = new JPanel();
+		alarmPanel.setLayout(new BoxLayout(alarmPanel, BoxLayout.LINE_AXIS));
 		alarmPanel.add(new JLabel("Alarm state: "));
 		alarmStatus = new JLabel(alarmState);
 		alarmPanel.add(alarmStatus);
 		
+		alarmButtonPanel = new JPanel();
+		alarmButtonPanel.setLayout(new BoxLayout(alarmButtonPanel, BoxLayout.LINE_AXIS));
 		acknowlAlarmButton = new JButton("Respond");
 		if (alarmState.equals(AlarmStatus.ACTIVE.name())) {
-			acknowlAlarmButton.setVisible(true);
+			acknowlAlarmButton.setEnabled(true);
+			alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+			alarmStatus.setForeground(Color.RED);
 		} else {
-			acknowlAlarmButton.setVisible(false);
+			acknowlAlarmButton.setEnabled(false);
+			alarmStatus.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			alarmStatus.setForeground(Color.GRAY);
 		}
 		acknowlAlarmButton.addActionListener(new AcknowlAlarmListener());
-		alarmPanel.add(acknowlAlarmButton);
-
+		alarmButtonPanel.add(acknowlAlarmButton);
 		
-		this.add(callPanel);
 		this.add(alarmPanel);
+		this.add(alarmButtonPanel);
 	}
 
 	/**
-	 * Inner class for listener on Acknowledge Alarm button
+	 * Called by external sources to update this patient and show alarm has been triggered
 	 */
-	private class AcknowlCallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			callStatus.setText(CallStatus.ACKNOWLEDGED.name());
-			acknowlCallButton.setVisible(false);
-			//TODO
-		}
+	public void triggerAlarm() {
+		alarmStatus.setText(AlarmStatus.ACTIVE.name());
+		alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+		alarmStatus.setForeground(Color.RED);
+		acknowlAlarmButton.setEnabled(true);
 	}
 
 	/**
@@ -104,8 +95,10 @@ public class PatientPanel extends JPanel {
 	private class AcknowlAlarmListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			alarmStatus.setText(AlarmStatus.ACKNOWLEDGED.name());
-			acknowlAlarmButton.setVisible(false);
-			//TODO
+			alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+			alarmStatus.setForeground(Color.BLUE);
+			acknowlAlarmButton.setEnabled(false);
+			//TODO logging, updating external sources, etc
 		}
 	}
 }

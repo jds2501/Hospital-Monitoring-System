@@ -9,12 +9,11 @@
 
 package nursestation.userinterface;
 
-import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 
-import nursestation.enums.AlarmStatus;
+import alarm.AlarmStatus;
 
 
 /**
@@ -53,13 +52,13 @@ public class PatientDisplay extends JPanel {
 	public void paintPatientPanels(/*TODO Pass in a patient map for populating data */) {
 		// remove images before adding more to the same panel
 		removeAll();
-		add(new PatientPanel("Test Patient 1", AlarmStatus.INACTIVE.name(), AlarmStatus.INACTIVE.name()));
-		add(new PatientPanel("Test Patient 2", AlarmStatus.INACTIVE.name(), AlarmStatus.ACTIVE.name()));
-		add(new PatientPanel("Test Patient 3", AlarmStatus.ACTIVE.name(), AlarmStatus.INACTIVE.name()));
-		add(new PatientPanel("Test Patient 4", AlarmStatus.ACTIVE.name(), AlarmStatus.INACTIVE.name()));
-		add(new PatientPanel("Test Patient 5", AlarmStatus.ACTIVE.name(), AlarmStatus.INACTIVE.name()));
-		add(new PatientPanel("Test Patient 6", AlarmStatus.INACTIVE.name(), AlarmStatus.ACTIVE.name()));
-		add(new PatientPanel("Test Patient 7", AlarmStatus.INACTIVE.name(), AlarmStatus.ACTIVE.name()));
+		add(new PatientPanel("Test Patient 1", AlarmStatus.INACTIVE.name()));
+		add(new PatientPanel("Test Patient 2", AlarmStatus.ACTIVE.name()));
+		add(new PatientPanel("Test Patient 3", AlarmStatus.INACTIVE.name()));
+		add(new PatientPanel("Test Patient 4", AlarmStatus.INACTIVE.name()));
+		add(new PatientPanel("Test Patient 5", AlarmStatus.INACTIVE.name()));
+		add(new PatientPanel("Test Patient 6", AlarmStatus.ACTIVE.name()));
+		add(new PatientPanel("Test Patient 7", AlarmStatus.ACTIVE.name()));
 		refresh();
 	}
 
