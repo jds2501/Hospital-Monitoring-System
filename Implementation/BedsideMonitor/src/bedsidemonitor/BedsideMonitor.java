@@ -36,13 +36,15 @@ import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
  */
 public class BedsideMonitor implements BedsideMonitorInterface {
 
+    private String patientName;
     private CallButtonController callButtonController;
     private Map<String, VitalSignCollectionController> vitalSignCollections;
     private Map<String, VitalSignProcessing> vitalSignProcessings;
     private List<NotificationService> notificationServices;
     private Timer timer;
     
-    public BedsideMonitor(){
+    public BedsideMonitor(String patientName){
+        this.patientName = patientName;
         notificationServices = new ArrayList<NotificationService>();
         callButtonController = new CallButtonController(notificationServices);
         vitalSignCollections = new HashMap<String, VitalSignCollectionController>();
@@ -114,11 +116,15 @@ public class BedsideMonitor implements BedsideMonitorInterface {
     }
     
     public boolean getCallButton(){
-        return false;
+        return this.callButtonController.getCallStatus();
     }
     
     public void setCallButton(boolean callStatus){
-        
+        this.callButtonController.setCallStatus(callStatus);
+    }
+    
+    public String getPatientName() {
+        return patientName;
     }
     
 } // BedsideMonitor
