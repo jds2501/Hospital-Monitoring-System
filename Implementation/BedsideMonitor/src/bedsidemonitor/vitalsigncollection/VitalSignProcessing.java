@@ -10,8 +10,13 @@ package bedsidemonitor.vitalsigncollection;
 
 import historylogging.HistoryLogging;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Queue;
+
+import nursestation.notificationservice.NotificationService;
+
+import alarm.AlarmController;
 
 
 /**
@@ -29,13 +34,19 @@ public class VitalSignProcessing extends Observable implements Runnable {
     
     private VitalSignConfiguration configuration;
 
+    private AlarmController alarmController;
+    
+    private List<NotificationService> notificationServices;
+    
     private boolean isActive;
     
     public VitalSignProcessing(Queue<Integer> vitalSignMsgQueue,
-            VitalSignConfiguration converter){
+            VitalSignConfiguration converter, List<NotificationService> notificationServices){
         this.vitalSignMsgQueue = vitalSignMsgQueue;
         this.vitalSignValue = null;
         this.configuration = converter;
+        this.alarmController = new AlarmController();
+        this.notificationServices = notificationServices;
     }
     
     public void pullVitalSign(){
@@ -67,6 +78,14 @@ public class VitalSignProcessing extends Observable implements Runnable {
     public void setActive(boolean isActive) {
     
         this.isActive = isActive;
+    }
+    
+    public VitalSignConfiguration getConfiguration() {
+        return configuration;
+    }
+    
+    public void setConfiguration(VitalSignConfiguration configuration) {
+        this.configuration = configuration;
     }
     
     public void run() {

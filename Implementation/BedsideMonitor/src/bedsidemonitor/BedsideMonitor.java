@@ -8,8 +8,6 @@
  */
 package bedsidemonitor;
 
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,8 +30,9 @@ import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
 
 
 /**
- * @author Jason
- *
+ * 
+ * 
+ * @author Jason Smith
  */
 public class BedsideMonitor implements BedsideMonitorInterface {
 
@@ -44,10 +43,10 @@ public class BedsideMonitor implements BedsideMonitorInterface {
     private Timer timer;
     
     public BedsideMonitor(){
-        callButtonController = new CallButtonController();
+        notificationServices = new ArrayList<NotificationService>();
+        callButtonController = new CallButtonController(notificationServices);
         vitalSignCollections = new HashMap<String, VitalSignCollectionController>();
         vitalSignProcessings = new HashMap<String, VitalSignProcessing>();
-        notificationServices = new ArrayList<NotificationService>();
         timer = new Timer();
     }
     
@@ -61,7 +60,8 @@ public class BedsideMonitor implements BedsideMonitorInterface {
             VitalSignCollectionController controller = 
                     new VitalSignCollectionController(sensor, vitalSignMsgQueue);
             VitalSignProcessing processor = 
-                    new VitalSignProcessing(vitalSignMsgQueue, configuration);
+                    new VitalSignProcessing(vitalSignMsgQueue, configuration,
+                            this.notificationServices);
             
             Thread processorTask = new Thread(processor);
             processorTask.start();
@@ -93,19 +93,32 @@ public class BedsideMonitor implements BedsideMonitorInterface {
     }
     
     public void subscribe(NotificationService service){
-        notificationServices.add(service);
+        synchronized(notificationServices) {
+            notificationServices.add(service);
+        }
     }
     
     public void unsubscribe(NotificationService service){
-        notificationServices.remove(service);
+        synchronized(notificationServices) {
+            notificationServices.remove(service);
+        }
     }
     
     public VitalSignConfiguration getConfiguration(String vitalSignName){
-        return null;
+        return vitalSignProcessings.get(vitalSignName).getConfiguration();
     }
     
     public void changeConfiguration(VitalSignConfiguration configuration){
+        String name = configuration.getName();
+        vitalSignProcessings.get(name).setConfiguration(configuration);
+    }
+    
+    public boolean getCallButton(){
+        return false;
+    }
+    
+    public void setCallButton(boolean callStatus){
         
     }
     
-}
+} // BedsideMonitor
