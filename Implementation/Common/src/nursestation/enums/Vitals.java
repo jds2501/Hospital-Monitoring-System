@@ -1,6 +1,8 @@
 package nursestation.enums;
 
 /**
+ * Details
+ * 
  * @author ian hunt
  * @date 11/3/11
  */
