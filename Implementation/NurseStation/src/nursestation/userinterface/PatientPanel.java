@@ -64,6 +64,7 @@ public class PatientPanel extends JPanel {
 		JPanel p3 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		
 		patientNameLabel = new JLabel("  Patient Name:  ");
+		
 		patientName = new JLabel(name);
 		patientName.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
 				Font.BOLD, UIManager.getDefaults().getFont("Label.font").getSize()));
