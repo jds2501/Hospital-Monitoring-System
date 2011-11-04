@@ -30,7 +30,8 @@ import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
 
 
 /**
- * 
+ * The bedside monitor for managing a patient's call button, vital signs,
+ * and notification services for who wants to receive notifications of updates.
  * 
  * @author Jason Smith
  */
@@ -43,6 +44,9 @@ public class BedsideMonitor implements BedsideMonitorInterface {
     private List<NotificationService> notificationServices;
     private Timer timer;
     
+    /**
+     * Constructs a BedsideMonitor object with a remote sensor lookup object.
+     */
     public BedsideMonitor(){
         this(new RemoteSensorLookup());
     }
@@ -94,14 +98,6 @@ public class BedsideMonitor implements BedsideMonitorInterface {
         }
     }
     
-    public void addListener(Observer observer){
-       for(VitalSignProcessing processing: vitalSignProcessings.values()){
-            processing.addObserver(observer);
-       }
-       
-       callButtonController.addObserver(observer);
-    }
-    
     public void subscribe(NotificationService service){
         synchronized(notificationServices) {
             notificationServices.add(service);
@@ -126,7 +122,12 @@ public class BedsideMonitor implements BedsideMonitorInterface {
     
     public void changeConfiguration(VitalSignConfiguration configuration){
         String name = configuration.getName();
-        vitalSignProcessings.get(name).setConfiguration(configuration);
+        
+        if(vitalSignProcessings.containsKey(name)){
+            vitalSignProcessings.get(name).setConfiguration(configuration);
+        }else{
+            throw new IllegalArgumentException("Configuration name " + name + " does not exist");
+        }
     }
     
     public boolean getCallButton(){
