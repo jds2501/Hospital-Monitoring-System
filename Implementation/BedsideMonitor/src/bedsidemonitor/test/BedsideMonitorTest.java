@@ -85,8 +85,24 @@ public class BedsideMonitorTest extends TestCase {
         this.sensorLookup.addSensor("valid", sensor);
         this.bedsideMonitor.addSensor(configuration);
         
-        // TODO: Verify that the controller and processor have been created
-        //       and stored.
+        assertEquals(this.bedsideMonitor.getConfiguration("valid"),
+                     configuration);
+    }
+    
+    /**
+     * Test to verify that removing a sensor that does not exist
+     * throws an exception.
+     */
+    public void testRemoveNonExistentSensor() {
+        boolean sensorFound = true;
+        
+        try{
+            this.bedsideMonitor.removeSensor("not found");
+        }catch(IllegalArgumentException ex){
+            sensorFound = false;
+        }
+        
+        assertFalse(sensorFound);
     }
     
 } // BedsideMonitorTest

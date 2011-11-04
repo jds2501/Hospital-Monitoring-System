@@ -84,10 +84,14 @@ public class BedsideMonitor implements BedsideMonitorInterface {
     }
     
     public void removeSensor(String sensorName){
-        VitalSignProcessing processor = vitalSignProcessings.remove(sensorName);
-        VitalSignCollectionController controller = vitalSignCollections.remove(sensorName);
-        controller.cancel();
-        processor.setActive(false);
+        if(vitalSignProcessings.containsKey(sensorName)){
+            VitalSignProcessing processor = vitalSignProcessings.remove(sensorName);
+            VitalSignCollectionController controller = vitalSignCollections.remove(sensorName);
+            controller.cancel();
+            processor.setActive(false);
+        }else{
+            throw new IllegalArgumentException("Sensor " + sensorName + " does not exist");
+        }
     }
     
     public void addListener(Observer observer){
