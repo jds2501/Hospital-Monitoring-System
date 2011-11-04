@@ -105,4 +105,16 @@ public class BedsideMonitorTest extends TestCase {
         assertFalse(sensorFound);
     }
     
+    /**
+     * Test to verify that removing a sensor that exists removes
+     * the vital sign from the bedside monitor.
+     */
+    public void testRemoveExistentSensor() {
+        this.testAddExistentSensor();
+        this.bedsideMonitor.removeSensor("valid");
+        this.sensorLookup.getSensors().remove("valid");
+        
+        assertEquals(this.bedsideMonitor.getConfiguration("valid"), null);
+    }
+    
 } // BedsideMonitorTest

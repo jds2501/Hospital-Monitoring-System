@@ -115,7 +115,13 @@ public class BedsideMonitor implements BedsideMonitorInterface {
     }
     
     public VitalSignConfiguration getConfiguration(String vitalSignName){
-        return vitalSignProcessings.get(vitalSignName).getConfiguration();
+        VitalSignConfiguration configuration = null;
+        
+        if(vitalSignProcessings.containsKey(vitalSignName)){
+            configuration = vitalSignProcessings.get(vitalSignName).getConfiguration();
+        }
+        
+        return configuration;
     }
     
     public void changeConfiguration(VitalSignConfiguration configuration){
