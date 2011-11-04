@@ -11,6 +11,7 @@ package nursestation.userinterface;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -123,12 +124,19 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 		stationPanel = new JPanel();
 
 		stationNameLabel = new JLabel("Station Name: ");
+		stationNameLabel.setForeground(Color.WHITE);
 		stationName = new JTextArea();
 		stationName.setEditable(false);		
+		stationName.setBackground(new Color(102,102,102));
+		stationName.setForeground(Color.WHITE);
+		stationName.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
+				Font.BOLD, UIManager.getDefaults().getFont("Label.font").getSize()));
 
 		stationPanel.add(stationNameLabel);
 		stationPanel.add(stationName);
+		stationPanel.setBackground(new Color(102,102,102));
 		subLeftInfo.add(stationPanel);
+		subLeftInfo.setBackground(new Color(102,102,102));
 
 		infoPanel.add(subLeftInfo, BorderLayout.WEST);
 
@@ -150,7 +158,8 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 		statusPanel.add(subNumPatientsPanel, BorderLayout.WEST);
 
 		infoPanel.setPreferredSize(new Dimension(infoPanel.getPreferredSize().width, 40));
-		infoPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+		infoPanel.setBorder(BorderFactory.createEtchedBorder());
+		infoPanel.setBackground(new Color(102,102,102));
 		totalPanelSet.add(infoPanel, BorderLayout.NORTH);
 		totalPanelSet.add(statusPanel, BorderLayout.SOUTH);
 
