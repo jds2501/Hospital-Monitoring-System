@@ -9,18 +9,24 @@
 
 package nursestation.userinterface;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
-import nursestation.enums.AlarmStatus;
-import nursestation.enums.CallStatus;
+import alarm.AlarmStatus;
 
 
 /**
@@ -32,70 +38,83 @@ import nursestation.enums.CallStatus;
 @SuppressWarnings("serial")
 public class PatientPanel extends JPanel {
 
-	private JPanel callPanel, alarmPanel;
-	private JButton acknowlCallButton, acknowlAlarmButton;
-	private JLabel alarmStatus, callStatus;
-
-	private String patientName, callState, alarmState;
+	private JPanel alarmPanel, alarmButtonPanel, alarmPanelOuter;
+	private JButton acknowlAlarmButton;
+	private JLabel alarmStatusLabel, alarmStatus, patientNameLabel, patientName;
 
 	/**
 	 * Constructor
-	 * @param display - the image display
-	 * @param img - the image to be displayed
 	 */
-	public PatientPanel(String patientName, String callState, String alarmState) {
+	public PatientPanel(String name, String alarmState) {
 		
 		// Call parent constructor
 		super();
 
 		// Instantiate values / construct panel
-		this.setLayout(new GridLayout(1, 3, 5, 5));
+		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createEtchedBorder());
 		
-		this.add(new JLabel("Patient Name: " + patientName));
+		alarmPanelOuter = new JPanel(new BorderLayout());
+		alarmPanel = new JPanel();
+		alarmPanel.setLayout(new GridLayout(2, 1));
+
+		JPanel p1 = new JPanel();
+		p1.setLayout(new BoxLayout(p1, BoxLayout.LINE_AXIS));
+		JPanel p2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		JPanel p3 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		
-		callPanel = new JPanel(new FlowLayout());
-		callPanel.add(new JLabel("Call state: "));
-		callStatus = new JLabel(callState);
-		callPanel.add(callStatus);
+		patientNameLabel = new JLabel("  Patient Name:  ");
 		
-		acknowlCallButton = new JButton("Respond");
-		if (callState.equals(CallStatus.ACTIVE.name())) {
-			acknowlCallButton.setVisible(true);
-		} else {
-			acknowlCallButton.setVisible(false);
-		}
-		acknowlCallButton.addActionListener(new AcknowlCallListener());
-		callPanel.add(acknowlCallButton);
+		patientName = new JLabel(name);
+		patientName.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
+				Font.BOLD, UIManager.getDefaults().getFont("Label.font").getSize()));
+		p1.add(patientNameLabel);
+		p1.add(patientName);
 		
-		alarmPanel = new JPanel(new FlowLayout());
-		alarmPanel.add(new JLabel("Alarm state: "));
+		alarmStatusLabel = new JLabel("Alarm:  ");
+		alarmStatusLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		p2.add(alarmStatusLabel);
+		alarmPanel.add(p2);
+		
 		alarmStatus = new JLabel(alarmState);
-		alarmPanel.add(alarmStatus);
+		alarmStatus.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		p3.add(alarmStatus);
+		alarmPanel.add(p3);
 		
+		alarmPanelOuter.add(alarmPanel, BorderLayout.LINE_END);
+		
+		alarmButtonPanel = new JPanel();
+		alarmButtonPanel.setLayout(new BorderLayout());
 		acknowlAlarmButton = new JButton("Respond");
 		if (alarmState.equals(AlarmStatus.ACTIVE.name())) {
-			acknowlAlarmButton.setVisible(true);
+			acknowlAlarmButton.setEnabled(true);
+			alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+			alarmStatus.setForeground(Color.RED);
 		} else {
-			acknowlAlarmButton.setVisible(false);
+			acknowlAlarmButton.setEnabled(false);
+			alarmStatus.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			alarmStatus.setForeground(Color.GRAY);
 		}
 		acknowlAlarmButton.addActionListener(new AcknowlAlarmListener());
-		alarmPanel.add(acknowlAlarmButton);
+		alarmButtonPanel.add(acknowlAlarmButton, BorderLayout.EAST);
+
 
 		
-		this.add(callPanel);
-		this.add(alarmPanel);
+		this.add(p1, BorderLayout.WEST);
+		this.add(alarmPanelOuter, BorderLayout.CENTER);
+		this.add(alarmButtonPanel, BorderLayout.EAST);
+		
+		this.setPreferredSize(new Dimension(600, 50));
 	}
 
 	/**
-	 * Inner class for listener on Acknowledge Alarm button
+	 * Called by external sources to update this patient and show alarm has been triggered
 	 */
-	private class AcknowlCallListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			callStatus.setText(CallStatus.ACKNOWLEDGED.name());
-			acknowlCallButton.setVisible(false);
-			//TODO
-		}
+	public void triggerAlarm() {
+		alarmStatus.setText(AlarmStatus.ACTIVE.name());
+		alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+		alarmStatus.setForeground(Color.RED);
+		acknowlAlarmButton.setEnabled(true);
 	}
 
 	/**
@@ -104,8 +123,10 @@ public class PatientPanel extends JPanel {
 	private class AcknowlAlarmListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			alarmStatus.setText(AlarmStatus.ACKNOWLEDGED.name());
-			acknowlAlarmButton.setVisible(false);
-			//TODO
+			alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+			alarmStatus.setForeground(Color.BLUE);
+			acknowlAlarmButton.setEnabled(false);
+			//TODO logging, updating external sources, etc
 		}
 	}
 }

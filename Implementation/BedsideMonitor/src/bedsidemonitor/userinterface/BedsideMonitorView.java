@@ -1,13 +1,13 @@
 /*
- * Package: nursestation.userinterface
+ * Package: bedsidemonitor.userinterface
  *
- * File: StationView.java
+ * File: BedsideMonitorView.java
  *
- * Date: Nov 2, 2011
+ * Date: Nov 3, 2011
  * 
  */
 
-package nursestation.userinterface;
+package bedsidemonitor.userinterface;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -24,6 +24,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -42,13 +43,15 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
+import alarm.AlarmStatus;
+
 /**
- * Nurse station user interface
+ * BedsideMonitorView - Main interface display for a bedside monitor
  * 
  * @author Anthony Barone
  */
 @SuppressWarnings("serial")
-public class NurseStationView extends JFrame implements AWTEventListener {
+public class BedsideMonitorView extends JFrame implements AWTEventListener {
 
 
 	//------------------------------------ Attributes -------------------------------------//
@@ -56,8 +59,8 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 
 	// ***** Window attributes ***** //
 
-	private static final int FRAME_WIDTH = 614;
-	private static final int FRAME_HEIGHT = 610;
+	private static final int FRAME_WIDTH = (int)(Toolkit.getDefaultToolkit().getScreenSize().width * 0.4);
+	private static final int FRAME_HEIGHT = (int)(Toolkit.getDefaultToolkit().getScreenSize().height * 0.5);
 
 	// ***** Menu and Toolbar components ***** //
 
@@ -66,18 +69,19 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 	private JMenu fileMenu, helpMenu;
 
 	private JMenuItem exitItem, aboutItem;
+	private JButton callOffButton, alarmOffButton;
 
 	// ***** Panel components ***** //
 
-	private JPanel totalPanelSet, infoPanel, subLeftInfo, statusPanel, subNumPatientsPanel, stationPanel;
+	private JPanel totalPanelSet, infoPanel, subLeftInfo, statusPanel, subCallStatusPanel, 
+		subAlarmStatusPanel, stationPanel;
 
-	private JLabel stationNameLabel, numPatientsLabel, numPatients;
+	private JLabel monitorNameLabel, callStatus, alarmStatus;
 
-	private JTextArea stationName;
-
-	// ***** A panel for displaying all the patients this Nurse Station is subscribed to ***** //
-
-	private PatientDisplay patientDisplay;
+	private JTextArea monitorName;
+	
+	private static final String CALL_BUTTON_OFF = "OFF";
+	private static final String CALL_BUTTON_ON = "ON";
 
 
 	//--------------------------------------------------------------------------------------//
@@ -86,7 +90,7 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 	/**
 	 * Default constructor
 	 */
-	public NurseStationView() {
+	public BedsideMonitorView() {
 
 		// Set windows look'n'feel
 		try {
@@ -123,20 +127,13 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 		subLeftInfo = new JPanel(new FlowLayout());
 		stationPanel = new JPanel();
 
-		stationNameLabel = new JLabel("Station Name: ");
-		stationNameLabel.setForeground(Color.WHITE);
-		stationName = new JTextArea();
-		stationName.setEditable(false);		
-		stationName.setBackground(new Color(102,102,102));
-		stationName.setForeground(Color.WHITE);
-		stationName.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
-				Font.BOLD, UIManager.getDefaults().getFont("Label.font").getSize()));
+		monitorNameLabel = new JLabel("Monitor Name: ");
+		monitorName = new JTextArea();
+		monitorName.setEditable(false);		
 
-		stationPanel.add(stationNameLabel);
-		stationPanel.add(stationName);
-		stationPanel.setBackground(new Color(102,102,102));
+		stationPanel.add(monitorNameLabel);
+		stationPanel.add(monitorName);
 		subLeftInfo.add(stationPanel);
-		subLeftInfo.setBackground(new Color(102,102,102));
 
 		infoPanel.add(subLeftInfo, BorderLayout.WEST);
 
@@ -144,22 +141,41 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 		// ********** Status Bar ********** //
 
 		statusPanel = new JPanel(new BorderLayout());
+		
+		// Panel dealing with Call
+		subCallStatusPanel = new JPanel(new BoxLayout(statusPanel, BoxLayout.LINE_AXIS));
+		subCallStatusPanel.setLayout(new BoxLayout(subCallStatusPanel, BoxLayout.LINE_AXIS));
+		subCallStatusPanel.add(new JLabel("Call button state: "));
+		callStatus = new JLabel(CALL_BUTTON_OFF);
+		callStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+		callStatus.setForeground(Color.GRAY);
+		subCallStatusPanel.add(callStatus);
+		
+		callOffButton = new JButton("Turn Off Call");
+		callOffButton.setEnabled(false);
+		callOffButton.addActionListener(new TurnOffCallListener());
+		subCallStatusPanel.add(callOffButton);
+		
+		// Panel dealing with Alarm
+		subAlarmStatusPanel = new JPanel(new BoxLayout(statusPanel, BoxLayout.LINE_AXIS));
+		subAlarmStatusPanel.setLayout(new BoxLayout(subAlarmStatusPanel, BoxLayout.LINE_AXIS));
+		subAlarmStatusPanel.add(new JLabel("Alarm state: "));
+		alarmStatus = new JLabel(AlarmStatus.INACTIVE.name());
+		alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+		alarmStatus.setForeground(Color.GRAY);
+		subAlarmStatusPanel.add(alarmStatus);
+		
+		alarmOffButton = new JButton("Turn Off Alarm");
+		alarmOffButton.setEnabled(false);
+		alarmOffButton.addActionListener(new TurnOffAlarmListener());
+		subAlarmStatusPanel.add(alarmOffButton);
+		
+		// Add both sub panels
+		statusPanel.add(subCallStatusPanel, BorderLayout.WEST);
+		statusPanel.add(subAlarmStatusPanel, BorderLayout.EAST);
 
-		subNumPatientsPanel = new JPanel(new FlowLayout());
-
-		numPatientsLabel = new JLabel("Number of Patients:   ");
-		numPatients = new JLabel("");
-		numPatients.setFont(new Font("Tahoma", Font.BOLD, 12));
-
-		subNumPatientsPanel.add(numPatientsLabel);
-		subNumPatientsPanel.add(numPatients);
-
-		statusPanel.setBorder(BorderFactory.createTitledBorder("Status"));
-		statusPanel.add(subNumPatientsPanel, BorderLayout.WEST);
-
-		infoPanel.setPreferredSize(new Dimension(infoPanel.getPreferredSize().width, 40));
-		infoPanel.setBorder(BorderFactory.createEtchedBorder());
-		infoPanel.setBackground(new Color(102,102,102));
+		infoPanel.setPreferredSize(new Dimension(infoPanel.getPreferredSize().width, 50));
+		infoPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		totalPanelSet.add(infoPanel, BorderLayout.NORTH);
 		totalPanelSet.add(statusPanel, BorderLayout.SOUTH);
 
@@ -167,18 +183,18 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 		// *********************************** //
 
 
-		// add all panels to container
+		// Add all panels to container
 		pack();
 		container.add(totalPanelSet);
 
-		// get dimensions for window and set its properties
+		// Get dimensions for window and set its properties
 		Toolkit testkit = Toolkit.getDefaultToolkit();
 		Dimension dim = testkit.getScreenSize();
 		int loc_height = (dim.height / 2) - (FRAME_HEIGHT / 2) - 25 /* for taskbar */;
 		int loc_width = (dim.width / 2) - (FRAME_WIDTH / 2);
 		setSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		setLocation(loc_width, loc_height);
-		setTitle("Nurse Station View Console v1.0");
+		setTitle("Bedside Montior View Console v1.0");
 		setVisible(true);
 		//TODO figure out implications of closing window (dealing with unsubscribing)
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
@@ -216,7 +232,7 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 		helpMenu.setMnemonic(KeyEvent.VK_H);
 
 		// 1. About the program
-		aboutItem = menuItemGenerator("About Nurse Station View Console", "img/about-icon.png", 
+		aboutItem = menuItemGenerator("About Bedside Monitor View Console", "img/about-icon.png", 
 				null, "about", new AboutListener());
 		helpMenu.add(aboutItem);
 
@@ -235,7 +251,7 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 	 */
 	private class AboutListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			JOptionPane.showMessageDialog(null, "Nurse Station View Console\n" +
+			JOptionPane.showMessageDialog(null, "Bedside Monitor View Console\n" +
 					"Version 1.0\n\n" +
 					"Anthony Barone, Chris Bentivenga, Ian Hunt, Jason Smith\n\n" +
 					"Copyright 2011 | Group 1\n" +
@@ -342,35 +358,88 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 		// return the resulting button
 		return newMenuItem;
 	}
-	
+
 	/**
-	 * Set the patient display panel for this view
-	 * 
-	 * @param display - the patient display to set to this interface
+	 * Set the name of the Bedside Monitor
 	 */
-	public void setPatientDisplay(PatientDisplay display) {
-		patientDisplay = display;
-		totalPanelSet.add(patientDisplay, BorderLayout.CENTER);
-		patientDisplay.setPreferredSize(new Dimension(patientDisplay.getPreferredSize().width, 20));
-		totalPanelSet.requestFocus();
+	public void setMonitorName(String name) {
+		monitorName.setText(name);
+		monitorName.setCaretPosition(0);
+		monitorName.setPreferredSize(monitorName.getPreferredSize());
 	}
 
 	/**
-	 * Set the name of the Nurse Station
+	 * Alarm triggered, update display
 	 */
-	public void setStationNameBox(String name) {
-		stationName.setText(name);
-		stationName.setCaretPosition(0);
-		stationName.setPreferredSize(stationName.getPreferredSize());
+	public void alarmTriggered() {
+		alarmStatus.setText(AlarmStatus.ACTIVE.name());
+		alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+		alarmStatus.setForeground(Color.RED);
+		alarmOffButton.setEnabled(true);
 	}
 
 	/**
-	 * Display the number of patients currently viewing
-	 * 
-	 * @param num - The number of patients currently subscribed to
+	 * Alarm acknowledged, update display
 	 */
-	public void setPatientNumber(int num) {
-		numPatients.setText(num+"");
+	public void alarmAcknowledged() {
+		alarmStatus.setText(AlarmStatus.ACKNOWLEDGED.name());
+		alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+		alarmStatus.setForeground(Color.BLUE);
+		alarmOffButton.setEnabled(true);
+	}
+
+	/**
+	 * Call button triggered, update display
+	 */
+	public void callTriggered() {
+		callStatus.setText(CALL_BUTTON_ON);
+		callStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+		callStatus.setForeground(Color.RED);
+		callOffButton.setEnabled(true);
+	}
+
+	/**
+	 * Set the name of the patient
+	 * 
+	 * @param name - The patient name
+	 */
+	public void setPatientName(String name) {
+		//TODO
+	}
+
+	/**
+	 * Set the ID# of the patient
+	 * 
+	 * @param id - The patient ID#
+	 */
+	public void setPatientID(int id) {
+		//TODO
+	}
+
+	/**
+	 * Inner class for listener on Acknowledge Alarm button
+	 */
+	private class TurnOffAlarmListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			alarmStatus.setText(AlarmStatus.INACTIVE.name());
+			alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+			alarmStatus.setForeground(Color.GRAY);
+			alarmOffButton.setEnabled(false);
+			//TODO logging, updating external sources, etc
+		}
+	}
+
+	/**
+	 * Inner class for listener on Acknowledge Alarm button
+	 */
+	private class TurnOffCallListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			callStatus.setText(CALL_BUTTON_OFF);
+			callStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+			callStatus.setForeground(Color.GRAY);
+			callOffButton.setEnabled(false);
+			//TODO logging, updating external sources, etc
+		}
 	}
 
 	/**
