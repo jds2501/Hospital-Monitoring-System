@@ -26,7 +26,7 @@ public class FakeSensorLookup implements SensorLookupInterface {
      * The map of local sensor objects
      */
     private Map<String, SensorInterface> sensors;
-    
+
     /**
      * Constructs a FakeSensorLookup object.
      */
@@ -53,6 +53,15 @@ public class FakeSensorLookup implements SensorLookupInterface {
      */
     public SensorInterface getSensorByName(String sensorName) {
         return sensors.get(sensorName);
+    }
+    
+    
+    /**
+     * @return the sensors
+     */
+    public Map<String, SensorInterface> getSensors() {
+    
+        return sensors;
     }
     
 } // FakeSensorLookup
