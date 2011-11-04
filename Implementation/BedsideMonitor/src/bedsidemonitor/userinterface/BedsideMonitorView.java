@@ -59,8 +59,8 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 
 	// ***** Window attributes ***** //
 
-	private static final int FRAME_WIDTH = (int)(Toolkit.getDefaultToolkit().getScreenSize().width * 0.7);
-	private static final int FRAME_HEIGHT = (int)(Toolkit.getDefaultToolkit().getScreenSize().height * 0.75);
+	private static final int FRAME_WIDTH = (int)(Toolkit.getDefaultToolkit().getScreenSize().width * 0.4);
+	private static final int FRAME_HEIGHT = (int)(Toolkit.getDefaultToolkit().getScreenSize().height * 0.5);
 
 	// ***** Menu and Toolbar components ***** //
 
@@ -142,6 +142,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 
 		statusPanel = new JPanel(new BorderLayout());
 		
+		// Panel dealing with Call
 		subCallStatusPanel = new JPanel(new BoxLayout(statusPanel, BoxLayout.LINE_AXIS));
 		subCallStatusPanel.setLayout(new BoxLayout(subCallStatusPanel, BoxLayout.LINE_AXIS));
 		subCallStatusPanel.add(new JLabel("Call button state: "));
@@ -155,6 +156,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 		callOffButton.addActionListener(new TurnOffCallListener());
 		subCallStatusPanel.add(callOffButton);
 		
+		// Panel dealing with Alarm
 		subAlarmStatusPanel = new JPanel(new BoxLayout(statusPanel, BoxLayout.LINE_AXIS));
 		subAlarmStatusPanel.setLayout(new BoxLayout(subAlarmStatusPanel, BoxLayout.LINE_AXIS));
 		subAlarmStatusPanel.add(new JLabel("Alarm state: "));
@@ -168,6 +170,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 		alarmOffButton.addActionListener(new TurnOffAlarmListener());
 		subAlarmStatusPanel.add(alarmOffButton);
 		
+		// Add both sub panels
 		statusPanel.add(subCallStatusPanel, BorderLayout.WEST);
 		statusPanel.add(subAlarmStatusPanel, BorderLayout.EAST);
 
@@ -180,11 +183,11 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 		// *********************************** //
 
 
-		// add all panels to container
+		// Add all panels to container
 		pack();
 		container.add(totalPanelSet);
 
-		// get dimensions for window and set its properties
+		// Get dimensions for window and set its properties
 		Toolkit testkit = Toolkit.getDefaultToolkit();
 		Dimension dim = testkit.getScreenSize();
 		int loc_height = (dim.height / 2) - (FRAME_HEIGHT / 2) - 25 /* for taskbar */;
