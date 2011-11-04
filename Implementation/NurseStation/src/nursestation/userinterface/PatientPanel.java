@@ -76,6 +76,8 @@ public class PatientPanel extends JPanel {
 		
 		this.add(alarmPanel);
 		this.add(alarmButtonPanel);
+		
+		this.setSize(this.getPreferredSize().width, 40);
 	}
 
 	/**

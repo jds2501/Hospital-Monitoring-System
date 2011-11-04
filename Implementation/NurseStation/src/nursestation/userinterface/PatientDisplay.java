@@ -9,7 +9,7 @@
 
 package nursestation.userinterface;
 
-import java.awt.GridLayout;
+import java.awt.FlowLayout;
 
 import javax.swing.JPanel;
 
@@ -39,7 +39,7 @@ public class PatientDisplay extends JPanel {
 
 		// Instantiate values / construct panel
 		view = gui;
-		this.setLayout(new GridLayout(0, 1, 5, 5));
+		this.setLayout(new FlowLayout());
 		
 	}
 

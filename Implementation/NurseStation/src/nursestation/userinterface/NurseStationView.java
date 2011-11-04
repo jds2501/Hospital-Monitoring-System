@@ -55,8 +55,8 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 
 	// ***** Window attributes ***** //
 
-	private static final int FRAME_WIDTH = (int)(Toolkit.getDefaultToolkit().getScreenSize().width * 0.7);
-	private static final int FRAME_HEIGHT = (int)(Toolkit.getDefaultToolkit().getScreenSize().height * 0.75);
+	private static final int FRAME_WIDTH = 614;
+	private static final int FRAME_HEIGHT = 610;
 
 	// ***** Menu and Toolbar components ***** //
 
@@ -149,7 +149,7 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 		statusPanel.setBorder(BorderFactory.createTitledBorder("Status"));
 		statusPanel.add(subNumPatientsPanel, BorderLayout.WEST);
 
-		infoPanel.setPreferredSize(new Dimension(infoPanel.getPreferredSize().width, 50));
+		infoPanel.setPreferredSize(new Dimension(infoPanel.getPreferredSize().width, 40));
 		infoPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		totalPanelSet.add(infoPanel, BorderLayout.NORTH);
 		totalPanelSet.add(statusPanel, BorderLayout.SOUTH);
