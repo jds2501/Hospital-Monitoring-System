@@ -17,6 +17,7 @@ import java.util.Queue;
 import nursestation.notificationservice.NotificationService;
 
 import alarm.AlarmController;
+import alarm.AlarmStatus;
 
 
 /**
@@ -55,7 +56,7 @@ public class VitalSignProcessing extends Observable implements Runnable {
         HistoryLogging.getInstance().logMessage("New Vital Reading: " + vitalSignValue);
         
         if(!configuration.isVitalSignInRange(vitalSignValue)){
-            // TODO: Turn on alarm from controller
+            this.alarmController.setAlarmStatus(AlarmStatus.ACTIVE);
         }
         
         this.setChanged();

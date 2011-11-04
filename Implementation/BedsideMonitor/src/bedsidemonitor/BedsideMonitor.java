@@ -16,14 +16,14 @@ import java.util.Map;
 import java.util.Observer;
 import java.util.Queue;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import nursestation.notificationservice.NotificationService;
 
 import bedsidemonitor.callbutton.CallButtonController;
 import bedsidemonitor.sensor.SensorInterface;
-import bedsidemonitor.sensor.SensorLookup;
+import bedsidemonitor.sensor.RemoteSensorLookup;
+import bedsidemonitor.sensor.SensorLookupInterface;
 import bedsidemonitor.vitalsigncollection.VitalSignCollectionController;
 import bedsidemonitor.vitalsigncollection.VitalSignConfiguration;
 import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
@@ -35,7 +35,8 @@ import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
  * @author Jason Smith
  */
 public class BedsideMonitor implements BedsideMonitorInterface {
-    
+
+    private SensorLookupInterface sensorLookup;
     private CallButtonController callButtonController;
     private Map<String, VitalSignCollectionController> vitalSignCollections;
     private Map<String, VitalSignProcessing> vitalSignProcessings;
@@ -43,6 +44,11 @@ public class BedsideMonitor implements BedsideMonitorInterface {
     private Timer timer;
     
     public BedsideMonitor(){
+        this(new RemoteSensorLookup());
+    }
+    
+    public BedsideMonitor(SensorLookupInterface sensorLookup){
+        this.sensorLookup = sensorLookup;
         notificationServices = new ArrayList<NotificationService>();
         callButtonController = new CallButtonController();
         vitalSignCollections = new HashMap<String, VitalSignCollectionController>();
@@ -52,7 +58,7 @@ public class BedsideMonitor implements BedsideMonitorInterface {
     
     public void addSensor(VitalSignConfiguration configuration){
         String name = configuration.getName();
-        SensorInterface sensor = SensorLookup.getInstance().getSensorByName(name);
+        SensorInterface sensor = sensorLookup.getSensorByName(name);
         
         if(sensor != null) {
             

@@ -35,10 +35,13 @@ public class BedsideMonitorMain {
     /**
      * Main method of execution to startup the bedside monitor system.
      * 
-     * @param args[0] Number of sensors
+     * @param args[0] name of bedside monitor
+     * @param args[1] Number of sensors
      */
     public static void main(String[] args){
         new BedsideMonitorMain();
+        
+        
     }
     
 } // BedsideMonitorMain
