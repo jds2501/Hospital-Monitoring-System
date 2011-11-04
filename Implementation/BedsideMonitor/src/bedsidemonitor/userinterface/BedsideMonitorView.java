@@ -39,7 +39,6 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
@@ -74,7 +73,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	// ***** Panel components ***** //
 
 	private JPanel totalPanelSet, infoPanel, subLeftInfo, statusPanel, subCallStatusPanel, 
-		subAlarmStatusPanel, stationPanel;
+		subAlarmStatusPanel, monitorPanel;
 
 	private JLabel monitorNameLabel, callStatus, alarmStatus;
 
@@ -82,6 +81,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	
 	private static final String CALL_BUTTON_OFF = "OFF";
 	private static final String CALL_BUTTON_ON = "ON";
+	private static final String SPACER_TEXT = " ";
 
 
 	//--------------------------------------------------------------------------------------//
@@ -125,15 +125,22 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 
 		infoPanel = new JPanel(new BorderLayout());
 		subLeftInfo = new JPanel(new FlowLayout());
-		stationPanel = new JPanel();
+		monitorPanel = new JPanel();
 
 		monitorNameLabel = new JLabel("Monitor Name: ");
+		monitorNameLabel.setForeground(Color.WHITE);
 		monitorName = new JTextArea();
 		monitorName.setEditable(false);		
+		monitorName.setBackground(new Color(102,102,102));
+		monitorName.setForeground(Color.WHITE);
+		monitorName.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
+				Font.BOLD, UIManager.getDefaults().getFont("Label.font").getSize()));
 
-		stationPanel.add(monitorNameLabel);
-		stationPanel.add(monitorName);
-		subLeftInfo.add(stationPanel);
+		monitorPanel.add(monitorNameLabel);
+		monitorPanel.add(monitorName);
+		monitorPanel.setBackground(new Color(102,102,102));
+		subLeftInfo.add(monitorPanel);
+		subLeftInfo.setBackground(new Color(102,102,102));
 
 		infoPanel.add(subLeftInfo, BorderLayout.WEST);
 
@@ -145,8 +152,8 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 		// Panel dealing with Call
 		subCallStatusPanel = new JPanel(new BoxLayout(statusPanel, BoxLayout.LINE_AXIS));
 		subCallStatusPanel.setLayout(new BoxLayout(subCallStatusPanel, BoxLayout.LINE_AXIS));
-		subCallStatusPanel.add(new JLabel("Call button state: "));
-		callStatus = new JLabel(CALL_BUTTON_OFF);
+		subCallStatusPanel.add(new JLabel("Call button: "));
+		callStatus = new JLabel(CALL_BUTTON_OFF + SPACER_TEXT);
 		callStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
 		callStatus.setForeground(Color.GRAY);
 		subCallStatusPanel.add(callStatus);
@@ -159,8 +166,8 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 		// Panel dealing with Alarm
 		subAlarmStatusPanel = new JPanel(new BoxLayout(statusPanel, BoxLayout.LINE_AXIS));
 		subAlarmStatusPanel.setLayout(new BoxLayout(subAlarmStatusPanel, BoxLayout.LINE_AXIS));
-		subAlarmStatusPanel.add(new JLabel("Alarm state: "));
-		alarmStatus = new JLabel(AlarmStatus.INACTIVE.name());
+		subAlarmStatusPanel.add(new JLabel("Alarm: "));
+		alarmStatus = new JLabel(AlarmStatus.INACTIVE.name() + SPACER_TEXT);
 		alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
 		alarmStatus.setForeground(Color.GRAY);
 		subAlarmStatusPanel.add(alarmStatus);
@@ -174,8 +181,10 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 		statusPanel.add(subCallStatusPanel, BorderLayout.WEST);
 		statusPanel.add(subAlarmStatusPanel, BorderLayout.EAST);
 
-		infoPanel.setPreferredSize(new Dimension(infoPanel.getPreferredSize().width, 50));
-		infoPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+		infoPanel.setPreferredSize(new Dimension(infoPanel.getPreferredSize().width, 40));
+		infoPanel.setBorder(BorderFactory.createEtchedBorder());
+		infoPanel.setBackground(new Color(102,102,102));
+		statusPanel.setBorder(BorderFactory.createTitledBorder("Status"));
 		totalPanelSet.add(infoPanel, BorderLayout.NORTH);
 		totalPanelSet.add(statusPanel, BorderLayout.SOUTH);
 
@@ -372,7 +381,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	 * Alarm triggered, update display
 	 */
 	public void alarmTriggered() {
-		alarmStatus.setText(AlarmStatus.ACTIVE.name());
+		alarmStatus.setText(AlarmStatus.ACTIVE.name() + SPACER_TEXT);
 		alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
 		alarmStatus.setForeground(Color.RED);
 		alarmOffButton.setEnabled(true);
@@ -382,7 +391,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	 * Alarm acknowledged, update display
 	 */
 	public void alarmAcknowledged() {
-		alarmStatus.setText(AlarmStatus.ACKNOWLEDGED.name());
+		alarmStatus.setText(AlarmStatus.ACKNOWLEDGED.name() + SPACER_TEXT);
 		alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
 		alarmStatus.setForeground(Color.BLUE);
 		alarmOffButton.setEnabled(true);
@@ -392,7 +401,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	 * Call button triggered, update display
 	 */
 	public void callTriggered() {
-		callStatus.setText(CALL_BUTTON_ON);
+		callStatus.setText(CALL_BUTTON_ON + SPACER_TEXT);
 		callStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
 		callStatus.setForeground(Color.RED);
 		callOffButton.setEnabled(true);
@@ -421,7 +430,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	 */
 	private class TurnOffAlarmListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			alarmStatus.setText(AlarmStatus.INACTIVE.name());
+			alarmStatus.setText(AlarmStatus.INACTIVE.name() + SPACER_TEXT);
 			alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
 			alarmStatus.setForeground(Color.GRAY);
 			alarmOffButton.setEnabled(false);
@@ -434,7 +443,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	 */
 	private class TurnOffCallListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			callStatus.setText(CALL_BUTTON_OFF);
+			callStatus.setText(CALL_BUTTON_OFF + SPACER_TEXT);
 			callStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
 			callStatus.setForeground(Color.GRAY);
 			callOffButton.setEnabled(false);
