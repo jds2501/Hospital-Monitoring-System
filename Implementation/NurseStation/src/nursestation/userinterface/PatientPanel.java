@@ -9,7 +9,11 @@
 
 package nursestation.userinterface;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -33,9 +37,9 @@ import alarm.AlarmStatus;
 @SuppressWarnings("serial")
 public class PatientPanel extends JPanel {
 
-	private JPanel alarmPanel, alarmButtonPanel;
+	private JPanel alarmPanel, alarmButtonPanel, alarmPanelOuter;
 	private JButton acknowlAlarmButton;
-	private JLabel alarmStatus;
+	private JLabel alarmStatusLabel, alarmStatus;
 
 	/**
 	 * Constructor
@@ -48,19 +52,32 @@ public class PatientPanel extends JPanel {
 		super();
 
 		// Instantiate values / construct panel
-		this.setLayout(new GridLayout(1, 3, 5, 5));
+		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createEtchedBorder());
 		
-		this.add(new JLabel("Patient Name: " + patientName));
-		
+		alarmPanelOuter = new JPanel(new BorderLayout());
 		alarmPanel = new JPanel();
-		alarmPanel.setLayout(new BoxLayout(alarmPanel, BoxLayout.LINE_AXIS));
-		alarmPanel.add(new JLabel("Alarm state: "));
+		alarmPanel.setLayout(new GridLayout(2, 1));
+		
+		JPanel p1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		JPanel p2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		
+		
+		
+		alarmStatusLabel = new JLabel("Alarm:  ");
+		alarmStatusLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		p1.add(alarmStatusLabel);
+		alarmPanel.add(p1);
+		
 		alarmStatus = new JLabel(alarmState);
-		alarmPanel.add(alarmStatus);
+		alarmStatus.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		p2.add(alarmStatus);
+		alarmPanel.add(p2);
+		
+		alarmPanelOuter.add(alarmPanel, BorderLayout.LINE_END);
 		
 		alarmButtonPanel = new JPanel();
-		alarmButtonPanel.setLayout(new BoxLayout(alarmButtonPanel, BoxLayout.LINE_AXIS));
+		alarmButtonPanel.setLayout(new BorderLayout());
 		acknowlAlarmButton = new JButton("Respond");
 		if (alarmState.equals(AlarmStatus.ACTIVE.name())) {
 			acknowlAlarmButton.setEnabled(true);
@@ -72,12 +89,13 @@ public class PatientPanel extends JPanel {
 			alarmStatus.setForeground(Color.GRAY);
 		}
 		acknowlAlarmButton.addActionListener(new AcknowlAlarmListener());
-		alarmButtonPanel.add(acknowlAlarmButton);
+		alarmButtonPanel.add(acknowlAlarmButton, BorderLayout.EAST);
+
+		this.add(new JLabel("Patient Name:  " + patientName), BorderLayout.WEST);
+		this.add(alarmPanelOuter, BorderLayout.CENTER);
+		this.add(alarmButtonPanel, BorderLayout.EAST);
 		
-		this.add(alarmPanel);
-		this.add(alarmButtonPanel);
-		
-		this.setSize(this.getPreferredSize().width, 40);
+		this.setPreferredSize(new Dimension(600, 50));
 	}
 
 	/**
