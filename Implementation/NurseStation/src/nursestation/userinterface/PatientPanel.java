@@ -24,6 +24,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 import alarm.AlarmStatus;
 
@@ -39,14 +40,12 @@ public class PatientPanel extends JPanel {
 
 	private JPanel alarmPanel, alarmButtonPanel, alarmPanelOuter;
 	private JButton acknowlAlarmButton;
-	private JLabel alarmStatusLabel, alarmStatus;
+	private JLabel alarmStatusLabel, alarmStatus, patientNameLabel, patientName;
 
 	/**
 	 * Constructor
-	 * @param display - the image display
-	 * @param img - the image to be displayed
 	 */
-	public PatientPanel(String patientName, String alarmState) {
+	public PatientPanel(String name, String alarmState) {
 		
 		// Call parent constructor
 		super();
@@ -58,21 +57,28 @@ public class PatientPanel extends JPanel {
 		alarmPanelOuter = new JPanel(new BorderLayout());
 		alarmPanel = new JPanel();
 		alarmPanel.setLayout(new GridLayout(2, 1));
-		
-		JPanel p1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+		JPanel p1 = new JPanel();
+		p1.setLayout(new BoxLayout(p1, BoxLayout.LINE_AXIS));
 		JPanel p2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		JPanel p3 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		
-		
+		patientNameLabel = new JLabel("Patient Name:  ");
+		patientName = new JLabel(name);
+		patientName.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
+				Font.BOLD, UIManager.getDefaults().getFont("Label.font").getSize()));
+		p1.add(patientNameLabel);
+		p1.add(patientName);
 		
 		alarmStatusLabel = new JLabel("Alarm:  ");
 		alarmStatusLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		p1.add(alarmStatusLabel);
-		alarmPanel.add(p1);
+		p2.add(alarmStatusLabel);
+		alarmPanel.add(p2);
 		
 		alarmStatus = new JLabel(alarmState);
 		alarmStatus.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		p2.add(alarmStatus);
-		alarmPanel.add(p2);
+		p3.add(alarmStatus);
+		alarmPanel.add(p3);
 		
 		alarmPanelOuter.add(alarmPanel, BorderLayout.LINE_END);
 		
@@ -91,7 +97,9 @@ public class PatientPanel extends JPanel {
 		acknowlAlarmButton.addActionListener(new AcknowlAlarmListener());
 		alarmButtonPanel.add(acknowlAlarmButton, BorderLayout.EAST);
 
-		this.add(new JLabel("Patient Name:  " + patientName), BorderLayout.WEST);
+
+		
+		this.add(p1, BorderLayout.WEST);
 		this.add(alarmPanelOuter, BorderLayout.CENTER);
 		this.add(alarmButtonPanel, BorderLayout.EAST);
 		
