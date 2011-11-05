@@ -62,7 +62,7 @@ public abstract class BedsideMonitorTestCase extends TestCase {
      * Test to verify that adding a non existent sensor should throw
      * an exception.
      */
-    public void testAddNonExistentSensor(){
+    /*public void testAddNonExistentSensor(){
         boolean sensorFound = true;
         
         VitalSignConfiguration configuration = 
@@ -74,13 +74,13 @@ public abstract class BedsideMonitorTestCase extends TestCase {
         }
         
         assertFalse(sensorFound);
-    }
+    }*/
     
     /**
      * Test to verify that a sensor that exists results in a new
      * vital sign processor and controller started.
      */
-    public void testAddExistentSensor() throws RemoteException,
+    /*public void testAddExistentSensor() throws RemoteException,
         MalformedURLException, AlreadyBoundException {
         VitalSignConfiguration configuration = 
                 new VitalSignConfiguration("valid", 1, 1, 2, 100);
@@ -89,13 +89,13 @@ public abstract class BedsideMonitorTestCase extends TestCase {
         
         assertEquals(this.bedsideMonitor.getConfiguration("valid"),
                      configuration);
-    }
+    }*/
     
     /**
      * Test to verify that removing a sensor that does not exist
      * throws an exception.
      */
-    public void testRemoveNonExistentSensor() {
+    /*public void testRemoveNonExistentSensor() {
         boolean sensorFound = true;
         
         try{
@@ -105,19 +105,19 @@ public abstract class BedsideMonitorTestCase extends TestCase {
         }
         
         assertFalse(sensorFound);
-    }
+    }*/
     
     /**
      * Test to verify that removing a sensor that exists removes
      * the vital sign from the bedside monitor.
      */
-    public void testRemoveExistentSensor() throws RemoteException,
+    /*public void testRemoveExistentSensor() throws RemoteException,
         MalformedURLException, AlreadyBoundException, NotBoundException {
         this.testAddExistentSensor();
         this.bedsideMonitor.disableMeasurement("valid");
         this.removeSensor("valid");
         
         assertEquals(this.bedsideMonitor.getConfiguration("valid"), null);
-    }
+    }*/
     
 } // BedsideMonitorTestCase

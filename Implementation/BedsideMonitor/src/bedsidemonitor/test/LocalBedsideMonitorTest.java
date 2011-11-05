@@ -30,11 +30,11 @@ public class LocalBedsideMonitorTest extends BedsideMonitorTestCase {
     /**
      * Tears down each test case by removing each sensor.
      */
-    public void tearDown() {
+    /*public void tearDown() {
         for(String sensorName: sensors.keySet()){
             this.bedsideMonitor.disableMeasurement(sensorName);
         }
-    }
+    }*/
 
     /**
      * Builds the bedside monitor for a local test case.
