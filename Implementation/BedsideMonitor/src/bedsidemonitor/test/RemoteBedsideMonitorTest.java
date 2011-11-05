@@ -37,6 +37,8 @@ public class RemoteBedsideMonitorTest extends BedsideMonitorTestCase {
      * Removes all known sensors from the registry
      */
     public void tearDown() {
+        
+        
         for(String sensorName: sensorsActive){
             try {
                 Naming.unbind(sensorName);

@@ -32,14 +32,11 @@ public class BedsideMonitorMain {
 	public BedsideMonitorMain(String patientName) {
         try {
             BedsideMonitor bedsideMonitor = new BedsideMonitor(patientName);
-            Naming.rebind(patientName, bedsideMonitor);
             view = new BedsideMonitorView(bedsideMonitor);
             view.setMonitorName("Dummy Bedside Monitor View");
             patientDisplay = new PatientStatsPanel(view);
             patientDisplay.paintPatientPanels();
         } catch (RemoteException ex) {
-            ex.printStackTrace();
-        } catch (MalformedURLException ex) {
             ex.printStackTrace();
         }
 	}

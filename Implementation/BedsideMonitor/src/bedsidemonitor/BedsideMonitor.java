@@ -8,20 +8,15 @@
  */
 package bedsidemonitor;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import nursestation.notificationservice.NotificationService;
 
 import bedsidemonitor.callbutton.CallButtonController;
 import bedsidemonitor.sensor.SensorInterface;
@@ -38,15 +33,14 @@ import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
  * 
  * @author Jason Smith
  */
-public class BedsideMonitor extends UnicastRemoteObject 
-    implements BedsideMonitorInterface, Observer {
+public class BedsideMonitor {
 
     private String patientName;
+    private BedsideMonitorSubscribeInterface subscribe;
     private SensorLookupInterface sensorLookup;
     private CallButtonController callButtonController;
     private Map<String, VitalSignCollectionController> vitalSignCollections;
     private Map<String, VitalSignProcessing> vitalSignProcessings;
-    private List<NotificationService> notificationServices;
     private Timer timer;
     
     /**
@@ -56,14 +50,21 @@ public class BedsideMonitor extends UnicastRemoteObject
      */
     public BedsideMonitor(String patientName) throws RemoteException {
         this(patientName, new RemoteSensorLookup());
+        
+        try {
+            Naming.rebind(patientName, subscribe);
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        } catch (MalformedURLException ex) {
+            ex.printStackTrace();
+        }
     }
     
     public BedsideMonitor(String patientName, 
-            SensorLookupInterface sensorLookup) throws RemoteException{
-        super();
+            SensorLookupInterface sensorLookup) throws RemoteException {
+        this.subscribe = new BedsideMonitorSubscribeImpl();
         this.patientName = patientName;
         this.sensorLookup = sensorLookup;
-        notificationServices = new ArrayList<NotificationService>();
         callButtonController = new CallButtonController();
         vitalSignCollections = new HashMap<String, VitalSignCollectionController>();
         vitalSignProcessings = new HashMap<String, VitalSignProcessing>();
@@ -107,18 +108,6 @@ public class BedsideMonitor extends UnicastRemoteObject
         }
     }
     
-    public void subscribe(NotificationService service) throws RemoteException {
-        synchronized(notificationServices) {
-            notificationServices.add(service);
-        }
-    }
-    
-    public void unsubscribe(NotificationService service) throws RemoteException {
-        synchronized(notificationServices) {
-            notificationServices.remove(service);
-        }
-    }
-    
     public VitalSignConfiguration getConfiguration(String vitalSignName){
         VitalSignConfiguration configuration = null;
         
@@ -145,10 +134,6 @@ public class BedsideMonitor extends UnicastRemoteObject
     
     public void setCallButton(boolean callStatus){
         this.callButtonController.setCallStatus(callStatus);
-    }
-
-    public void update(Observable o, Object arg) {
-        
     }
     
 } // BedsideMonitor
