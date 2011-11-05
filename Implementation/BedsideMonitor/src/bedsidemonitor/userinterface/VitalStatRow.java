@@ -26,6 +26,9 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
 
 import alarm.AlarmStatus;
@@ -40,10 +43,14 @@ import alarm.AlarmStatus;
 @SuppressWarnings("serial")
 public class VitalStatRow extends JPanel {
 
-	private JPanel infoPanel, alarmPanel, alarmPanelTop, alarmPanelBottom, alarmButtonPanel, alarmPanelOuter;
+	private JPanel infoPanel, alarmPanel, alarmPanelTop, alarmPanelBottom, alarmButtonPanel, alarmPanelOuter,
+		minRangeValuePanel, maxRangeValuePanel, configureButtonPanel;
 	private JButton configureButton, acknowlAlarmButton;
-	private JLabel alarmStatusLabel, alarmStatus, vitalStatNameLabel, vitalStatName, vitalValueLabel, vitalStatValue;
+	private JLabel alarmStatusLabel, alarmStatus, vitalStatNameLabel, vitalStatName, 
+		vitalValueLabel, vitalStatValue, minRangeLabel, maxRangeLabel;
 	private JCheckBox enableBox;
+	private JSpinner minRangeValue, maxRangeValue;
+	private SpinnerNumberModel spinnerConfigMin, spinnerConfigMax;
 
 	/**
 	 * Constructor
@@ -71,15 +78,18 @@ public class VitalStatRow extends JPanel {
 		enableBox.addActionListener(new EnableDisableVitalListener());
 
 		//TODO configure button should be tied to vital stat id
+		configureButtonPanel = new JPanel();
+		configureButtonPanel.setLayout(new BoxLayout(configureButtonPanel, BoxLayout.LINE_AXIS));
 		ImageIcon gearIcon = new ImageIcon("img/gear-icon.png");
 		configureButton = new JButton(gearIcon);
 		configureButton.setIcon(gearIcon);
 		Dimension dim = new Dimension(gearIcon.getIconWidth()*2,
 				gearIcon.getIconHeight());
-		configureButton.setSize(dim);
-		configureButton.setPreferredSize(dim);
+		configureButtonPanel.setSize(dim);
+		configureButtonPanel.setPreferredSize(dim);
 		configureButton.setOpaque(false);
 		configureButton.addActionListener(new ConfigureVitalListener());
+		configureButtonPanel.add(configureButton);
 
 		vitalStatNameLabel = new JLabel("  Vital Stat:  ");
 		vitalStatName = new JLabel(name);
@@ -90,9 +100,37 @@ public class VitalStatRow extends JPanel {
 		vitalStatValue = new JLabel("");
 		vitalStatValue.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
 				Font.BOLD, 20));
-		
 		infoPanel.add(enableBox);
-		infoPanel.add(configureButton);
+		infoPanel.add(configureButtonPanel);
+
+		// JSpinner config model used for min and max
+		spinnerConfigMin = new SpinnerNumberModel(0, 0, 100, 1);
+		spinnerConfigMax = new SpinnerNumberModel(100, 0, 100, 1);
+		
+		minRangeValuePanel = new JPanel();
+		minRangeValuePanel.setLayout(new BoxLayout(minRangeValuePanel, BoxLayout.LINE_AXIS));
+		minRangeValue = new JSpinner(spinnerConfigMin);
+		((DefaultEditor) minRangeValue.getEditor()).getTextField().setEditable(false);
+		minRangeValue.setPreferredSize(new Dimension(60,minRangeValue.getPreferredSize().height));
+		
+		maxRangeValuePanel = new JPanel();
+		maxRangeValuePanel.setLayout(new BoxLayout(maxRangeValuePanel, BoxLayout.LINE_AXIS));
+		maxRangeValue = new JSpinner(spinnerConfigMax);
+		((DefaultEditor) maxRangeValue.getEditor()).getTextField().setEditable(false);
+		maxRangeValue.setPreferredSize(new Dimension(60,maxRangeValue.getPreferredSize().height));
+
+		minRangeLabel = new JLabel(" Min: ");
+		minRangeValuePanel.add(minRangeLabel);
+		minRangeValuePanel.setVisible(false);
+		minRangeValuePanel.add(minRangeValue);
+		infoPanel.add(minRangeValuePanel);
+
+		maxRangeLabel = new JLabel(" Max: ");
+		maxRangeValuePanel.add(maxRangeLabel);
+		maxRangeValuePanel.setVisible(false);
+		maxRangeValuePanel.add(maxRangeValue);
+		infoPanel.add(maxRangeValuePanel);
+		
 		infoPanel.add(vitalStatNameLabel);
 		infoPanel.add(vitalStatName);
 		infoPanel.add(vitalValueLabel);
@@ -126,8 +164,6 @@ public class VitalStatRow extends JPanel {
 		}
 		acknowlAlarmButton.addActionListener(new TurnOffAlarmListener());
 		alarmButtonPanel.add(acknowlAlarmButton, BorderLayout.EAST);
-
-
 
 		this.add(infoPanel, BorderLayout.WEST);
 		this.add(alarmPanelOuter, BorderLayout.CENTER);
@@ -172,7 +208,15 @@ public class VitalStatRow extends JPanel {
 	 */
 	private class ConfigureVitalListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			//TODO
+			if (minRangeValuePanel.isVisible()) {
+				//TODO save min/max values
+				minRangeValuePanel.setVisible(false);
+				maxRangeValuePanel.setVisible(false);
+			} else {
+				//TODO save min/max values
+				minRangeValuePanel.setVisible(true);
+				maxRangeValuePanel.setVisible(true);
+			}
 		}
 	}
 
