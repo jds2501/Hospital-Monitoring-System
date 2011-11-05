@@ -43,7 +43,8 @@ public class LocalBedsideMonitorTest extends BedsideMonitorTestCase {
      */
     public BedsideMonitor buildBedsideMonitor() throws RemoteException {
         this.sensors = new HashMap<String, SensorInterface>();
-        return new BedsideMonitor("sample", sensors);
+        return null;
+        //return new BedsideMonitor("sample", sensors);
     }
 
     /**
