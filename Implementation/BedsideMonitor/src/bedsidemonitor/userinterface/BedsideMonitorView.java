@@ -478,7 +478,6 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	        VitalStatRow newVital = new VitalStatRow(vitalSign);
     	    vitalStatDisplay.add(newVital);
     	    vitalStatDisplay.validate();
-    	    vitalStatDisplay.repaint();
 	    }
 	}
 	

@@ -82,8 +82,8 @@ public class VitalStatRow extends JPanel {
 
 		//TODO checkbox id should be tied to vital stat id
 		enableBox = new JCheckBox();
-		enableBox.setEnabled(true);
-		enableBox.setSelected(true);
+		enableBox.setEnabled(false);
+		enableBox.setSelected(false);
 		enableBox.addActionListener(new EnableDisableVitalListener());
 
 		//TODO configure button should be tied to vital stat id
@@ -117,20 +117,18 @@ public class VitalStatRow extends JPanel {
 		// JSpinner config models
 		
 		//TODO INTEGRATION WITH CONFIG OBJECT
-		spinnerConfigMin = new SpinnerNumberModel(configuration.getMinAllowedReading(), 0, 100, 1);
-		spinnerConfigMax = new SpinnerNumberModel(configuration.getMaxAllowedReading(), 0, 100, 1);
-		spinnerConfigConvFactor = new SpinnerNumberModel(1, 0, 100, 1);
+		spinnerConfigMin = new SpinnerNumberModel(configuration.getMinAllowedReading(), 0.0, 100.0, .1);
+		spinnerConfigMax = new SpinnerNumberModel(configuration.getMaxAllowedReading(), 0.0, 100.0, .1);
+		spinnerConfigConvFactor = new SpinnerNumberModel(configuration.getConversionFactor(), 0.0, 100.0, .1);
 		
 		minRangeValuePanel = new JPanel();
 		minRangeValuePanel.setLayout(new BoxLayout(minRangeValuePanel, BoxLayout.LINE_AXIS));
 		minRangeValue = new JSpinner(spinnerConfigMin);
-		((DefaultEditor) minRangeValue.getEditor()).getTextField().setEditable(false);
 		minRangeValue.setPreferredSize(new Dimension(60,minRangeValue.getPreferredSize().height));
 		
 		maxRangeValuePanel = new JPanel();
 		maxRangeValuePanel.setLayout(new BoxLayout(maxRangeValuePanel, BoxLayout.LINE_AXIS));
 		maxRangeValue = new JSpinner(spinnerConfigMax);
-		((DefaultEditor) maxRangeValue.getEditor()).getTextField().setEditable(false);
 		maxRangeValue.setPreferredSize(new Dimension(60,maxRangeValue.getPreferredSize().height));
 		
 		convFactorPanel = new JPanel();
@@ -141,19 +139,19 @@ public class VitalStatRow extends JPanel {
 
 		minRangeLabel = new JLabel(" Min: ");
 		minRangeValuePanel.add(minRangeLabel);
-		minRangeValuePanel.setVisible(false);
+		minRangeValuePanel.setVisible(true);
 		minRangeValuePanel.add(minRangeValue);
 		infoPanel.add(minRangeValuePanel);
 
 		maxRangeLabel = new JLabel(" Max: ");
 		maxRangeValuePanel.add(maxRangeLabel);
-		maxRangeValuePanel.setVisible(false);
+		maxRangeValuePanel.setVisible(true);
 		maxRangeValuePanel.add(maxRangeValue);
 		infoPanel.add(maxRangeValuePanel);
 
 		convFactorLabel = new JLabel(" Conv. Factor: ");
 		convFactorPanel.add(convFactorLabel);
-		convFactorPanel.setVisible(false);
+		convFactorPanel.setVisible(true);
 		convFactorPanel.add(conversionFactor);
 		infoPanel.add(convFactorPanel);
 		
@@ -225,11 +223,9 @@ public class VitalStatRow extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			JCheckBox box = (JCheckBox)e.getSource();
 			if (box.isSelected()) {
-				//TODO vital sign enabled
-				configureButton.setEnabled(true);
+				vitalSign.enableMeasurement();
 			} else {
-				//TODO vital sign disabled
-				configureButton.setEnabled(false);
+				vitalSign.disableMeasurement();
 			}
 		}
 	}
@@ -239,6 +235,9 @@ public class VitalStatRow extends JPanel {
 	 */
 	private class ConfigureVitalListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			if (!enableBox.isEnabled()) {
+				enableBox.setEnabled(true);
+			}
 			if (minRangeValuePanel.isVisible()) {
 				//TODO save min/max values
 				minRangeValuePanel.setVisible(false);
