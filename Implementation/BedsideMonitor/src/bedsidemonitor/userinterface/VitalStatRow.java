@@ -24,19 +24,16 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
-
-import bedsidemonitor.vitalsigncollection.VitalSignConfiguration;
-import bedsidemonitor.vitalsigncollection.VitalSignController;
+import javax.swing.JSpinner.DefaultEditor;
 
 import alarm.AlarmStatus;
+import bedsidemonitor.vitalsigncollection.VitalSignConfiguration;
+import bedsidemonitor.vitalsigncollection.VitalSignController;
 
 
 /**
@@ -107,7 +104,7 @@ public class VitalStatRow extends JPanel {
 		vitalStatName.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
 				Font.BOLD, UIManager.getDefaults().getFont("Label.font").getSize()));
 		
-		vitalValueLabel = new JLabel(" = ");
+		vitalValueLabel = new JLabel();
 		vitalStatValue = new JLabel("");
 		vitalStatValue.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
 				Font.BOLD, 20));
@@ -134,7 +131,6 @@ public class VitalStatRow extends JPanel {
 		convFactorPanel = new JPanel();
 		convFactorPanel.setLayout(new BoxLayout(convFactorPanel, BoxLayout.LINE_AXIS));
 		conversionFactor = new JSpinner(spinnerConfigConvFactor);
-		((DefaultEditor) conversionFactor.getEditor()).getTextField().setEditable(false);
 		conversionFactor.setPreferredSize(new Dimension(60,conversionFactor.getPreferredSize().height));
 
 		minRangeLabel = new JLabel(" Min: ");
@@ -203,7 +199,7 @@ public class VitalStatRow extends JPanel {
 	 * Update display to show new sensor data for this stat
 	 */
 	public void updateValue(int value) {
-		vitalStatValue.setText(value+"");
+		vitalStatValue.setText(" = " + value);
 	}
 
 	/**
@@ -236,16 +232,20 @@ public class VitalStatRow extends JPanel {
 	private class ConfigureVitalListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (!enableBox.isEnabled()) {
+				// Initial configuration, enable
 				enableBox.setEnabled(true);
 			}
+			VitalSignConfiguration tempConfig = vitalSign.getConfiguration();
 			if (minRangeValuePanel.isVisible()) {
-				//TODO save min/max values
+				tempConfig = vitalSign.getConfiguration();
+				tempConfig.setMinAllowedReading((Double)minRangeValue.getValue());
+				tempConfig.setMaxAllowedReading((Double)maxRangeValue.getValue());
+				tempConfig.setConversionFactor((Double)conversionFactor.getValue());
 				minRangeValuePanel.setVisible(false);
 				maxRangeValuePanel.setVisible(false);
 				convFactorPanel.setVisible(false);
 				refresh();
 			} else {
-				//TODO save min/max values
 				minRangeValuePanel.setVisible(true);
 				maxRangeValuePanel.setVisible(true);
 				convFactorPanel.setVisible(true);
