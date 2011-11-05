@@ -42,12 +42,11 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
+import alarm.AlarmStatus;
 import bedsidemonitor.BedsideMonitor;
 
-import alarm.AlarmStatus;
-
 /**
- * BedsideMonitorView - Main interface display for a bedside monitor
+ * BedsideMonitorView - Bedside monitor user interface
  * 
  * @author Anthony Barone
  */
@@ -61,8 +60,8 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 
 	// ***** Window attributes ***** //
 
-	private static final int FRAME_WIDTH = (int)(Toolkit.getDefaultToolkit().getScreenSize().width * 0.4);
-	private static final int FRAME_HEIGHT = (int)(Toolkit.getDefaultToolkit().getScreenSize().height * 0.5);
+	private static final int FRAME_WIDTH = 714;
+	private static final int FRAME_HEIGHT = 610;
 
 	// ***** Menu and Toolbar components ***** //
 
@@ -85,6 +84,10 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	private static final String CALL_BUTTON_OFF = "OFF";
 	private static final String CALL_BUTTON_ON = "ON";
 	private static final String SPACER_TEXT = " ";
+
+	// ***** A panel for displaying all the patients' vital stats and respective alarm status ***** //
+
+	private VitalStatDisplay vitalStatDisplay;
 
 	//--------------------------------------------------------------------------------------//
 
@@ -167,23 +170,8 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 		callOffButton.addActionListener(new TurnOffCallListener());
 		subCallStatusPanel.add(callOffButton);
 		
-		// Panel dealing with Alarm
-		subAlarmStatusPanel = new JPanel(new BoxLayout(statusPanel, BoxLayout.LINE_AXIS));
-		subAlarmStatusPanel.setLayout(new BoxLayout(subAlarmStatusPanel, BoxLayout.LINE_AXIS));
-		subAlarmStatusPanel.add(new JLabel("Alarm: "));
-		alarmStatus = new JLabel(AlarmStatus.INACTIVE.name() + SPACER_TEXT);
-		alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
-		alarmStatus.setForeground(Color.GRAY);
-		subAlarmStatusPanel.add(alarmStatus);
-		
-		alarmOffButton = new JButton("Turn Off Alarm");
-		alarmOffButton.setEnabled(false);
-		alarmOffButton.addActionListener(new TurnOffAlarmListener());
-		subAlarmStatusPanel.add(alarmOffButton);
-		
 		// Add both sub panels
 		statusPanel.add(subCallStatusPanel, BorderLayout.WEST);
-		statusPanel.add(subAlarmStatusPanel, BorderLayout.EAST);
 
 		infoPanel.setPreferredSize(new Dimension(infoPanel.getPreferredSize().width, 40));
 		infoPanel.setBorder(BorderFactory.createEtchedBorder());
@@ -371,6 +359,18 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 		// return the resulting button
 		return newMenuItem;
 	}
+	
+	/**
+	 * Set the vital stat display panel for this view
+	 * 
+	 * @param display - the vital stat display to set to this interface
+	 */
+	public void setVitalStatDisplay(VitalStatDisplay display) {
+		vitalStatDisplay = display;
+		totalPanelSet.add(vitalStatDisplay, BorderLayout.CENTER);
+		vitalStatDisplay.setPreferredSize(new Dimension(vitalStatDisplay.getPreferredSize().width, 20));
+		totalPanelSet.requestFocus();
+	}
 
 	/**
 	 * Set the name of the Bedside Monitor
@@ -427,19 +427,6 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	 */
 	public void setPatientID(int id) {
 		//TODO
-	}
-
-	/**
-	 * Inner class for listener on Acknowledge Alarm button
-	 */
-	private class TurnOffAlarmListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			alarmStatus.setText(AlarmStatus.INACTIVE.name() + SPACER_TEXT);
-			alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
-			alarmStatus.setForeground(Color.GRAY);
-			alarmOffButton.setEnabled(false);
-			//TODO logging, updating external sources, etc
-		}
 	}
 
 	/**

@@ -9,12 +9,10 @@
 
 package bedsidemonitor;
 
-import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 
 import bedsidemonitor.userinterface.BedsideMonitorView;
-import bedsidemonitor.userinterface.PatientStatsPanel;
+import bedsidemonitor.userinterface.VitalStatDisplay;
 
 /**
  * Main starting point to start up the bedside monitor.
@@ -24,7 +22,7 @@ import bedsidemonitor.userinterface.PatientStatsPanel;
 public class BedsideMonitorMain {
 	
 	private BedsideMonitorView view;
-	private PatientStatsPanel patientDisplay;
+	private VitalStatDisplay vitalStatDisplay;
 	
 	/**
      * Constructor for bedside monitor that shows GUI.
@@ -34,8 +32,9 @@ public class BedsideMonitorMain {
             BedsideMonitor bedsideMonitor = new BedsideMonitor(patientName);
             view = new BedsideMonitorView(bedsideMonitor);
             view.setMonitorName("Dummy Bedside Monitor View");
-            patientDisplay = new PatientStatsPanel(view);
-            patientDisplay.paintPatientPanels();
+            vitalStatDisplay = new VitalStatDisplay(view);
+            view.setVitalStatDisplay(vitalStatDisplay);
+            vitalStatDisplay.paintPatientPanels();
         } catch (RemoteException ex) {
             ex.printStackTrace();
         }

@@ -1,7 +1,7 @@
 /*
  * Package: bedsidemonitor.userinterface
  *
- * File: PatientStatsPanel.java
+ * File: VitalStatDisplay.java
  *
  * Date: Nov 3, 2011
  * 
@@ -9,20 +9,21 @@
 
 package bedsidemonitor.userinterface;
 
-import java.awt.GridLayout;
+import java.awt.FlowLayout;
 
 import javax.swing.JPanel;
 
+import alarm.AlarmStatus;
+
 
 /**
- * PatientStatsPanel - The main JPanel that shows vital sign collection, alarm status, 
- * and call button status.
+ * VitalStatDisplay - The main JPanel that shows vital sign collections.
  * 
  * @author Anthony Barone
  */
 
 @SuppressWarnings("serial")
-public class PatientStatsPanel extends JPanel {
+public class VitalStatDisplay extends JPanel {
 
 	private BedsideMonitorView view;
 
@@ -31,14 +32,14 @@ public class PatientStatsPanel extends JPanel {
 	 * 
 	 * @param gui - Reference to the graphical user interface of the system
 	 */
-	public PatientStatsPanel(BedsideMonitorView gui) {
+	public VitalStatDisplay(BedsideMonitorView gui) {
 
 		// Call parent constructor
 		super();
 
 		// Instantiate values / construct panel
 		view = gui;
-		this.setLayout(new GridLayout(0, 2, 5, 5));
+		this.setLayout(new FlowLayout());
 		
 	}
 
@@ -51,6 +52,10 @@ public class PatientStatsPanel extends JPanel {
 	public void paintPatientPanels(/*TODO Pass in a patient map for populating data */) {
 		// remove images before adding more to the same panel
 		removeAll();
+		add(new VitalStatRow("Vital Stat 1", AlarmStatus.INACTIVE.name()));
+		add(new VitalStatRow("Vital Stat 2", AlarmStatus.ACTIVE.name()));
+		add(new VitalStatRow("Vital Stat 3", AlarmStatus.INACTIVE.name()));
+		add(new VitalStatRow("Vital Stat 4", AlarmStatus.INACTIVE.name()));
 		refresh();
 	}
 

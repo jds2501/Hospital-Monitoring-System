@@ -38,12 +38,11 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
 /**
- * Nurse station user interface
+ * NurseStationView - Nurse station user interface
  * 
  * @author Anthony Barone
  */
