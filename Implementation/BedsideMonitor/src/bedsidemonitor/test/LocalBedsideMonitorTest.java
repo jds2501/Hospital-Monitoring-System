@@ -26,7 +26,7 @@ import junit.framework.TestCase;
  * 
  * @author Jason Smith
  */
-public class BedsideMonitorTest extends TestCase {
+public class LocalBedsideMonitorTest extends TestCase {
 
     /**
      * The bedside monitor used for testing
