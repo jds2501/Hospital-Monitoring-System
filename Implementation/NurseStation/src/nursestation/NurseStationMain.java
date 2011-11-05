@@ -1,17 +1,18 @@
 package nursestation;
 
+import java.awt.FlowLayout;
 import java.rmi.NotBoundException;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-import bedsidemonitor.BedsideMonitorSubscribeInterface;
-import nursestation.notificationservice.NotificationService;
+import javax.swing.JPanel;
+
 import nursestation.notificationservice.NotificationServiceImpl;
 import nursestation.notificationservice.NotificationServiceTask;
 import nursestation.userinterface.NurseStationView;
-import nursestation.userinterface.PatientDisplay;
+import bedsidemonitor.BedsideMonitorSubscribeInterface;
 
 /**
  * Main starting point to start up the nurse station
@@ -29,11 +30,6 @@ public class NurseStationMain {
      * The view of the nurse station UI
      */
 	private NurseStationView view;
-	
-	/**
-	 * The display of the patient UI
-	 */
-	private PatientDisplay patientDisplay;
 
     private NotificationServiceTask serviceRunnable;
 	
@@ -51,7 +47,7 @@ public class NurseStationMain {
 	        serviceTask.start();
 	        
             this.subscribeToPatients(patientNames);
-            this.constructNurseStationGUI();
+            this.constructNurseStationGUI(patientNames);
         } catch (RemoteException ex) {
             ex.printStackTrace();
         } catch (NotBoundException ex) {
@@ -83,13 +79,15 @@ public class NurseStationMain {
 	/**
 	 * Constructs the Nurse Station GUI and starts it up.
 	 */
-	private void constructNurseStationGUI(){
+	private void constructNurseStationGUI(String[] patientNames){
         view = new NurseStationView();
         view.setStationNameBox("Dummy Nurse Station");
-        view.setPatientNumber(7);
-        patientDisplay = new PatientDisplay(view);
-        view.setPatientDisplay(patientDisplay);
-        patientDisplay.paintPatientPanels();
+        view.setPatientDisplay(new JPanel(new FlowLayout()));
+        
+        for (String patientName : patientNames) {
+        	view.addPatient(patientName);
+        }
+        view.setPatientNumber(patientNames.length);
 	}
 	
 	/**

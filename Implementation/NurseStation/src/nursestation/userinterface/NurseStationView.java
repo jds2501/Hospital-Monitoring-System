@@ -41,6 +41,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
+import alarm.AlarmStatus;
+
 /**
  * NurseStationView - Nurse station user interface
  * 
@@ -76,7 +78,7 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 
 	// ***** A panel for displaying all the patients this Nurse Station is subscribed to ***** //
 
-	private PatientDisplay patientDisplay;
+	private JPanel patientDisplay;
 
 
 	//--------------------------------------------------------------------------------------//
@@ -341,14 +343,26 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 		// return the resulting button
 		return newMenuItem;
 	}
+
+	/**
+	 * Add a patient to the Nurse station
+	 * @param name Patient name
+	 */
+	public void addPatient(String patientName) {
+		//TODO Model objects/controllers
+		
+        PatientPanel newPatient = new PatientPanel(patientName, AlarmStatus.INACTIVE.name());
+	    patientDisplay.add(newPatient);
+	    patientDisplay.validate();
+	}
 	
 	/**
 	 * Set the patient display panel for this view
 	 * 
 	 * @param display - the patient display to set to this interface
 	 */
-	public void setPatientDisplay(PatientDisplay display) {
-		patientDisplay = display;
+	public void setPatientDisplay(JPanel display) {
+		this.patientDisplay = display;
 		totalPanelSet.add(patientDisplay, BorderLayout.CENTER);
 		patientDisplay.setPreferredSize(new Dimension(patientDisplay.getPreferredSize().width, 20));
 		totalPanelSet.requestFocus();
