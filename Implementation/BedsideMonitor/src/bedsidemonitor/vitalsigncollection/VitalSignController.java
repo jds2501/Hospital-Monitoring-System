@@ -29,7 +29,7 @@ public class VitalSignController extends Observable {
     /**
      * The collection process for gathering sensor data
      */
-    private VitalSignCollectionController collection;
+    private VitalSignCollection collection;
 
     /**
      * The processing of collected sensor data
@@ -51,7 +51,7 @@ public class VitalSignController extends Observable {
     public VitalSignController(String vitalSignName, SensorInterface sensor){
         this.timer = new Timer();
         Queue<Integer> vitalSignMsgQueue = new LinkedBlockingQueue<Integer>();
-        this.collection = new VitalSignCollectionController(
+        this.collection = new VitalSignCollection(
                 sensor, vitalSignMsgQueue);
         VitalSignConfiguration configuration = new VitalSignConfiguration(
                 vitalSignName);

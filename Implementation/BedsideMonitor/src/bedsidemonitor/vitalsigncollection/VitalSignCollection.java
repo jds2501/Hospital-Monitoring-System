@@ -22,7 +22,7 @@ import bedsidemonitor.sensor.SensorInterface;
  * 
  * @author Jason Smith
  */
-public class VitalSignCollectionController extends TimerTask {
+public class VitalSignCollection extends TimerTask {
 
     /**
      * Sensor interface to poll data from
@@ -41,7 +41,7 @@ public class VitalSignCollectionController extends TimerTask {
      * @param sensor the sensor interface to pull sensor data from
      * @param vitalSignMsgQueue the message queue to push sensor data to
      */
-    public VitalSignCollectionController(SensorInterface sensor, 
+    public VitalSignCollection(SensorInterface sensor, 
             Queue<Integer> vitalSignMsgQueue){
         this.sensor = sensor;
         this.vitalSignMsgQueue = vitalSignMsgQueue;
