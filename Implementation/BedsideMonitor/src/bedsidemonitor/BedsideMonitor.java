@@ -138,6 +138,9 @@ public class BedsideMonitor extends Observable implements Observer {
             vitalSignProcessings.put(name, processor);
             vitalSignCollections.put(name, controller);
             
+            setChanged();
+            notifyObservers(this);
+            
         } else {
             throw new IllegalArgumentException("Sensor " + name + 
                     " requested was not found");
@@ -156,6 +159,8 @@ public class BedsideMonitor extends Observable implements Observer {
             VitalSignCollectionController controller = vitalSignCollections.remove(sensorName);
             controller.cancel();
             processor.setActive(false);
+            setChanged();
+            notifyObservers(this);
         }else{
             throw new IllegalArgumentException("Sensor " + sensorName + " does not exist");
         }
@@ -192,6 +197,8 @@ public class BedsideMonitor extends Observable implements Observer {
         
         if(vitalSignProcessings.containsKey(name)){
             vitalSignProcessings.get(name).setConfiguration(configuration);
+            setChanged();
+            notifyObservers(configuration);
         }else{
             throw new IllegalArgumentException("Configuration name " + name + " does not exist");
         }
