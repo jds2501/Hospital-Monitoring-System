@@ -25,6 +25,7 @@ import bedsidemonitor.callbutton.CallButtonController;
 import bedsidemonitor.sensor.SensorInterface;
 import bedsidemonitor.vitalsigncollection.VitalSignCollectionController;
 import bedsidemonitor.vitalsigncollection.VitalSignConfiguration;
+import bedsidemonitor.vitalsigncollection.VitalSignController;
 import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
 
 
@@ -52,24 +53,9 @@ public class BedsideMonitor extends Observable implements Observer {
     private CallButtonController callButtonController;
     
     /**
-     * The sensors for this bedside monitor
+     * The vital signs for bedside monitor
      */
-    private Map<String, SensorInterface> sensors;
-    
-    /**
-     * The vital sign collection processes
-     */
-    private Map<String, VitalSignCollectionController> vitalSignCollections;
-    
-    /**
-     * The vital sign processing tasks
-     */
-    private Map<String, VitalSignProcessing> vitalSignProcessings;
-    
-    /**
-     * The schedule timer for vital sign processing tasks
-     */
-    private Timer timer;
+    private Map<String, VitalSignController> vitalSigns;
     
     /**
      * Constructs a BedsideMonitor object with a patient name and a sensor
@@ -84,103 +70,26 @@ public class BedsideMonitor extends Observable implements Observer {
             Map<String, SensorInterface> sensors) throws RemoteException {
         this.subscribe = new BedsideMonitorSubscribeImpl();
         this.patientName = patientName;
-        this.sensors = sensors;
-        callButtonController = new CallButtonController();
-        vitalSignCollections = new HashMap<String, VitalSignCollectionController>();
-        vitalSignProcessings = new HashMap<String, VitalSignProcessing>();
-        timer = new Timer();
-    }
-    
-    /**
-     * Adds a new sensor to the bedside monitor with the given configuration.
-     * 
-     * @param configuration the vital sign configuration to add a sensor for
-     */
-    public void enableMeasurement(VitalSignConfiguration configuration){
-        String name = configuration.getName();
-        SensorInterface sensor = sensors.get(name);
+        this.callButtonController = new CallButtonController();
+        this.vitalSigns = new HashMap<String, VitalSignController>();
         
-        if(sensor != null) {
-            
-            Queue<Integer> vitalSignMsgQueue = new LinkedBlockingQueue<Integer>();
-            VitalSignCollectionController controller = 
-                    new VitalSignCollectionController(sensor, vitalSignMsgQueue);
-            VitalSignProcessing processor = 
-                    new VitalSignProcessing(vitalSignMsgQueue, configuration);
-            processor.addObserver(this);
-            
-            Thread processorTask = new Thread(processor);
-            processorTask.start();
-            timer.scheduleAtFixedRate(controller, new Date(), 
-                    configuration.getCollectionRate());
-            
-            vitalSignProcessings.put(name, processor);
-            vitalSignCollections.put(name, controller);
-            
-            setChanged();
-            notifyObservers(this);
-            
-        } else {
-            throw new IllegalArgumentException("Sensor " + name + 
-                    " requested was not found");
+        for(String sensorName: sensors.keySet()){
+            SensorInterface sensor = sensors.get(sensorName);
+            VitalSignController vitalSign = 
+                    new VitalSignController(sensorName, sensor);
+            vitalSign.addObserver(this);
+            vitalSigns.put(sensorName, vitalSign);
         }
     }
     
     /**
-     * Removes the sensor and the associated vital sign from the bedside
-     * monitor.
+     * Gets the vital sign controller for the specified vital sign name.
      * 
-     * @param sensorName the name of the sensor to remove
+     * @param vitalSignName the name of the vital sign to get
+     * @return the vital sign controller if it exists, null otherwise
      */
-    public void disableMeasurement(String sensorName){
-        if(vitalSignProcessings.containsKey(sensorName)){
-            VitalSignProcessing processor = vitalSignProcessings.remove(sensorName);
-            VitalSignCollectionController controller = vitalSignCollections.remove(sensorName);
-            controller.cancel();
-            processor.setActive(false);
-            setChanged();
-            notifyObservers(this);
-        }else{
-            throw new IllegalArgumentException("Sensor " + sensorName + " does not exist");
-        }
-    }
-    
-    /**
-     * Gets the vital sign configuration for the given vital sign.
-     * 
-     * @param vitalSignName the name of the vital sign
-     * 
-     * @return the vital sign configuration for the given name if it exists,
-     * null otherwise
-     */
-    public VitalSignConfiguration getConfiguration(String vitalSignName){
-        VitalSignConfiguration configuration = null;
-        
-        if(vitalSignProcessings.containsKey(vitalSignName)){
-            configuration = vitalSignProcessings.get(vitalSignName).getConfiguration();
-        }
-        
-        return configuration;
-    }
-    
-    /**
-     * Changes the vital sign configuration to the given configuration.
-     * 
-     * @param configuration the new vital sign configuration
-     * 
-     * @throws IllegalArgumentException if the given vital sign does
-     * not exist
-     */
-    public void changeConfiguration(VitalSignConfiguration configuration){
-        String name = configuration.getName();
-        
-        if(vitalSignProcessings.containsKey(name)){
-            vitalSignProcessings.get(name).setConfiguration(configuration);
-            setChanged();
-            notifyObservers(configuration);
-        }else{
-            throw new IllegalArgumentException("Configuration name " + name + " does not exist");
-        }
+    public VitalSignController getVitalSign(String vitalSignName) {
+        return vitalSigns.get(vitalSignName);
     }
     
     /**
