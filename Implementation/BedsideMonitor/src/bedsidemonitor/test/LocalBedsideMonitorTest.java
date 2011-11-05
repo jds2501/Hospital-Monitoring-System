@@ -26,25 +26,12 @@ import junit.framework.TestCase;
  * 
  * @author Jason Smith
  */
-public class LocalBedsideMonitorTest extends TestCase {
-
-    /**
-     * The bedside monitor used for testing
-     */
-    private BedsideMonitor bedsideMonitor;
+public class LocalBedsideMonitorTest extends SensorTestCase {
     
     /**
      * Sensor lookup interface for getting sensors
      */
     private FakeSensorLookup sensorLookup;
-    
-    /**
-     * Sets up a bedside monitor object for each test case.
-     */
-    public void setUp() throws RemoteException {
-        this.sensorLookup = new FakeSensorLookup();
-        this.bedsideMonitor = new BedsideMonitor("sample", sensorLookup);
-    }
     
     /**
      * Tears down each test case by removing each sensor.
@@ -56,66 +43,19 @@ public class LocalBedsideMonitorTest extends TestCase {
             this.bedsideMonitor.removeSensor(sensorName);
         }
     }
-    
-    /**
-     * Test to verify that adding a non existent sensor should throw
-     * an exception.
-     */
-    public void testAddNonExistentSensor(){
-        boolean sensorFound = true;
-        
-        VitalSignConfiguration configuration = 
-                new VitalSignConfiguration("not found", 0, 0, 0, 0);
-        try{
-            this.bedsideMonitor.addSensor(configuration);
-        }catch(IllegalArgumentException ex){
-            sensorFound = false;
-        }
-        
-        assertFalse(sensorFound);
+
+    public BedsideMonitor buildBedsideMonitor() throws RemoteException {
+        this.sensorLookup = new FakeSensorLookup();
+        return new BedsideMonitor("sample", sensorLookup);
     }
-    
-    /**
-     * Test to verify that a sensor that exists results in a new
-     * vital sign processor and controller started.
-     */
-    public void testAddExistentSensor() {
-        VitalSignConfiguration configuration = 
-                new VitalSignConfiguration("valid", 1, 1, 2, 100);
+
+    public void addSensor(String sensorName) {
         SensorInterface sensor = new FakeSensor(50);
-        this.sensorLookup.addSensor("valid", sensor);
-        this.bedsideMonitor.addSensor(configuration);
-        
-        assertEquals(this.bedsideMonitor.getConfiguration("valid"),
-                     configuration);
+        this.sensorLookup.addSensor(sensorName, sensor);
     }
-    
-    /**
-     * Test to verify that removing a sensor that does not exist
-     * throws an exception.
-     */
-    public void testRemoveNonExistentSensor() {
-        boolean sensorFound = true;
-        
-        try{
-            this.bedsideMonitor.removeSensor("not found");
-        }catch(IllegalArgumentException ex){
-            sensorFound = false;
-        }
-        
-        assertFalse(sensorFound);
-    }
-    
-    /**
-     * Test to verify that removing a sensor that exists removes
-     * the vital sign from the bedside monitor.
-     */
-    public void testRemoveExistentSensor() {
-        this.testAddExistentSensor();
-        this.bedsideMonitor.removeSensor("valid");
-        this.sensorLookup.getSensors().remove("valid");
-        
-        assertEquals(this.bedsideMonitor.getConfiguration("valid"), null);
+
+    public void removeSensor(String sensorName) {
+        this.sensorLookup.getSensors().remove(sensorName);
     }
     
 } // BedsideMonitorTest

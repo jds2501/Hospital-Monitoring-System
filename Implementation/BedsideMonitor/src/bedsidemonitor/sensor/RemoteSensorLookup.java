@@ -52,11 +52,8 @@ public class RemoteSensorLookup implements SensorLookupInterface {
             try {
                 sensor = (SensorInterface) registry.lookup(sensorName);
             } catch (AccessException ex) {
-                ex.printStackTrace();
             } catch (RemoteException ex) {
-                ex.printStackTrace();
             } catch (NotBoundException ex) {
-                ex.printStackTrace();
             }
         }
         
