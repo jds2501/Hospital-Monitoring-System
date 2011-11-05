@@ -8,6 +8,8 @@
  */
 package bedsidemonitor;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,13 +67,17 @@ public class BedsideMonitor extends Observable implements Observer {
      * @param sensorLookup the sensor lookup service
      * 
      * @throws RemoteException If the remote connection fails
+     * @throws MalformedURLException 
      */
     public BedsideMonitor(String patientName, 
-            Map<String, SensorInterface> sensors) throws RemoteException {
+            Map<String, SensorInterface> sensors) 
+                    throws RemoteException, MalformedURLException {
         this.subscribe = new BedsideMonitorSubscribeImpl();
         this.patientName = patientName;
         this.callButtonController = new CallButtonController();
         this.vitalSigns = new HashMap<String, VitalSignController>();
+        
+        Naming.rebind(patientName, subscribe);
         
         for(String sensorName: sensors.keySet()){
             SensorInterface sensor = sensors.get(sensorName);

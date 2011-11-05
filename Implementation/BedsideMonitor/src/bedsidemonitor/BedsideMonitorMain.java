@@ -10,6 +10,7 @@
 package bedsidemonitor;
 
 import java.awt.FlowLayout;
+import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.util.Map;
 
@@ -46,6 +47,8 @@ public class BedsideMonitorMain {
             }
             
         } catch (RemoteException ex) {
+            ex.printStackTrace();
+        } catch (MalformedURLException ex) {
             ex.printStackTrace();
         }
 	}
