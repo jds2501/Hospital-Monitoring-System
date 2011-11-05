@@ -143,5 +143,9 @@ public class VitalSignProcessing extends Observable implements Runnable {
             pullVitalSign();
         }
     }
+
+    public void resetAlarm() {
+        alarmController.setAlarmStatus(AlarmStatus.INACTIVE);
+    }
     
 } // VitalSignProcessing

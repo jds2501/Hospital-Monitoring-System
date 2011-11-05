@@ -276,6 +276,7 @@ public class VitalStatRow extends JPanel implements Observer {
 			alarmStatus.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			alarmStatus.setForeground(Color.GRAY);
 			acknowlAlarmButton.setEnabled(false);
+			vitalSign.resetAlarm();
 			//TODO logging, updating external sources, etc
 		}
 	}
@@ -285,6 +286,10 @@ public class VitalStatRow extends JPanel implements Observer {
         if(pushedObject instanceof VitalSignProcessing) {
             VitalSignProcessing processor = (VitalSignProcessing) pushedObject;
             updateVital(processor.getVitalSignValue());
+            
+            if(processor.getAlarmStatus() == AlarmStatus.ACTIVE) {
+                triggerAlarm();
+            }
         }
     }
 }
