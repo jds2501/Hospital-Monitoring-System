@@ -56,11 +56,14 @@ public class VitalSignCollectionController extends TimerTask {
             int reading = this.sensor.getVitalSign();
             this.vitalSignMsgQueue.offer(reading);
         } catch (RemoteException ex) {
-            //TODO: Need to properly handle a failure to connect
             ex.printStackTrace();
         }
     }
 
+    /**
+     * When scheduled, this task will pull sensor data and place it into
+     * a queue.
+     */
     public void run() {
         pollSensorData();
     }
