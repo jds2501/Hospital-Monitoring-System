@@ -93,8 +93,20 @@ public class VitalSignController extends Observable {
         this.notifyObservers(this);
     }
     
+    /**
+     * @return the vital sign configuration for this vital sign
+     */
     public VitalSignConfiguration getConfiguration() {
         return processor.getConfiguration();
+    }
+    
+    /**
+     * Changes the vital sign configuration to the specified configuration.
+     * 
+     * @param configuration the vital sign configuration
+     */
+    public void changeConfiguration(VitalSignConfiguration configuration) {
+        processor.setConfiguration(configuration);
     }
     
 } // VitalSignController

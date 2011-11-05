@@ -10,9 +10,6 @@ package alarm;
 
 import historylogging.HistoryLogging;
 
-// TODO: Note: This probably should broken up into a state pattern to
-//       handle state-by-state cases easier.
-
 /**
  * A controller for managing an alarm for a vital sign.
  * 
@@ -42,6 +39,9 @@ public class AlarmController {
         status = AlarmStatus.INACTIVE;
     }
     
+    /**
+     * @return the alarm status for this vital sign
+     */
     public AlarmStatus getStatus() {
         return status;
     }

@@ -115,6 +115,9 @@ public class VitalSignProcessing extends Observable implements Runnable {
         return vitalSignValue;
     }
     
+    /**
+     * @return the alarm status
+     */
     public AlarmStatus getAlarmStatus() {
         return alarmController.getStatus();
     }
