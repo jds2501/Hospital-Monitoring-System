@@ -222,6 +222,7 @@ public class VitalStatRow extends JPanel {
 				vitalSign.enableMeasurement();
 			} else {
 				vitalSign.disableMeasurement();
+				vitalStatValue.setText("");
 			}
 		}
 	}
