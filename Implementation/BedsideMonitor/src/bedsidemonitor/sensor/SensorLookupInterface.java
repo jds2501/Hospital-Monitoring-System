@@ -8,6 +8,8 @@
  */
 package bedsidemonitor.sensor;
 
+import java.util.Map;
+
 
 /**
  * This interface defines the sensor lookup service for getting a sensor
@@ -25,5 +27,7 @@ public interface SensorLookupInterface {
      * @return the sensor if it exists, null otherwise
      */
     public SensorInterface getSensorByName(String sensorName);
+    
+    public Map<String, SensorInterface> getSensorsbyName(String[] sensorNames);
     
 } // SensorLookupInterface

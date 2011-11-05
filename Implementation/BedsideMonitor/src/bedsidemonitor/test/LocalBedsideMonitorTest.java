@@ -10,11 +10,11 @@
 package bedsidemonitor.test;
 
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.Map;
 
 import bedsidemonitor.BedsideMonitor;
 import bedsidemonitor.sensor.FakeSensor;
-import bedsidemonitor.sensor.FakeSensorLookup;
 import bedsidemonitor.sensor.SensorInterface;
 
 /**
@@ -25,17 +25,12 @@ import bedsidemonitor.sensor.SensorInterface;
  */
 public class LocalBedsideMonitorTest extends BedsideMonitorTestCase {
     
-    /**
-     * Sensor lookup interface for getting sensors
-     */
-    private FakeSensorLookup sensorLookup;
+    private Map<String, SensorInterface> sensors;
     
     /**
      * Tears down each test case by removing each sensor.
      */
     public void tearDown() {
-        Map<String, SensorInterface> sensors = this.sensorLookup.getSensors();
-        
         for(String sensorName: sensors.keySet()){
             this.bedsideMonitor.removeSensor(sensorName);
         }
@@ -47,8 +42,8 @@ public class LocalBedsideMonitorTest extends BedsideMonitorTestCase {
      * @return a bedside monitor referencing a local storage
      */
     public BedsideMonitor buildBedsideMonitor() throws RemoteException {
-        this.sensorLookup = new FakeSensorLookup();
-        return new BedsideMonitor("sample", sensorLookup);
+        this.sensors = new HashMap<String, SensorInterface>();
+        return new BedsideMonitor("sample", sensors);
     }
 
     /**
@@ -57,8 +52,7 @@ public class LocalBedsideMonitorTest extends BedsideMonitorTestCase {
      * @param sensorName the name of the sensor to add
      */
     public void addSensor(String sensorName) {
-        SensorInterface sensor = new FakeSensor(50);
-        this.sensorLookup.addSensor(sensorName, sensor);
+        this.sensors.put(sensorName, new FakeSensor(50));
     }
 
     /**
@@ -67,7 +61,7 @@ public class LocalBedsideMonitorTest extends BedsideMonitorTestCase {
      * @param sensorName the name of the sensor to remove
      */
     public void removeSensor(String sensorName) {
-        this.sensorLookup.getSensors().remove(sensorName);
+        this.sensors.remove(sensorName);
     }
     
 } // LocalBedsideMonitorTest

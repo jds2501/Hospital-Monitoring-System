@@ -59,7 +59,8 @@ public class RemoteBedsideMonitorTest extends BedsideMonitorTestCase {
      */
     public BedsideMonitor buildBedsideMonitor() throws RemoteException {
         this.sensorsActive = new ArrayList<String>();
-        return new BedsideMonitor("patient");
+        return null;
+        //return new BedsideMonitor("patient");
     }
 
     /**

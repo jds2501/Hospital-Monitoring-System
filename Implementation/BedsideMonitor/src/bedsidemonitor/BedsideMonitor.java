@@ -8,8 +8,6 @@
  */
 package bedsidemonitor;
 
-import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,8 +23,6 @@ import nursestation.notificationservice.VitalSignMessage;
 import alarm.AlarmStatus;
 import bedsidemonitor.callbutton.CallButtonController;
 import bedsidemonitor.sensor.SensorInterface;
-import bedsidemonitor.sensor.RemoteSensorLookup;
-import bedsidemonitor.sensor.SensorLookupInterface;
 import bedsidemonitor.vitalsigncollection.VitalSignCollectionController;
 import bedsidemonitor.vitalsigncollection.VitalSignConfiguration;
 import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
@@ -51,14 +47,14 @@ public class BedsideMonitor extends Observable implements Observer {
     private BedsideMonitorSubscribeImpl subscribe;
     
     /**
-     * The sensor lookup service
-     */
-    private SensorLookupInterface sensorLookup;
-    
-    /**
      * The call button manager
      */
     private CallButtonController callButtonController;
+    
+    /**
+     * The sensors for this bedside monitor
+     */
+    private Map<String, SensorInterface> sensors;
     
     /**
      * The vital sign collection processes
@@ -76,23 +72,6 @@ public class BedsideMonitor extends Observable implements Observer {
     private Timer timer;
     
     /**
-     * Constructs a BedsideMonitor object with a remote sensor lookup object.
-     * 
-     * @param patientName the name of the patient
-     */
-    public BedsideMonitor(String patientName) throws RemoteException {
-        this(patientName, new RemoteSensorLookup());
-        
-        try {
-            Naming.rebind(patientName, subscribe);
-        } catch (RemoteException ex) {
-            ex.printStackTrace();
-        } catch (MalformedURLException ex) {
-            ex.printStackTrace();
-        }
-    }
-    
-    /**
      * Constructs a BedsideMonitor object with a patient name and a sensor
      * lookup service.
      * 
@@ -102,10 +81,10 @@ public class BedsideMonitor extends Observable implements Observer {
      * @throws RemoteException If the remote connection fails
      */
     public BedsideMonitor(String patientName, 
-            SensorLookupInterface sensorLookup) throws RemoteException {
+            Map<String, SensorInterface> sensors) throws RemoteException {
         this.subscribe = new BedsideMonitorSubscribeImpl();
         this.patientName = patientName;
-        this.sensorLookup = sensorLookup;
+        this.sensors = sensors;
         callButtonController = new CallButtonController();
         vitalSignCollections = new HashMap<String, VitalSignCollectionController>();
         vitalSignProcessings = new HashMap<String, VitalSignProcessing>();
@@ -119,7 +98,7 @@ public class BedsideMonitor extends Observable implements Observer {
      */
     public void addSensor(VitalSignConfiguration configuration){
         String name = configuration.getName();
-        SensorInterface sensor = sensorLookup.getSensorByName(name);
+        SensorInterface sensor = sensors.get(name);
         
         if(sensor != null) {
             

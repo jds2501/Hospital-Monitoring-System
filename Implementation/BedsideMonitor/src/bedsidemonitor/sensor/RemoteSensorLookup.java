@@ -14,6 +14,8 @@ import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This singleton class acts as a lookup service for sensor objects.
@@ -60,4 +62,28 @@ public class RemoteSensorLookup implements SensorLookupInterface {
         return sensor;
     }
     
-} // SensorLookup
+    /**
+     * Looks up a group of sensors in the RMI registry.
+     * 
+     * @param sensorNames the objects to lookup
+     * 
+     * @return a map of sensor names mapping to sensor objects found
+     */
+    public Map<String, SensorInterface> getSensorsbyName(String[] sensorNames){
+        Map<String, SensorInterface> sensors =
+                new HashMap<String, SensorInterface>();
+        
+        for(String sensorName: sensorNames){
+            SensorInterface sensor = getSensorByName(sensorName);
+            
+            if(sensor != null) {
+                sensors.put(sensorName, sensor);
+            } else {
+                System.err.println("Sensor " + sensorName + " was not found");
+            }
+        }
+        
+        return sensors;
+    }
+    
+} // RemoteSensorLookup

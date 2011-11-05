@@ -38,6 +38,13 @@ public class BedsideMonitorSubscribeImpl extends UnicastRemoteObject
      */
     public BedsideMonitorSubscribeImpl() throws RemoteException {
         super();
+/*        try {
+            Naming.rebind(patientName, subscribe);
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        } catch (MalformedURLException ex) {
+            ex.printStackTrace();
+        }*/
         notificationServices = new ArrayList<NotificationService>();
     }
     
