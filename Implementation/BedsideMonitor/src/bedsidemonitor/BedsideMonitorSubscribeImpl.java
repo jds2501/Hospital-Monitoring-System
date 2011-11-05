@@ -63,6 +63,11 @@ public class BedsideMonitorSubscribeImpl extends UnicastRemoteObject
         }
     }
 
+    /**
+     * Publishes the given vital sign message to all remote observers.
+     * 
+     * @param msg the vital sign message to publish
+     */
     public void publishVitalSign(VitalSignMessage msg) {
         for(NotificationService service: notificationServices) {
             try {
