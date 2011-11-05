@@ -71,17 +71,20 @@ public class VitalSignProcessing extends Observable implements Runnable {
      * fire an alarm.
      */
     public void pullVitalSign(){
-        int rawVitalSignReading = vitalSignMsgQueue.poll();
-        vitalSignValue = configuration.convertRawVitalToActual(rawVitalSignReading);
-        HistoryLogging.getInstance().logMessage("New Vital Reading: " + 
-                vitalSignValue);
+        Integer rawVitalSignReading = vitalSignMsgQueue.poll();
         
-        if(!configuration.isVitalSignInRange(vitalSignValue)){
-            this.alarmController.setAlarmStatus(AlarmStatus.ACTIVE);
+        if(rawVitalSignReading != null) {
+            vitalSignValue = configuration.convertRawVitalToActual(rawVitalSignReading);
+            HistoryLogging.getInstance().logMessage("New Vital Reading: " + 
+                    vitalSignValue);
+            
+            if(!configuration.isVitalSignInRange(vitalSignValue)){
+                this.alarmController.setAlarmStatus(AlarmStatus.ACTIVE);
+            }
+            
+            this.setChanged();
+            this.notifyObservers(this);
         }
-        
-        this.setChanged();
-        this.notifyObservers(this);
     }
 
     /**
