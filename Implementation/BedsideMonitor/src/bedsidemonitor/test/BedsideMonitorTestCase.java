@@ -24,7 +24,7 @@ import junit.framework.TestCase;
  * @author Jason
  *
  */
-public abstract class SensorTestCase extends TestCase {
+public abstract class BedsideMonitorTestCase extends TestCase {
 
     protected BedsideMonitor bedsideMonitor;
     

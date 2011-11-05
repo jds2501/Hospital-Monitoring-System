@@ -26,7 +26,7 @@ import junit.framework.TestCase;
  * @author Jason
  *
  */
-public class RemoteBedsideMonitorTest extends SensorTestCase {
+public class RemoteBedsideMonitorTest extends BedsideMonitorTestCase {
     
     private List<String> sensorsActive;
     

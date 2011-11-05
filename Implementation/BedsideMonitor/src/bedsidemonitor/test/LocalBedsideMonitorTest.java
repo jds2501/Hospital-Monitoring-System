@@ -26,7 +26,7 @@ import junit.framework.TestCase;
  * 
  * @author Jason Smith
  */
-public class LocalBedsideMonitorTest extends SensorTestCase {
+public class LocalBedsideMonitorTest extends BedsideMonitorTestCase {
     
     /**
      * Sensor lookup interface for getting sensors
