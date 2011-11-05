@@ -105,15 +105,6 @@ public class VitalSignController extends Observable {
     }
     
     /**
-     * Changes the vital sign configuration to the specified configuration.
-     * 
-     * @param configuration the vital sign configuration
-     */
-    public void changeConfiguration(VitalSignConfiguration configuration) {
-        processor.setConfiguration(configuration);
-    }
-    
-    /**
      * @return vital sign value
      */
     public Double getVitalSignValue() {
