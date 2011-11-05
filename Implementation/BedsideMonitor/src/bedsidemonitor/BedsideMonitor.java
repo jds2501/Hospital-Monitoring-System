@@ -23,7 +23,7 @@ import nursestation.notificationservice.VitalSignMessage;
 import alarm.AlarmStatus;
 import bedsidemonitor.callbutton.CallButtonController;
 import bedsidemonitor.sensor.SensorInterface;
-import bedsidemonitor.vitalsigncollection.VitalSignCollectionController;
+import bedsidemonitor.vitalsigncollection.VitalSignCollection;
 import bedsidemonitor.vitalsigncollection.VitalSignConfiguration;
 import bedsidemonitor.vitalsigncollection.VitalSignController;
 import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
