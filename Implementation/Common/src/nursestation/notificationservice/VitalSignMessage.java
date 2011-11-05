@@ -17,6 +17,11 @@ package nursestation.notificationservice;
 public class VitalSignMessage {
 
     /**
+     * The patient's ID
+     */
+    private long id;
+    
+    /**
      * The patient's name
      */
     private String patientName;
@@ -40,17 +45,26 @@ public class VitalSignMessage {
      * Constructs a VitalSignMessage object with a patient name, vital sign
      * name, vital sign value, and an alarm status.
      * 
+     * @param patientID the ID of the patient
      * @param patientName the name of the patient
      * @param vitalSignName the name of the vital sign
      * @param vitalSign the value of the vital sign
      * @param alarmStatus the status of the alarm for that vital sign
      */
-    public VitalSignMessage(String patientName, String vitalSignName, 
+    public VitalSignMessage(long id, String patientName, String vitalSignName, 
                             double vitalSign, boolean alarmStatus) {
+        this.id = id;
         this.patientName = patientName;
         this.vitalSignName = vitalSignName;
         this.vitalSignValue = vitalSign;
         this.alarmStatus = alarmStatus;
+    }
+
+    /**
+     * @return the patient's ID
+     */
+    public long getID() {
+        return id;
     }
     
     /**
