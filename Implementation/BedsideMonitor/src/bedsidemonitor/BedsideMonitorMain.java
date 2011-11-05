@@ -29,11 +29,19 @@ public class BedsideMonitorMain {
 	/**
      * Constructor for bedside monitor that shows GUI.
      */
-	public BedsideMonitorMain() {
-        view = new BedsideMonitorView();
-        view.setMonitorName("Dummy Bedside Monitor View");
-        patientDisplay = new PatientStatsPanel(view);
-        patientDisplay.paintPatientPanels();
+	public BedsideMonitorMain(String patientName) {
+        try {
+            BedsideMonitor bedsideMonitor = new BedsideMonitor();
+            Naming.rebind(patientName, bedsideMonitor);
+            view = new BedsideMonitorView(bedsideMonitor);
+            view.setMonitorName("Dummy Bedside Monitor View");
+            patientDisplay = new PatientStatsPanel(view);
+            patientDisplay.paintPatientPanels();
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        } catch (MalformedURLException ex) {
+            ex.printStackTrace();
+        }
 	}
 
     /**
@@ -43,15 +51,7 @@ public class BedsideMonitorMain {
      */
     public static void main(String[] args){
         if(args.length == 1){        
-            try {
-                BedsideMonitorInterface bedsideMonitor = new BedsideMonitor();
-                Naming.rebind(args[0], bedsideMonitor);
-                new BedsideMonitorMain();
-            } catch (RemoteException ex) {
-                ex.printStackTrace();
-            } catch (MalformedURLException ex) {
-                ex.printStackTrace();
-            }
+            new BedsideMonitorMain(args[0]);
         } else {
             System.err.println("Usage: java BedsideMonitorMain patientName");
         }

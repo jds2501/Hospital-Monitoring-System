@@ -43,6 +43,8 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
+import bedsidemonitor.BedsideMonitor;
+
 import alarm.AlarmStatus;
 
 /**
@@ -56,6 +58,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 
 	//------------------------------------ Attributes -------------------------------------//
 
+    private BedsideMonitor bedsideMonitor;
 
 	// ***** Window attributes ***** //
 
@@ -83,15 +86,16 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	private static final String CALL_BUTTON_OFF = "OFF";
 	private static final String CALL_BUTTON_ON = "ON";
 
-
 	//--------------------------------------------------------------------------------------//
 
 
 	/**
 	 * Default constructor
 	 */
-	public BedsideMonitorView() {
-
+	public BedsideMonitorView(BedsideMonitor bedsideMonitor) {
+	    
+	    this.bedsideMonitor = bedsideMonitor;
+	    
 		// Set windows look'n'feel
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
