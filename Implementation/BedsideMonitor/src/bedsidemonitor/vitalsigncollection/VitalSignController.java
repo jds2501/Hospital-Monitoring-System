@@ -15,6 +15,7 @@ import java.util.Queue;
 import java.util.Timer;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import alarm.AlarmStatus;
 import bedsidemonitor.sensor.SensorInterface;
 
 
@@ -109,6 +110,20 @@ public class VitalSignController extends Observable {
      */
     public void changeConfiguration(VitalSignConfiguration configuration) {
         processor.setConfiguration(configuration);
+    }
+    
+    /**
+     * @return vital sign value
+     */
+    public Double getVitalSignValue() {
+        return processor.getVitalSignValue();
+    }
+    
+    /**
+     * @return the alarm status
+     */
+    public AlarmStatus getAlarmStatus() {
+        return processor.getAlarmStatus();
     }
     
 } // VitalSignController
