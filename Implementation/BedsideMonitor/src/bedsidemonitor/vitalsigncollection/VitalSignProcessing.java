@@ -74,7 +74,6 @@ public class VitalSignProcessing extends Observable implements Runnable {
         Integer rawVitalSignReading = vitalSignMsgQueue.poll();
         
         if(rawVitalSignReading != null) {
-            
             vitalSignValue = configuration.convertRawVitalToActual(rawVitalSignReading);
             HistoryLogging.getInstance().logMessage("New Vital Reading: " + 
                     vitalSignValue);

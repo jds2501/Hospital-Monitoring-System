@@ -18,6 +18,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -34,6 +36,7 @@ import javax.swing.JSpinner.DefaultEditor;
 import alarm.AlarmStatus;
 import bedsidemonitor.vitalsigncollection.VitalSignConfiguration;
 import bedsidemonitor.vitalsigncollection.VitalSignController;
+import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
 
 
 /**
@@ -43,7 +46,7 @@ import bedsidemonitor.vitalsigncollection.VitalSignController;
  */
 
 @SuppressWarnings("serial")
-public class VitalStatRow extends JPanel {
+public class VitalStatRow extends JPanel implements Observer {
 
     private VitalSignController vitalSign;
 	private JPanel infoPanel, alarmPanel, alarmPanelTop, alarmPanelBottom, alarmButtonPanel, alarmPanelOuter,
@@ -64,6 +67,7 @@ public class VitalStatRow extends JPanel {
 		super();
 
 		this.vitalSign = vitalSign;
+		this.vitalSign.addObserver(this);
 		VitalSignConfiguration configuration = vitalSign.getConfiguration();
 		
 		// Instantiate values / construct panel
@@ -198,7 +202,7 @@ public class VitalStatRow extends JPanel {
 	/**
 	 * Update display to show new sensor data for this stat
 	 */
-	public void updateValue(int value) {
+	public void updateVital(Double value) {
 		vitalStatValue.setText(" = " + value);
 	}
 
@@ -276,16 +280,11 @@ public class VitalStatRow extends JPanel {
 		}
 	}
 
-	/**
-	 * Inner class for listener on Acknowledge Alarm button
-	 */
-//	private class AcknowlAlarmListener implements ActionListener {
-//		public void actionPerformed(ActionEvent e) {
-//			alarmStatus.setText(AlarmStatus.ACKNOWLEDGED.name());
-//			alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
-//			alarmStatus.setForeground(Color.BLUE);
-//			acknowlAlarmButton.setEnabled(false);
-//			//TODO logging, updating external sources, etc
-//		}
-//	}
+
+    public void update(Observable observable, Object pushedObject) {
+        if(pushedObject instanceof VitalSignProcessing) {
+            VitalSignProcessing processor = (VitalSignProcessing) pushedObject;
+            updateVital(processor.getVitalSignValue());
+        }
+    }
 }

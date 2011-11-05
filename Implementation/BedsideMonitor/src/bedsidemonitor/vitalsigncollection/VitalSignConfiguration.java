@@ -45,7 +45,7 @@ public class VitalSignConfiguration {
         this.conversionFactor = 1.0;
         this.minAllowedReading = 0.0;
         this.maxAllowedReading = 100.0;
-        this.collectionRate = 100L;
+        this.collectionRate = 1000L;
     }
     
     /**
