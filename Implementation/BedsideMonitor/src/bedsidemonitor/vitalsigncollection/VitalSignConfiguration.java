@@ -18,23 +18,36 @@ public class VitalSignConfiguration {
     /**
      * The conversion factor for converting a raw value to the actual value
      */
-    private double conversionFactor;
+    private Double conversionFactor;
     
     /**
      * The minimum allowed value that a vital sign can be in
      */
-    private double minAllowedReading;
+    private Double minAllowedReading;
     
     /**
      * The maximum allowed value that a vital sign can be in
      */
-    private double maxAllowedReading;
+    private Double maxAllowedReading;
     
     /**
      * The collection rate of the vital sign from the sensor
      */
-    private long collectionRate;
+    private Long collectionRate;
 
+    /**
+     * Constructs a basic vital sign configuration with hard-coded defaults.
+     * 
+     * @param name the name of the vital sign
+     */
+    public VitalSignConfiguration(String name) {
+        this.name = name;
+        this.conversionFactor = 1.0;
+        this.minAllowedReading = 0.0;
+        this.maxAllowedReading = 100.0;
+        this.collectionRate = 100L;
+    }
+    
     /**
      * Constructs a VitalSignConfiguration object with a name, conversion
      * factor, and minimum/maximum allowed readings.
