@@ -42,6 +42,10 @@ public class AlarmController {
         status = AlarmStatus.INACTIVE;
     }
     
+    public AlarmStatus getStatus() {
+        return status;
+    }
+    
     /**
      * Sets the alarm status for the vital sign this represents.
      * 

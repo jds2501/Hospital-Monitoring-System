@@ -14,10 +14,15 @@ import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import nursestation.notificationservice.VitalSignMessage;
+
+import alarm.AlarmStatus;
 import bedsidemonitor.callbutton.CallButtonController;
 import bedsidemonitor.sensor.SensorInterface;
 import bedsidemonitor.sensor.RemoteSensorLookup;
@@ -33,14 +38,41 @@ import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
  * 
  * @author Jason Smith
  */
-public class BedsideMonitor {
+public class BedsideMonitor extends Observable implements Observer {
 
+    /**
+     * The name of the patient
+     */
     private String patientName;
-    private BedsideMonitorSubscribeInterface subscribe;
+    
+    /**
+     * The subscribable interface for patient observers
+     */
+    private BedsideMonitorSubscribeImpl subscribe;
+    
+    /**
+     * The sensor lookup service
+     */
     private SensorLookupInterface sensorLookup;
+    
+    /**
+     * The call button manager
+     */
     private CallButtonController callButtonController;
+    
+    /**
+     * The vital sign collection processes
+     */
     private Map<String, VitalSignCollectionController> vitalSignCollections;
+    
+    /**
+     * The vital sign processing tasks
+     */
     private Map<String, VitalSignProcessing> vitalSignProcessings;
+    
+    /**
+     * The schedule timer for vital sign processing tasks
+     */
     private Timer timer;
     
     /**
@@ -60,6 +92,15 @@ public class BedsideMonitor {
         }
     }
     
+    /**
+     * Constructs a BedsideMonitor object with a patient name and a sensor
+     * lookup service.
+     * 
+     * @param patientName the name of the patient
+     * @param sensorLookup the sensor lookup service
+     * 
+     * @throws RemoteException If the remote connection fails
+     */
     public BedsideMonitor(String patientName, 
             SensorLookupInterface sensorLookup) throws RemoteException {
         this.subscribe = new BedsideMonitorSubscribeImpl();
@@ -71,6 +112,11 @@ public class BedsideMonitor {
         timer = new Timer();
     }
     
+    /**
+     * Adds a new sensor to the bedside monitor with the given configuration.
+     * 
+     * @param configuration the vital sign configuration to add a sensor for
+     */
     public void addSensor(VitalSignConfiguration configuration){
         String name = configuration.getName();
         SensorInterface sensor = sensorLookup.getSensorByName(name);
@@ -82,6 +128,7 @@ public class BedsideMonitor {
                     new VitalSignCollectionController(sensor, vitalSignMsgQueue);
             VitalSignProcessing processor = 
                     new VitalSignProcessing(vitalSignMsgQueue, configuration);
+            processor.addObserver(this);
             
             Thread processorTask = new Thread(processor);
             processorTask.start();
@@ -97,6 +144,12 @@ public class BedsideMonitor {
         }
     }
     
+    /**
+     * Removes the sensor and the associated vital sign from the bedside
+     * monitor.
+     * 
+     * @param sensorName the name of the sensor to remove
+     */
     public void removeSensor(String sensorName){
         if(vitalSignProcessings.containsKey(sensorName)){
             VitalSignProcessing processor = vitalSignProcessings.remove(sensorName);
@@ -108,6 +161,14 @@ public class BedsideMonitor {
         }
     }
     
+    /**
+     * Gets the vital sign configuration for the given vital sign.
+     * 
+     * @param vitalSignName the name of the vital sign
+     * 
+     * @return the vital sign configuration for the given name if it exists,
+     * null otherwise
+     */
     public VitalSignConfiguration getConfiguration(String vitalSignName){
         VitalSignConfiguration configuration = null;
         
@@ -118,6 +179,14 @@ public class BedsideMonitor {
         return configuration;
     }
     
+    /**
+     * Changes the vital sign configuration to the given configuration.
+     * 
+     * @param configuration the new vital sign configuration
+     * 
+     * @throws IllegalArgumentException if the given vital sign does
+     * not exist
+     */
     public void changeConfiguration(VitalSignConfiguration configuration){
         String name = configuration.getName();
         
@@ -128,12 +197,51 @@ public class BedsideMonitor {
         }
     }
     
+    /**
+     * @return the current status of the call button
+     */
     public boolean getCallButton(){
         return this.callButtonController.getCallStatus();
     }
     
+    /**
+     * Sets the call status of the button.
+     * 
+     * @param callStatus the new status of the call button
+     */
     public void setCallButton(boolean callStatus){
         this.callButtonController.setCallStatus(callStatus);
+        setChanged();
+        notifyObservers(this);
+    }
+
+    /**
+     * Upon receiving an update to a vital sign, this will create a vital
+     * sign message and notify both the local and remote observers
+     * of the bedside monitor.
+     * 
+     * @param observable the observable object (vital sign processing)
+     * @param arg (ignored)
+     */
+    public void update(Observable observable, Object arg) {
+        if(observable instanceof VitalSignProcessing) {
+            VitalSignProcessing processor = (VitalSignProcessing) observable;
+            long patientID = this.hashCode();
+            long vitalSignID = processor.hashCode();
+            
+            VitalSignConfiguration configuration = processor.getConfiguration();
+            String vitalSignName = configuration.getName();
+            Double vitalSignValue = processor.getVitalSignValue();
+            AlarmStatus alarmStatus = processor.getAlarmStatus();
+            
+            VitalSignMessage msg = new VitalSignMessage(patientID, patientName,
+                    vitalSignName, vitalSignID, vitalSignValue, alarmStatus);
+            
+            setChanged();
+            notifyObservers(msg);
+            
+            this.subscribe.publishVitalSign(msg);
+        }
     }
     
 } // BedsideMonitor

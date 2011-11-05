@@ -109,6 +109,17 @@ public class VitalSignProcessing extends Observable implements Runnable {
     }
     
     /**
+     * @return vital sign value
+     */
+    public Double getVitalSignValue() {
+        return vitalSignValue;
+    }
+    
+    public AlarmStatus getAlarmStatus() {
+        return alarmController.getStatus();
+    }
+    
+    /**
      * Sets the vital sign configuration to specified value.
      * 
      * @param configuration the new vital sign configuration

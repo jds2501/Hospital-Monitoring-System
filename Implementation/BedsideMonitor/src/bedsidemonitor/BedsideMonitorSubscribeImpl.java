@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nursestation.notificationservice.NotificationService;
+import nursestation.notificationservice.VitalSignMessage;
 
 
 /**
@@ -62,4 +63,14 @@ public class BedsideMonitorSubscribeImpl extends UnicastRemoteObject
         }
     }
 
+    public void publishVitalSign(VitalSignMessage msg) {
+        for(NotificationService service: notificationServices) {
+            try {
+                service.pushVitalSign(msg);
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+    
 } // BedsideMonitorSubscribeImpl
