@@ -76,7 +76,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	// ***** Panel components ***** //
 
 	private JPanel totalPanelSet, infoPanel, subLeftInfo, statusPanel, subCallStatusPanel, 
-		subAlarmStatusPanel, monitorPanel;
+		monitorPanel;
 
 	private JLabel monitorNameLabel, callStatus, alarmStatus;
 
@@ -477,6 +477,8 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	    if(vitalSign != null) {
 	        VitalStatRow newVital = new VitalStatRow(vitalSign);
     	    vitalStatDisplay.add(newVital);
+    	    vitalStatDisplay.validate();
+    	    vitalStatDisplay.repaint();
 	    }
 	}
 	
