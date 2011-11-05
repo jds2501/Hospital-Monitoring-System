@@ -52,10 +52,11 @@ public class VitalStatDisplay extends JPanel {
 	public void paintPatientPanels(/*TODO Pass in a patient map for populating data */) {
 		// remove images before adding more to the same panel
 		removeAll();
-		add(new VitalStatRow("Vital Stat 1", AlarmStatus.INACTIVE.name()));
-		add(new VitalStatRow("Vital Stat 2", AlarmStatus.ACTIVE.name()));
-		add(new VitalStatRow("Vital Stat 3", AlarmStatus.INACTIVE.name()));
-		add(new VitalStatRow("Vital Stat 4", AlarmStatus.INACTIVE.name()));
+		add(new VitalStatRow("Heart Rate", AlarmStatus.INACTIVE.name()));
+		add(new VitalStatRow("Systolic Blood Pressure", AlarmStatus.ACTIVE.name()));
+		add(new VitalStatRow("Respiratory Rate", AlarmStatus.INACTIVE.name()));
+		add(new VitalStatRow("Weight (kg)", AlarmStatus.INACTIVE.name()));
+		add(new VitalStatRow("Weight (lb)", AlarmStatus.INACTIVE.name()));
 		refresh();
 	}
 

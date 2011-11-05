@@ -2,6 +2,7 @@ grant {
   permission java.net.SocketPermission "localhost", "accept,connect,resolve";
   permission java.io.FilePermission "img/close-icon.png", "read";
   permission java.io.FilePermission "img/about-icon.png", "read";
+  permission java.io.FilePermission "img/gear-icon.png", "read";
   permission java.lang.RuntimePermission "createSecurityManager";
   permission java.lang.RuntimePermission "setSecurityManager";
 };

@@ -70,7 +70,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	private JMenu fileMenu, helpMenu;
 
 	private JMenuItem exitItem, aboutItem;
-	private JButton callOffButton, alarmOffButton;
+	private JButton callButton, alarmOffButton;
 
 	// ***** Panel components ***** //
 
@@ -81,8 +81,11 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 
 	private JTextArea monitorName;
 	
-	private static final String CALL_BUTTON_OFF = "OFF";
-	private static final String CALL_BUTTON_ON = "ON";
+	private static final String CALL_LABEL_OFF = "OFF";
+	private static final String CALL_LABEL_ON = "ON";
+	
+	private static final String CALL_NURSE = "Call Nurse";
+	private static final String CALL_OFF = "Turn Off";
 	private static final String SPACER_TEXT = " ";
 
 	// ***** A panel for displaying all the patients' vital stats and respective alarm status ***** //
@@ -137,10 +140,10 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 		monitorNameLabel = new JLabel("Monitor Name: ");
 		monitorNameLabel.setForeground(Color.WHITE);
 		monitorName = new JTextArea();
-		monitorName.setEditable(false);		
+		monitorName.setEditable(false);
 		monitorName.setBackground(new Color(102,102,102));
 		monitorName.setForeground(Color.WHITE);
-		monitorName.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
+		monitorName.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(),
 				Font.BOLD, UIManager.getDefaults().getFont("Label.font").getSize()));
 
 		monitorPanel.add(monitorNameLabel);
@@ -160,15 +163,15 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 		subCallStatusPanel = new JPanel(new BoxLayout(statusPanel, BoxLayout.LINE_AXIS));
 		subCallStatusPanel.setLayout(new BoxLayout(subCallStatusPanel, BoxLayout.LINE_AXIS));
 		subCallStatusPanel.add(new JLabel("Call button: "));
-		callStatus = new JLabel(CALL_BUTTON_OFF + SPACER_TEXT);
+		callStatus = new JLabel(CALL_LABEL_OFF + SPACER_TEXT);
 		callStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
 		callStatus.setForeground(Color.GRAY);
 		subCallStatusPanel.add(callStatus);
 		
-		callOffButton = new JButton("Turn Off Call");
-		callOffButton.setEnabled(false);
-		callOffButton.addActionListener(new TurnOffCallListener());
-		subCallStatusPanel.add(callOffButton);
+		callButton = new JButton(CALL_NURSE);
+		callButton.setEnabled(true);
+		callButton.addActionListener(new TurnOffCallListener());
+		subCallStatusPanel.add(callButton);
 		
 		// Add both sub panels
 		statusPanel.add(subCallStatusPanel, BorderLayout.WEST);
@@ -404,11 +407,20 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	/**
 	 * Call button triggered, update display
 	 */
-	public void callTriggered() {
-		callStatus.setText(CALL_BUTTON_ON + SPACER_TEXT);
+	public void callOff() {
+		callStatus.setText(CALL_LABEL_ON + SPACER_TEXT);
 		callStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
 		callStatus.setForeground(Color.RED);
-		callOffButton.setEnabled(true);
+		callButton.setEnabled(true);
+	}
+
+	/**
+	 * Call button triggered, update display
+	 */
+	public void callTriggered() {
+		callStatus.setText(CALL_LABEL_ON + SPACER_TEXT);
+		callStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+		callStatus.setForeground(Color.RED);
 	}
 
 	/**
@@ -434,10 +446,20 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	 */
 	private class TurnOffCallListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			callStatus.setText(CALL_BUTTON_OFF + SPACER_TEXT);
-			callStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
-			callStatus.setForeground(Color.GRAY);
-			callOffButton.setEnabled(false);
+			String action = ((JButton)e.getSource()).getText();
+			if (action.equals(CALL_OFF)) {
+				// Turn off call button
+				callStatus.setText(CALL_LABEL_OFF + SPACER_TEXT);
+				callStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+				callStatus.setForeground(Color.GRAY);
+				callButton.setText(CALL_NURSE);
+			} else {
+				// Calling all nurse stations
+				callStatus.setText(CALL_LABEL_ON + SPACER_TEXT);
+				callStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+				callStatus.setForeground(Color.RED);
+				callButton.setText(CALL_OFF);
+			}
 			//TODO logging, updating external sources, etc
 		}
 	}

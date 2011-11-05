@@ -21,7 +21,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -39,8 +41,9 @@ import alarm.AlarmStatus;
 public class VitalStatRow extends JPanel {
 
 	private JPanel alarmPanel, alarmButtonPanel, alarmPanelOuter;
-	private JButton acknowlAlarmButton;
+	private JButton configureButton, acknowlAlarmButton;
 	private JLabel alarmStatusLabel, alarmStatus, vitalStatNameLabel, vitalStatName;
+	private JCheckBox enableBox;
 
 	/**
 	 * Constructor
@@ -49,7 +52,7 @@ public class VitalStatRow extends JPanel {
 		
 		// Call parent constructor
 		super();
-
+		
 		// Instantiate values / construct panel
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createEtchedBorder());
@@ -63,11 +66,29 @@ public class VitalStatRow extends JPanel {
 		JPanel p2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		JPanel p3 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		
-		vitalStatNameLabel = new JLabel("  Patient Name:  ");
+		//TODO checkbox id should be tied to vital stat id
+		enableBox = new JCheckBox();
+		enableBox.setEnabled(true);
+		enableBox.setSelected(true);
+		enableBox.addActionListener(new EnableDisableVitalListener());
 		
+		//TODO configure button should be tied to vital stat id
+		ImageIcon gearIcon = new ImageIcon("img/gear-icon.png");
+		configureButton = new JButton(gearIcon);
+		configureButton.setIcon(gearIcon);
+		Dimension dim = new Dimension(gearIcon.getIconWidth()*2,
+				gearIcon.getIconHeight());
+		configureButton.setSize(dim);
+		configureButton.setPreferredSize(dim);
+		configureButton.setOpaque(false);
+		configureButton.addActionListener(new ConfigureVitalListener());
+		
+		vitalStatNameLabel = new JLabel("  Vital Stat Name:  ");
 		vitalStatName = new JLabel(name);
 		vitalStatName.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
 				Font.BOLD, UIManager.getDefaults().getFont("Label.font").getSize()));
+		p1.add(enableBox);
+		p1.add(configureButton);
 		p1.add(vitalStatNameLabel);
 		p1.add(vitalStatName);
 		
@@ -118,6 +139,29 @@ public class VitalStatRow extends JPanel {
 	}
 
 	/**
+	 * Inner class for listener on Enable/Disable vital sign checkbox
+	 */
+	private class EnableDisableVitalListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			JCheckBox box = (JCheckBox)e.getSource();
+			if (box.isSelected()) {
+				//TODO vital sign enabled
+			} else {
+				//TODO vital sign disabled
+			}
+		}
+	}
+
+	/**
+	 * Inner class for listener on Configure Vital button
+	 */
+	private class ConfigureVitalListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			//TODO
+		}
+	}
+
+	/**
 	 * Inner class for listener on Turn Off Alarm button
 	 */
 	private class TurnOffAlarmListener implements ActionListener {
@@ -133,13 +177,13 @@ public class VitalStatRow extends JPanel {
 	/**
 	 * Inner class for listener on Acknowledge Alarm button
 	 */
-	private class AcknowlAlarmListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			alarmStatus.setText(AlarmStatus.ACKNOWLEDGED.name());
-			alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
-			alarmStatus.setForeground(Color.BLUE);
-			acknowlAlarmButton.setEnabled(false);
-			//TODO logging, updating external sources, etc
-		}
-	}
+//	private class AcknowlAlarmListener implements ActionListener {
+//		public void actionPerformed(ActionEvent e) {
+//			alarmStatus.setText(AlarmStatus.ACKNOWLEDGED.name());
+//			alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+//			alarmStatus.setForeground(Color.BLUE);
+//			acknowlAlarmButton.setEnabled(false);
+//			//TODO logging, updating external sources, etc
+//		}
+//	}
 }
