@@ -75,6 +75,7 @@ public class VitalSignController extends Observable {
      * tasks for this vital sign.
      */
     public void enableMeasurement(){
+        processor.setActive(true);
         Thread processorTask = new Thread(processor);
         processorTask.start();
         timer.scheduleAtFixedRate(collection, new Date(),
