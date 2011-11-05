@@ -1,5 +1,5 @@
 grant {
-  permission java.net.SocketPermission "127.0.0.1:1099", "connect,resolve";
+  permission java.net.SocketPermission "localhost", "accept,connect,resolve";
   permission java.io.FilePermission "img/close-icon.png", "read";
   permission java.io.FilePermission "img/about-icon.png", "read";
   permission java.lang.RuntimePermission "createSecurityManager";

@@ -57,6 +57,7 @@ public class RemoteBedsideMonitorTest extends SensorTestCase {
 
     public void removeSensor(String sensorName) throws RemoteException, MalformedURLException, NotBoundException {
         Naming.unbind(sensorName);
+        sensorsActive.remove(sensorName);
     }
     
 }
