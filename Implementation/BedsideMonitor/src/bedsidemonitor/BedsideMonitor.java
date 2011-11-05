@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 import java.util.Observer;
 import java.util.Queue;
 import java.util.Timer;
@@ -38,7 +39,7 @@ import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
  * @author Jason Smith
  */
 public class BedsideMonitor extends UnicastRemoteObject 
-    implements BedsideMonitorInterface {
+    implements BedsideMonitorInterface, Observer {
 
     private String patientName;
     private SensorLookupInterface sensorLookup;
@@ -79,8 +80,7 @@ public class BedsideMonitor extends UnicastRemoteObject
             VitalSignCollectionController controller = 
                     new VitalSignCollectionController(sensor, vitalSignMsgQueue);
             VitalSignProcessing processor = 
-                    new VitalSignProcessing(vitalSignMsgQueue, configuration,
-                            this.notificationServices);
+                    new VitalSignProcessing(vitalSignMsgQueue, configuration);
             
             Thread processorTask = new Thread(processor);
             processorTask.start();
@@ -145,6 +145,10 @@ public class BedsideMonitor extends UnicastRemoteObject
     
     public void setCallButton(boolean callStatus){
         this.callButtonController.setCallStatus(callStatus);
+    }
+
+    public void update(Observable o, Object arg) {
+        
     }
     
 } // BedsideMonitor

@@ -37,17 +37,14 @@ public class VitalSignProcessing extends Observable implements Runnable {
 
     private AlarmController alarmController;
     
-    private List<NotificationService> notificationServices;
-    
     private boolean isActive;
     
-    public VitalSignProcessing(Queue<Integer> vitalSignMsgQueue,
-            VitalSignConfiguration converter, List<NotificationService> notificationServices){
+    public VitalSignProcessing(Queue<Integer> vitalSignMsgQueue, 
+           VitalSignConfiguration converter){
         this.vitalSignMsgQueue = vitalSignMsgQueue;
         this.vitalSignValue = null;
         this.configuration = converter;
         this.alarmController = new AlarmController();
-        this.notificationServices = notificationServices;
     }
     
     public void pullVitalSign(){
@@ -90,7 +87,9 @@ public class VitalSignProcessing extends Observable implements Runnable {
     }
     
     public void run() {
-        
+        while(isActive) {
+            pullVitalSign();
+        }
     }
     
 }
