@@ -33,6 +33,9 @@ import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
 
+import bedsidemonitor.vitalsigncollection.VitalSignConfiguration;
+import bedsidemonitor.vitalsigncollection.VitalSignController;
+
 import alarm.AlarmStatus;
 
 
@@ -45,6 +48,7 @@ import alarm.AlarmStatus;
 @SuppressWarnings("serial")
 public class VitalStatRow extends JPanel {
 
+    private VitalSignController vitalSign;
 	private JPanel infoPanel, alarmPanel, alarmPanelTop, alarmPanelBottom, alarmButtonPanel, alarmPanelOuter,
 		minRangeValuePanel, maxRangeValuePanel, configureButtonPanel, convFactorPanel;
 	private JButton configureButton, acknowlAlarmButton;
@@ -57,11 +61,14 @@ public class VitalStatRow extends JPanel {
 	/**
 	 * Constructor
 	 */
-	public VitalStatRow(String name, String alarmState) {
+	public VitalStatRow(VitalSignController vitalSign) {
 
 		// Call parent constructor
 		super();
 
+		this.vitalSign = vitalSign;
+		VitalSignConfiguration configuration = vitalSign.getConfiguration();
+		
 		// Instantiate values / construct panel
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createEtchedBorder());
@@ -96,7 +103,7 @@ public class VitalStatRow extends JPanel {
 		configureButtonPanel.add(configureButton);
 
 		vitalStatNameLabel = new JLabel("  Vital Stat:  ");
-		vitalStatName = new JLabel(name);
+		vitalStatName = new JLabel(configuration.getName());
 		vitalStatName.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
 				Font.BOLD, UIManager.getDefaults().getFont("Label.font").getSize()));
 		
@@ -110,8 +117,8 @@ public class VitalStatRow extends JPanel {
 		// JSpinner config models
 		
 		//TODO INTEGRATION WITH CONFIG OBJECT
-		spinnerConfigMin = new SpinnerNumberModel(0, 0, 100, 1);
-		spinnerConfigMax = new SpinnerNumberModel(100, 0, 100, 1);
+		spinnerConfigMin = new SpinnerNumberModel(configuration.getMinAllowedReading(), 0, 100, 1);
+		spinnerConfigMax = new SpinnerNumberModel(configuration.getMaxAllowedReading(), 0, 100, 1);
 		spinnerConfigConvFactor = new SpinnerNumberModel(1, 0, 100, 1);
 		
 		minRangeValuePanel = new JPanel();
@@ -162,7 +169,8 @@ public class VitalStatRow extends JPanel {
 		alarmPanel.add(alarmPanelTop);
 
 		alarmPanelBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		alarmStatus = new JLabel(alarmState);
+		// TODO: Change this to reference the vital sign controller
+		alarmStatus = new JLabel(AlarmStatus.INACTIVE.name());
 		alarmStatus.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		alarmPanelBottom.add(alarmStatus);
 		alarmPanel.add(alarmPanelBottom);
@@ -172,15 +180,17 @@ public class VitalStatRow extends JPanel {
 		alarmButtonPanel = new JPanel();
 		alarmButtonPanel.setLayout(new BorderLayout());
 		acknowlAlarmButton = new JButton("Turn Off");
-		if (alarmState.equals(AlarmStatus.ACTIVE.name())) {
+		
+		/*if (alarmState.equals(AlarmStatus.ACTIVE.name())) {
 			acknowlAlarmButton.setEnabled(true);
 			alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
 			alarmStatus.setForeground(Color.RED);
-		} else {
+		} else {*/
 			acknowlAlarmButton.setEnabled(false);
 			alarmStatus.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			alarmStatus.setForeground(Color.GRAY);
-		}
+		//}
+		
 		acknowlAlarmButton.addActionListener(new TurnOffAlarmListener());
 		alarmButtonPanel.add(acknowlAlarmButton, BorderLayout.EAST);
 

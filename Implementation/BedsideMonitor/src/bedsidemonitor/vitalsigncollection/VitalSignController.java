@@ -93,4 +93,8 @@ public class VitalSignController extends Observable {
         this.notifyObservers(this);
     }
     
+    public VitalSignConfiguration getConfiguration() {
+        return processor.getConfiguration();
+    }
+    
 } // VitalSignController

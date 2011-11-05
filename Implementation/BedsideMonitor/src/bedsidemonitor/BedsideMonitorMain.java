@@ -9,14 +9,16 @@
 
 package bedsidemonitor;
 
+import java.awt.FlowLayout;
 import java.rmi.RemoteException;
 import java.util.Map;
+
+import javax.swing.JPanel;
 
 import bedsidemonitor.sensor.RemoteSensorLookup;
 import bedsidemonitor.sensor.SensorInterface;
 import bedsidemonitor.sensor.SensorLookupInterface;
 import bedsidemonitor.userinterface.BedsideMonitorView;
-import bedsidemonitor.userinterface.VitalStatDisplay;
 
 /**
  * Main starting point to start up the bedside monitor.
@@ -26,7 +28,6 @@ import bedsidemonitor.userinterface.VitalStatDisplay;
 public class BedsideMonitorMain {
 	
 	private BedsideMonitorView view;
-	private VitalStatDisplay vitalStatDisplay;
 	
 	/**
      * Constructor for bedside monitor that shows GUI.
@@ -38,9 +39,7 @@ public class BedsideMonitorMain {
             BedsideMonitor bedsideMonitor = new BedsideMonitor(patientName, sensors);
             view = new BedsideMonitorView(bedsideMonitor);
             view.setMonitorName("Bedside Monitor for Patient: " + patientName);
-            
-            vitalStatDisplay = new VitalStatDisplay(view);
-            view.setVitalStatDisplay(vitalStatDisplay);
+            view.setVitalStatDisplay(new JPanel(new FlowLayout()));
 
             for(String sensorName: sensors.keySet()) {
                 view.addVitalSign(sensorName);

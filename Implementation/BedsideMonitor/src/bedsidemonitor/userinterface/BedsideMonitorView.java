@@ -44,6 +44,7 @@ import javax.swing.border.EtchedBorder;
 
 import alarm.AlarmStatus;
 import bedsidemonitor.BedsideMonitor;
+import bedsidemonitor.vitalsigncollection.VitalSignController;
 
 /**
  * BedsideMonitorView - Bedside monitor user interface
@@ -90,7 +91,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 
 	// ***** A panel for displaying all the patients' vital stats and respective alarm status ***** //
 
-	private VitalStatDisplay vitalStatDisplay;
+	private JPanel vitalStatDisplay;
 
 	//--------------------------------------------------------------------------------------//
 
@@ -368,7 +369,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	 * 
 	 * @param display - the vital stat display to set to this interface
 	 */
-	public void setVitalStatDisplay(VitalStatDisplay display) {
+	public void setVitalStatDisplay(JPanel display) {
 		vitalStatDisplay = display;
 		totalPanelSet.add(vitalStatDisplay, BorderLayout.CENTER);
 		vitalStatDisplay.setPreferredSize(new Dimension(vitalStatDisplay.getPreferredSize().width, 20));
@@ -471,7 +472,12 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	 * @param name Vital sign name
 	 */
 	public void addVitalSign(String vitalName) {
-		vitalStatDisplay.addVitalSign(vitalName);
+	    VitalSignController vitalSign = bedsideMonitor.getVitalSign(vitalName);
+		
+	    if(vitalSign != null) {
+	        VitalStatRow newVital = new VitalStatRow(vitalSign);
+    	    vitalStatDisplay.add(newVital);
+	    }
 	}
 	
 	/**
@@ -480,7 +486,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	 * @param value  Vital sign value
 	 */
 	public void updateVitalSign(String vitalName, int value) {
-		vitalStatDisplay.updateVitalSign(vitalName, value);
+		//vitalStatDisplay.updateVitalSign(vitalName, value);
 	}
 
 	/**
