@@ -453,12 +453,14 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 				callStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
 				callStatus.setForeground(Color.GRAY);
 				callButton.setText(CALL_NURSE);
+				bedsideMonitor.setCallButton(false);
 			} else {
 				// Calling all nurse stations
 				callStatus.setText(CALL_LABEL_ON + SPACER_TEXT);
 				callStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
 				callStatus.setForeground(Color.RED);
 				callButton.setText(CALL_OFF);
+				bedsideMonitor.setCallButton(true);
 			}
 			//TODO logging, updating external sources, etc
 		}

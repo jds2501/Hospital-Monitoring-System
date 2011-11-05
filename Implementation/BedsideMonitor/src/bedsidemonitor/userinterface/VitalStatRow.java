@@ -24,7 +24,9 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JSpinner.DefaultEditor;
@@ -44,13 +46,13 @@ import alarm.AlarmStatus;
 public class VitalStatRow extends JPanel {
 
 	private JPanel infoPanel, alarmPanel, alarmPanelTop, alarmPanelBottom, alarmButtonPanel, alarmPanelOuter,
-		minRangeValuePanel, maxRangeValuePanel, configureButtonPanel;
+		minRangeValuePanel, maxRangeValuePanel, configureButtonPanel, convFactorPanel;
 	private JButton configureButton, acknowlAlarmButton;
 	private JLabel alarmStatusLabel, alarmStatus, vitalStatNameLabel, vitalStatName, 
-		vitalValueLabel, vitalStatValue, minRangeLabel, maxRangeLabel;
+		vitalValueLabel, vitalStatValue, minRangeLabel, maxRangeLabel, convFactorLabel;
 	private JCheckBox enableBox;
-	private JSpinner minRangeValue, maxRangeValue;
-	private SpinnerNumberModel spinnerConfigMin, spinnerConfigMax;
+	private JSpinner minRangeValue, maxRangeValue, conversionFactor;
+	private SpinnerNumberModel spinnerConfigMin, spinnerConfigMax, spinnerConfigConvFactor;
 
 	/**
 	 * Constructor
@@ -105,9 +107,12 @@ public class VitalStatRow extends JPanel {
 		infoPanel.add(enableBox);
 		infoPanel.add(configureButtonPanel);
 
-		// JSpinner config model used for min and max
+		// JSpinner config models
+		
+		//TODO INTEGRATION WITH CONFIG OBJECT
 		spinnerConfigMin = new SpinnerNumberModel(0, 0, 100, 1);
 		spinnerConfigMax = new SpinnerNumberModel(100, 0, 100, 1);
+		spinnerConfigConvFactor = new SpinnerNumberModel(1, 0, 100, 1);
 		
 		minRangeValuePanel = new JPanel();
 		minRangeValuePanel.setLayout(new BoxLayout(minRangeValuePanel, BoxLayout.LINE_AXIS));
@@ -120,6 +125,12 @@ public class VitalStatRow extends JPanel {
 		maxRangeValue = new JSpinner(spinnerConfigMax);
 		((DefaultEditor) maxRangeValue.getEditor()).getTextField().setEditable(false);
 		maxRangeValue.setPreferredSize(new Dimension(60,maxRangeValue.getPreferredSize().height));
+		
+		convFactorPanel = new JPanel();
+		convFactorPanel.setLayout(new BoxLayout(convFactorPanel, BoxLayout.LINE_AXIS));
+		conversionFactor = new JSpinner(spinnerConfigConvFactor);
+		((DefaultEditor) conversionFactor.getEditor()).getTextField().setEditable(false);
+		conversionFactor.setPreferredSize(new Dimension(60,conversionFactor.getPreferredSize().height));
 
 		minRangeLabel = new JLabel(" Min: ");
 		minRangeValuePanel.add(minRangeLabel);
@@ -132,6 +143,12 @@ public class VitalStatRow extends JPanel {
 		maxRangeValuePanel.setVisible(false);
 		maxRangeValuePanel.add(maxRangeValue);
 		infoPanel.add(maxRangeValuePanel);
+
+		convFactorLabel = new JLabel(" Conv. Factor: ");
+		convFactorPanel.add(convFactorLabel);
+		convFactorPanel.setVisible(false);
+		convFactorPanel.add(conversionFactor);
+		infoPanel.add(convFactorPanel);
 		
 		infoPanel.add(vitalStatNameLabel);
 		infoPanel.add(vitalStatName);
@@ -216,11 +233,13 @@ public class VitalStatRow extends JPanel {
 				//TODO save min/max values
 				minRangeValuePanel.setVisible(false);
 				maxRangeValuePanel.setVisible(false);
+				convFactorPanel.setVisible(false);
 				refresh();
 			} else {
 				//TODO save min/max values
 				minRangeValuePanel.setVisible(true);
 				maxRangeValuePanel.setVisible(true);
+				convFactorPanel.setVisible(true);
 				refresh();
 			}
 		}
