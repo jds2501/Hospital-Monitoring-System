@@ -8,6 +8,8 @@
  */
 package nursestation.notificationservice;
 
+import alarm.AlarmStatus;
+
 /**
  * A message sent to the notification service with a new vital sign and
  * an alarm status for a particular patient.
@@ -19,12 +21,17 @@ public class VitalSignMessage {
     /**
      * The patient's ID
      */
-    private long id;
+    private long patientID;
     
     /**
      * The patient's name
      */
     private String patientName;
+    
+    /**
+     * Vital sign ID
+     */
+    private long vitalSignID;
     
     /**
      * The name of the vital sign
@@ -39,7 +46,7 @@ public class VitalSignMessage {
     /**
      * The status of the alarm for this vital sign
      */
-    private boolean alarmStatus;
+    private AlarmStatus alarmStatus;
     
     /**
      * Constructs a VitalSignMessage object with a patient name, vital sign
@@ -51,10 +58,12 @@ public class VitalSignMessage {
      * @param vitalSign the value of the vital sign
      * @param alarmStatus the status of the alarm for that vital sign
      */
-    public VitalSignMessage(long id, String patientName, String vitalSignName, 
-                            double vitalSign, boolean alarmStatus) {
-        this.id = id;
+    public VitalSignMessage(long patientID, String patientName, 
+            String vitalSignName, long vitalSignID, double vitalSign,
+            AlarmStatus alarmStatus) {
+        this.patientID = patientID;
         this.patientName = patientName;
+        this.vitalSignID = vitalSignID;
         this.vitalSignName = vitalSignName;
         this.vitalSignValue = vitalSign;
         this.alarmStatus = alarmStatus;
@@ -63,8 +72,15 @@ public class VitalSignMessage {
     /**
      * @return the patient's ID
      */
-    public long getID() {
-        return id;
+    public long getPatientID() {
+        return patientID;
+    }
+    
+    /**
+     * @return the vital sign ID
+     */
+    public long getVitalSignID() {
+        return vitalSignID;
     }
     
     /**
@@ -92,7 +108,7 @@ public class VitalSignMessage {
     /**
      * @return the alarmStatus
      */
-    public boolean getAlarmStatus() {
+    public AlarmStatus getAlarmStatus() {
     
         return alarmStatus;
     }
