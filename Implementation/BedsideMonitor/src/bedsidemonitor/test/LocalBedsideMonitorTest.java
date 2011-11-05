@@ -1,7 +1,7 @@
 /*
  * Package: bedsidemonitor.test
  *
- * File: BedsideMonitorTest.java
+ * File: LocalBedsideMonitorTest.java
  *
  * Date: Nov 4, 2011
  * 
@@ -16,9 +16,6 @@ import bedsidemonitor.BedsideMonitor;
 import bedsidemonitor.sensor.FakeSensor;
 import bedsidemonitor.sensor.FakeSensorLookup;
 import bedsidemonitor.sensor.SensorInterface;
-import bedsidemonitor.sensor.SensorLookupInterface;
-import bedsidemonitor.vitalsigncollection.VitalSignConfiguration;
-import junit.framework.TestCase;
 
 /**
  * This class represents a test class to simulate a bedside monitor
@@ -44,18 +41,33 @@ public class LocalBedsideMonitorTest extends BedsideMonitorTestCase {
         }
     }
 
+    /**
+     * Builds the bedside monitor for a local test case.
+     * 
+     * @return a bedside monitor referencing a local storage
+     */
     public BedsideMonitor buildBedsideMonitor() throws RemoteException {
         this.sensorLookup = new FakeSensorLookup();
         return new BedsideMonitor("sample", sensorLookup);
     }
 
+    /**
+     * Adds a sensor to the local storage.
+     * 
+     * @param sensorName the name of the sensor to add
+     */
     public void addSensor(String sensorName) {
         SensorInterface sensor = new FakeSensor(50);
         this.sensorLookup.addSensor(sensorName, sensor);
     }
 
+    /**
+     * Removes a sensor from the local storage
+     * 
+     * @param sensorName the name of the sensor to remove
+     */
     public void removeSensor(String sensorName) {
         this.sensorLookup.getSensors().remove(sensorName);
     }
     
-} // BedsideMonitorTest
+} // LocalBedsideMonitorTest
