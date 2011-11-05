@@ -10,6 +10,8 @@
 package bedsidemonitor;
 
 import java.rmi.RemoteException;
+import java.util.Random;
+import java.util.Timer;
 
 import bedsidemonitor.userinterface.BedsideMonitorView;
 import bedsidemonitor.userinterface.VitalStatDisplay;
@@ -32,9 +34,32 @@ public class BedsideMonitorMain {
             BedsideMonitor bedsideMonitor = new BedsideMonitor(patientName);
             view = new BedsideMonitorView(bedsideMonitor);
             view.setMonitorName("Dummy Bedside Monitor View");
+            
             vitalStatDisplay = new VitalStatDisplay(view);
             view.setVitalStatDisplay(vitalStatDisplay);
-            vitalStatDisplay.paintPatientPanels();
+
+            view.addVitalSign("Heart Rate");
+            view.addVitalSign("Systolic Blood Pressure");
+            view.addVitalSign("Respiratory Rate");
+            view.addVitalSign("Weight (kg)");
+            view.addVitalSign("Weight (lb)");
+
+	    	//TODO ** PURELY TEST CODE - REMOVE AFTER INTEGRATION **
+            while (true) {
+            	try {
+            		Thread.sleep(800);
+            	}
+            	catch (InterruptedException ie) {
+            		ie.printStackTrace();
+            	}
+            	Random rand = new Random();
+            	view.updateVitalSign("Heart Rate", rand.nextInt(100 - 1 + 1) + 1);
+            	view.updateVitalSign("Systolic Blood Pressure", rand.nextInt(100 - 1 + 1) + 1);
+            	view.updateVitalSign("Respiratory Rate", rand.nextInt(100 - 1 + 1) + 1);
+            	view.updateVitalSign("Weight (kg)", rand.nextInt(100 - 1 + 1) + 1);
+            	view.updateVitalSign("Weight (lb)", rand.nextInt(100 - 1 + 1) + 1);
+            }
+            
         } catch (RemoteException ex) {
             ex.printStackTrace();
         }

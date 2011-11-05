@@ -40,38 +40,36 @@ import alarm.AlarmStatus;
 @SuppressWarnings("serial")
 public class VitalStatRow extends JPanel {
 
-	private JPanel alarmPanel, alarmButtonPanel, alarmPanelOuter;
+	private JPanel infoPanel, alarmPanel, alarmPanelTop, alarmPanelBottom, alarmButtonPanel, alarmPanelOuter;
 	private JButton configureButton, acknowlAlarmButton;
-	private JLabel alarmStatusLabel, alarmStatus, vitalStatNameLabel, vitalStatName;
+	private JLabel alarmStatusLabel, alarmStatus, vitalStatNameLabel, vitalStatName, vitalValueLabel, vitalStatValue;
 	private JCheckBox enableBox;
 
 	/**
 	 * Constructor
 	 */
 	public VitalStatRow(String name, String alarmState) {
-		
+
 		// Call parent constructor
 		super();
-		
+
 		// Instantiate values / construct panel
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createEtchedBorder());
-		
+
 		alarmPanelOuter = new JPanel(new BorderLayout());
 		alarmPanel = new JPanel();
 		alarmPanel.setLayout(new GridLayout(2, 1));
 
-		JPanel p1 = new JPanel();
-		p1.setLayout(new BoxLayout(p1, BoxLayout.LINE_AXIS));
-		JPanel p2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		JPanel p3 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		
+		infoPanel = new JPanel();
+		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.LINE_AXIS));
+
 		//TODO checkbox id should be tied to vital stat id
 		enableBox = new JCheckBox();
 		enableBox.setEnabled(true);
 		enableBox.setSelected(true);
 		enableBox.addActionListener(new EnableDisableVitalListener());
-		
+
 		//TODO configure button should be tied to vital stat id
 		ImageIcon gearIcon = new ImageIcon("img/gear-icon.png");
 		configureButton = new JButton(gearIcon);
@@ -82,28 +80,38 @@ public class VitalStatRow extends JPanel {
 		configureButton.setPreferredSize(dim);
 		configureButton.setOpaque(false);
 		configureButton.addActionListener(new ConfigureVitalListener());
-		
-		vitalStatNameLabel = new JLabel("  Vital Stat Name:  ");
+
+		vitalStatNameLabel = new JLabel("  Vital Stat:  ");
 		vitalStatName = new JLabel(name);
 		vitalStatName.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
 				Font.BOLD, UIManager.getDefaults().getFont("Label.font").getSize()));
-		p1.add(enableBox);
-		p1.add(configureButton);
-		p1.add(vitalStatNameLabel);
-		p1.add(vitalStatName);
 		
+		vitalValueLabel = new JLabel(" = ");
+		vitalStatValue = new JLabel("");
+		vitalStatValue.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
+				Font.BOLD, 20));
+		
+		infoPanel.add(enableBox);
+		infoPanel.add(configureButton);
+		infoPanel.add(vitalStatNameLabel);
+		infoPanel.add(vitalStatName);
+		infoPanel.add(vitalValueLabel);
+		infoPanel.add(vitalStatValue);
+
+		alarmPanelTop = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		alarmStatusLabel = new JLabel("Alarm:  ");
 		alarmStatusLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		p2.add(alarmStatusLabel);
-		alarmPanel.add(p2);
-		
+		alarmPanelTop.add(alarmStatusLabel);
+		alarmPanel.add(alarmPanelTop);
+
+		alarmPanelBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		alarmStatus = new JLabel(alarmState);
 		alarmStatus.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		p3.add(alarmStatus);
-		alarmPanel.add(p3);
-		
+		alarmPanelBottom.add(alarmStatus);
+		alarmPanel.add(alarmPanelBottom);
+
 		alarmPanelOuter.add(alarmPanel, BorderLayout.LINE_END);
-		
+
 		alarmButtonPanel = new JPanel();
 		alarmButtonPanel.setLayout(new BorderLayout());
 		acknowlAlarmButton = new JButton("Turn Off");
@@ -120,16 +128,23 @@ public class VitalStatRow extends JPanel {
 		alarmButtonPanel.add(acknowlAlarmButton, BorderLayout.EAST);
 
 
-		
-		this.add(p1, BorderLayout.WEST);
+
+		this.add(infoPanel, BorderLayout.WEST);
 		this.add(alarmPanelOuter, BorderLayout.CENTER);
 		this.add(alarmButtonPanel, BorderLayout.EAST);
-		
+
 		this.setPreferredSize(new Dimension(700, 50));
 	}
 
 	/**
-	 * Called by external sources to update this patient and show alarm has been triggered
+	 * Update display to show new sensor data for this stat
+	 */
+	public void updateValue(int value) {
+		vitalStatValue.setText(value+"");
+	}
+
+	/**
+	 * Update display to represent alarm being triggered for this stat
 	 */
 	public void triggerAlarm() {
 		alarmStatus.setText(AlarmStatus.ACTIVE.name());
