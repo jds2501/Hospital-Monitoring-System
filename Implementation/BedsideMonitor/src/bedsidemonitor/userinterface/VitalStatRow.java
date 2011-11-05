@@ -199,8 +199,10 @@ public class VitalStatRow extends JPanel {
 			JCheckBox box = (JCheckBox)e.getSource();
 			if (box.isSelected()) {
 				//TODO vital sign enabled
+				configureButton.setEnabled(true);
 			} else {
 				//TODO vital sign disabled
+				configureButton.setEnabled(false);
 			}
 		}
 	}
