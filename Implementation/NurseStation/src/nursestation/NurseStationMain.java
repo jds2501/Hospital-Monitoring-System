@@ -31,6 +31,9 @@ public class NurseStationMain {
      */
 	private NurseStationView view;
 
+	/**
+	 * The service task for collecting patient data
+	 */
     private NotificationServiceTask serviceRunnable;
 	
 	/**
