@@ -96,7 +96,7 @@ public class BedsideMonitor extends Observable implements Observer {
      * 
      * @param configuration the vital sign configuration to add a sensor for
      */
-    public void addSensor(VitalSignConfiguration configuration){
+    public void enableMeasurement(VitalSignConfiguration configuration){
         String name = configuration.getName();
         SensorInterface sensor = sensors.get(name);
         
@@ -132,7 +132,7 @@ public class BedsideMonitor extends Observable implements Observer {
      * 
      * @param sensorName the name of the sensor to remove
      */
-    public void removeSensor(String sensorName){
+    public void disableMeasurement(String sensorName){
         if(vitalSignProcessings.containsKey(sensorName)){
             VitalSignProcessing processor = vitalSignProcessings.remove(sensorName);
             VitalSignCollectionController controller = vitalSignCollections.remove(sensorName);

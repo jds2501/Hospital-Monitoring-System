@@ -32,7 +32,7 @@ public class LocalBedsideMonitorTest extends BedsideMonitorTestCase {
      */
     public void tearDown() {
         for(String sensorName: sensors.keySet()){
-            this.bedsideMonitor.removeSensor(sensorName);
+            this.bedsideMonitor.disableMeasurement(sensorName);
         }
     }
 

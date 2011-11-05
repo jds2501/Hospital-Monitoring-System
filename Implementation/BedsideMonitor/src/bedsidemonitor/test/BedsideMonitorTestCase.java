@@ -68,7 +68,7 @@ public abstract class BedsideMonitorTestCase extends TestCase {
         VitalSignConfiguration configuration = 
                 new VitalSignConfiguration("not found", 0, 0, 0, 0);
         try{
-            this.bedsideMonitor.addSensor(configuration);
+            this.bedsideMonitor.enableMeasurement(configuration);
         }catch(IllegalArgumentException ex){
             sensorFound = false;
         }
@@ -85,7 +85,7 @@ public abstract class BedsideMonitorTestCase extends TestCase {
         VitalSignConfiguration configuration = 
                 new VitalSignConfiguration("valid", 1, 1, 2, 100);
         this.addSensor("valid");
-        this.bedsideMonitor.addSensor(configuration);
+        this.bedsideMonitor.enableMeasurement(configuration);
         
         assertEquals(this.bedsideMonitor.getConfiguration("valid"),
                      configuration);
@@ -99,7 +99,7 @@ public abstract class BedsideMonitorTestCase extends TestCase {
         boolean sensorFound = true;
         
         try{
-            this.bedsideMonitor.removeSensor("not found");
+            this.bedsideMonitor.disableMeasurement("not found");
         }catch(IllegalArgumentException ex){
             sensorFound = false;
         }
@@ -114,7 +114,7 @@ public abstract class BedsideMonitorTestCase extends TestCase {
     public void testRemoveExistentSensor() throws RemoteException,
         MalformedURLException, AlreadyBoundException, NotBoundException {
         this.testAddExistentSensor();
-        this.bedsideMonitor.removeSensor("valid");
+        this.bedsideMonitor.disableMeasurement("valid");
         this.removeSensor("valid");
         
         assertEquals(this.bedsideMonitor.getConfiguration("valid"), null);
