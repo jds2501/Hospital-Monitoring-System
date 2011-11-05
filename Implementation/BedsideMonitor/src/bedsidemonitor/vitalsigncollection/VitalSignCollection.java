@@ -48,6 +48,17 @@ public class VitalSignCollection extends TimerTask {
     }
     
     /**
+     * Constructs a VitalSignCollection object that copies the underlying
+     * data for another vital sign collection object.
+     * 
+     * @param collection the vital sign collection object to copy data from
+     */
+    public VitalSignCollection(VitalSignCollection collection) {
+        this.sensor = collection.sensor;
+        this.vitalSignMsgQueue = collection.vitalSignMsgQueue;
+    }
+    
+    /**
      * Polls the sensor data off the sensor interface and pushes
      * the results to the vital sign message queue.
      */

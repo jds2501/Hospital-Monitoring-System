@@ -87,7 +87,9 @@ public class VitalSignController extends Observable {
      * tasks for this vital sign.
      */
     public void disableMeasurement() {
-        collection.cancel();
+        VitalSignCollection oldCollection = collection;
+        collection = new VitalSignCollection(oldCollection);
+        oldCollection.cancel();
         processor.setActive(false);
         this.setChanged();
         this.notifyObservers(this);
