@@ -43,7 +43,7 @@ public class LocalBedsideMonitorTest extends TestCase {
      */
     public void setUp() throws RemoteException {
         this.sensorLookup = new FakeSensorLookup();
-        this.bedsideMonitor = new BedsideMonitor(sensorLookup);
+        this.bedsideMonitor = new BedsideMonitor("sample", sensorLookup);
     }
     
     /**

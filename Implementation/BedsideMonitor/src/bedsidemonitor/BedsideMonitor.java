@@ -40,6 +40,7 @@ import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
 public class BedsideMonitor extends UnicastRemoteObject 
     implements BedsideMonitorInterface {
 
+    private String patientName;
     private SensorLookupInterface sensorLookup;
     private CallButtonController callButtonController;
     private Map<String, VitalSignCollectionController> vitalSignCollections;
@@ -49,13 +50,17 @@ public class BedsideMonitor extends UnicastRemoteObject
     
     /**
      * Constructs a BedsideMonitor object with a remote sensor lookup object.
+     * 
+     * @param patientName the name of the patient
      */
-    public BedsideMonitor() throws RemoteException {
-        this(new RemoteSensorLookup());
+    public BedsideMonitor(String patientName) throws RemoteException {
+        this(patientName, new RemoteSensorLookup());
     }
     
-    public BedsideMonitor(SensorLookupInterface sensorLookup) throws RemoteException{
+    public BedsideMonitor(String patientName, 
+            SensorLookupInterface sensorLookup) throws RemoteException{
         super();
+        this.patientName = patientName;
         this.sensorLookup = sensorLookup;
         notificationServices = new ArrayList<NotificationService>();
         callButtonController = new CallButtonController();

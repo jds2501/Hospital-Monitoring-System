@@ -31,7 +31,7 @@ public class BedsideMonitorMain {
      */
 	public BedsideMonitorMain(String patientName) {
         try {
-            BedsideMonitor bedsideMonitor = new BedsideMonitor();
+            BedsideMonitor bedsideMonitor = new BedsideMonitor(patientName);
             Naming.rebind(patientName, bedsideMonitor);
             view = new BedsideMonitorView(bedsideMonitor);
             view.setMonitorName("Dummy Bedside Monitor View");
