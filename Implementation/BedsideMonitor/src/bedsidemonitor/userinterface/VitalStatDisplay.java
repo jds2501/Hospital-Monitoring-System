@@ -10,6 +10,8 @@
 package bedsidemonitor.userinterface;
 
 import java.awt.FlowLayout;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
@@ -26,6 +28,9 @@ import alarm.AlarmStatus;
 public class VitalStatDisplay extends JPanel {
 
 	private BedsideMonitorView view;
+	// Collection of vital sign id -> vitalstatrow
+	private Map<String,JPanel> allVitalSigns;
+	
 
 	/**
 	 * Constructor
@@ -39,36 +44,31 @@ public class VitalStatDisplay extends JPanel {
 
 		// Instantiate values / construct panel
 		view = gui;
+		allVitalSigns = new HashMap<String,JPanel>();
 		this.setLayout(new FlowLayout());
-		
 	}
 
 	/**
-	 * Paint the patients which this Nurse Station is currently subscribed to
-	 * @param set - a set containing images to display
-	 * @param currentReconImage - a set containing the current recon image (needed for next study image in recon mode)
-	 * @param mode - the current display mode of the program (int value)
+	 * Add a vital sign row to this display
+	 * @param name Vital sign name
 	 */
-	public void paintPatientPanels(/*TODO Pass in a patient map for populating data */) {
-		// remove images before adding more to the same panel
-		removeAll();
-		add(new VitalStatRow("Heart Rate", AlarmStatus.INACTIVE.name()));
-		add(new VitalStatRow("Systolic Blood Pressure", AlarmStatus.ACTIVE.name()));
-		add(new VitalStatRow("Respiratory Rate", AlarmStatus.INACTIVE.name()));
-		add(new VitalStatRow("Weight (kg)", AlarmStatus.INACTIVE.name()));
-		add(new VitalStatRow("Weight (lb)", AlarmStatus.INACTIVE.name()));
-		refresh();
+	public void addVitalSign(String vitalName) {
+		if (allVitalSigns.containsKey(vitalName)) {
+			System.err.println("This vital sign already exists on the bedside monitor.");
+		} else {
+			VitalStatRow newVital = new VitalStatRow(vitalName, AlarmStatus.INACTIVE.name());
+			allVitalSigns.put(vitalName, newVital);
+			this.add(newVital);
+		}
 	}
-
+	
 	/**
-	 * Ensure the display of the components
+	 * Add a vital sign row to this display
+	 * @param name Vital sign name
 	 */
-	public void refresh() {
-		// refresh the interface
-		revalidate();
-		repaint();
-		updateUI();
-		view.validate();
-		view.repaint();
+	public void updateVitalSign(String vitalName, int vitalValue) {
+		VitalStatRow tempRow = (VitalStatRow) allVitalSigns.get(vitalName);
+		tempRow.updateValue(vitalValue);
 	}
+	
 }

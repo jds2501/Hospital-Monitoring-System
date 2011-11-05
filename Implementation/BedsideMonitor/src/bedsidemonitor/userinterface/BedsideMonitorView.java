@@ -465,6 +465,23 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	}
 
 	/**
+	 * Add a vital sign row to the monitor
+	 * @param name Vital sign name
+	 */
+	public void addVitalSign(String vitalName) {
+		vitalStatDisplay.addVitalSign(vitalName);
+	}
+	
+	/**
+	 * Update a vital sign value
+	 * @param name   Vital sign name
+	 * @param value  Vital sign value
+	 */
+	public void updateVitalSign(String vitalName, int value) {
+		vitalStatDisplay.updateVitalSign(vitalName, value);
+	}
+
+	/**
 	 *  Invoked when an event is dispatched in the AWT.
 	 *
 	 *  @param event - the dispatched event

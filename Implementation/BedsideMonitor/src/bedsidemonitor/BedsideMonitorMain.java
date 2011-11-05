@@ -9,14 +9,10 @@
 
 package bedsidemonitor;
 
-import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.util.HashMap;
 import java.util.Map;
 
 import bedsidemonitor.sensor.RemoteSensorLookup;
-import bedsidemonitor.sensor.SensorImpl;
 import bedsidemonitor.sensor.SensorInterface;
 import bedsidemonitor.sensor.SensorLookupInterface;
 import bedsidemonitor.userinterface.BedsideMonitorView;
@@ -42,9 +38,14 @@ public class BedsideMonitorMain {
             BedsideMonitor bedsideMonitor = new BedsideMonitor(patientName, sensors);
             view = new BedsideMonitorView(bedsideMonitor);
             view.setMonitorName("Dummy Bedside Monitor View");
+            
             vitalStatDisplay = new VitalStatDisplay(view);
             view.setVitalStatDisplay(vitalStatDisplay);
-            vitalStatDisplay.paintPatientPanels();
+
+            for(String sensorName: sensorNames) {
+                view.addVitalSign(sensorName);
+            }
+            
         } catch (RemoteException ex) {
             ex.printStackTrace();
         }
