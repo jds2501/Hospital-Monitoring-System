@@ -17,7 +17,7 @@ import nursestation.notificationservice.NotificationService;
  * @author Jason
  *
  */
-public interface BedsideMonitorInterface extends Remote {
+public interface BedsideMonitorSubscribeInterface extends Remote {
 
     public void subscribe(NotificationService service) throws RemoteException;
     

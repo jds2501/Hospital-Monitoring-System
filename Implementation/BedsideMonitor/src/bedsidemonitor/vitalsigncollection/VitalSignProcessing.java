@@ -17,6 +17,7 @@ import java.util.Queue;
 import nursestation.notificationservice.NotificationService;
 
 import alarm.AlarmController;
+import alarm.AlarmStatus;
 
 
 /**
@@ -36,17 +37,14 @@ public class VitalSignProcessing extends Observable implements Runnable {
 
     private AlarmController alarmController;
     
-    private List<NotificationService> notificationServices;
-    
     private boolean isActive;
     
-    public VitalSignProcessing(Queue<Integer> vitalSignMsgQueue,
-            VitalSignConfiguration converter, List<NotificationService> notificationServices){
+    public VitalSignProcessing(Queue<Integer> vitalSignMsgQueue, 
+           VitalSignConfiguration converter){
         this.vitalSignMsgQueue = vitalSignMsgQueue;
         this.vitalSignValue = null;
         this.configuration = converter;
         this.alarmController = new AlarmController();
-        this.notificationServices = notificationServices;
     }
     
     public void pullVitalSign(){
@@ -55,7 +53,7 @@ public class VitalSignProcessing extends Observable implements Runnable {
         HistoryLogging.getInstance().logMessage("New Vital Reading: " + vitalSignValue);
         
         if(!configuration.isVitalSignInRange(vitalSignValue)){
-            // TODO: Turn on alarm from controller
+            this.alarmController.setAlarmStatus(AlarmStatus.ACTIVE);
         }
         
         this.setChanged();
@@ -89,7 +87,9 @@ public class VitalSignProcessing extends Observable implements Runnable {
     }
     
     public void run() {
-        
+        while(isActive) {
+            pullVitalSign();
+        }
     }
     
 }

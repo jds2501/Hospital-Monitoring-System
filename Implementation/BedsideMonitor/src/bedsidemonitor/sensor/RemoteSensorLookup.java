@@ -20,12 +20,7 @@ import java.rmi.registry.Registry;
  * 
  * @author Jason Smith
  */
-public class SensorLookup {
-
-    /**
-     * Singleton object for this class
-     */
-    private static SensorLookup instance;
+public class RemoteSensorLookup implements SensorLookupInterface {
     
     /**
      * Registry object for RMI
@@ -35,7 +30,7 @@ public class SensorLookup {
     /**
      * Constructs a SensorLookup service.
      */
-    private SensorLookup(){
+    public RemoteSensorLookup(){
         System.setSecurityManager(new RMISecurityManager());
         try {
             this.registry = LocateRegistry.getRegistry();
@@ -57,28 +52,12 @@ public class SensorLookup {
             try {
                 sensor = (SensorInterface) registry.lookup(sensorName);
             } catch (AccessException ex) {
-                ex.printStackTrace();
             } catch (RemoteException ex) {
-                ex.printStackTrace();
             } catch (NotBoundException ex) {
-                ex.printStackTrace();
             }
         }
         
         return sensor;
-    }
-    
-    /**
-     * Gets the singleton instance of this class.
-     * 
-     * @return the singleton instance of this class
-     */
-    public static SensorLookup getInstance() {
-        if(instance == null){
-            instance = new SensorLookup();
-        }
-        
-        return instance;
     }
     
 } // SensorLookup

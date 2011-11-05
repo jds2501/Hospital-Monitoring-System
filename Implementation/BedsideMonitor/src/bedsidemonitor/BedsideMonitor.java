@@ -8,45 +8,64 @@
  */
 package bedsidemonitor;
 
-import java.util.ArrayList;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Observer;
 import java.util.Queue;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import nursestation.notificationservice.NotificationService;
 
 import bedsidemonitor.callbutton.CallButtonController;
 import bedsidemonitor.sensor.SensorInterface;
-import bedsidemonitor.sensor.SensorLookup;
+import bedsidemonitor.sensor.RemoteSensorLookup;
+import bedsidemonitor.sensor.SensorLookupInterface;
 import bedsidemonitor.vitalsigncollection.VitalSignCollectionController;
 import bedsidemonitor.vitalsigncollection.VitalSignConfiguration;
 import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
 
 
 /**
- * 
+ * The bedside monitor for managing a patient's call button, vital signs,
+ * and notification services for who wants to receive notifications of updates.
  * 
  * @author Jason Smith
  */
-public class BedsideMonitor implements BedsideMonitorInterface {
+public class BedsideMonitor {
 
     private String patientName;
+    private BedsideMonitorSubscribeInterface subscribe;
+    private SensorLookupInterface sensorLookup;
     private CallButtonController callButtonController;
     private Map<String, VitalSignCollectionController> vitalSignCollections;
     private Map<String, VitalSignProcessing> vitalSignProcessings;
-    private List<NotificationService> notificationServices;
     private Timer timer;
     
-    public BedsideMonitor(String patientName){
+    /**
+     * Constructs a BedsideMonitor object with a remote sensor lookup object.
+     * 
+     * @param patientName the name of the patient
+     */
+    public BedsideMonitor(String patientName) throws RemoteException {
+        this(patientName, new RemoteSensorLookup());
+        
+        try {
+            Naming.rebind(patientName, subscribe);
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        } catch (MalformedURLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public BedsideMonitor(String patientName, 
+            SensorLookupInterface sensorLookup) throws RemoteException {
+        this.subscribe = new BedsideMonitorSubscribeImpl();
         this.patientName = patientName;
-        notificationServices = new ArrayList<NotificationService>();
-        callButtonController = new CallButtonController(notificationServices);
+        this.sensorLookup = sensorLookup;
+        callButtonController = new CallButtonController();
         vitalSignCollections = new HashMap<String, VitalSignCollectionController>();
         vitalSignProcessings = new HashMap<String, VitalSignProcessing>();
         timer = new Timer();
@@ -54,7 +73,7 @@ public class BedsideMonitor implements BedsideMonitorInterface {
     
     public void addSensor(VitalSignConfiguration configuration){
         String name = configuration.getName();
-        SensorInterface sensor = SensorLookup.getInstance().getSensorByName(name);
+        SensorInterface sensor = sensorLookup.getSensorByName(name);
         
         if(sensor != null) {
             
@@ -62,8 +81,7 @@ public class BedsideMonitor implements BedsideMonitorInterface {
             VitalSignCollectionController controller = 
                     new VitalSignCollectionController(sensor, vitalSignMsgQueue);
             VitalSignProcessing processor = 
-                    new VitalSignProcessing(vitalSignMsgQueue, configuration,
-                            this.notificationServices);
+                    new VitalSignProcessing(vitalSignMsgQueue, configuration);
             
             Thread processorTask = new Thread(processor);
             processorTask.start();
@@ -80,39 +98,34 @@ public class BedsideMonitor implements BedsideMonitorInterface {
     }
     
     public void removeSensor(String sensorName){
-        VitalSignProcessing processor = vitalSignProcessings.remove(sensorName);
-        VitalSignCollectionController controller = vitalSignCollections.remove(sensorName);
-        controller.cancel();
-        processor.setActive(false);
-    }
-    
-    public void addListener(Observer observer){
-       for(VitalSignProcessing processing: vitalSignProcessings.values()){
-            processing.addObserver(observer);
-       }
-       
-       callButtonController.addObserver(observer);
-    }
-    
-    public void subscribe(NotificationService service){
-        synchronized(notificationServices) {
-            notificationServices.add(service);
-        }
-    }
-    
-    public void unsubscribe(NotificationService service){
-        synchronized(notificationServices) {
-            notificationServices.remove(service);
+        if(vitalSignProcessings.containsKey(sensorName)){
+            VitalSignProcessing processor = vitalSignProcessings.remove(sensorName);
+            VitalSignCollectionController controller = vitalSignCollections.remove(sensorName);
+            controller.cancel();
+            processor.setActive(false);
+        }else{
+            throw new IllegalArgumentException("Sensor " + sensorName + " does not exist");
         }
     }
     
     public VitalSignConfiguration getConfiguration(String vitalSignName){
-        return vitalSignProcessings.get(vitalSignName).getConfiguration();
+        VitalSignConfiguration configuration = null;
+        
+        if(vitalSignProcessings.containsKey(vitalSignName)){
+            configuration = vitalSignProcessings.get(vitalSignName).getConfiguration();
+        }
+        
+        return configuration;
     }
     
     public void changeConfiguration(VitalSignConfiguration configuration){
         String name = configuration.getName();
-        vitalSignProcessings.get(name).setConfiguration(configuration);
+        
+        if(vitalSignProcessings.containsKey(name)){
+            vitalSignProcessings.get(name).setConfiguration(configuration);
+        }else{
+            throw new IllegalArgumentException("Configuration name " + name + " does not exist");
+        }
     }
     
     public boolean getCallButton(){
@@ -121,10 +134,6 @@ public class BedsideMonitor implements BedsideMonitorInterface {
     
     public void setCallButton(boolean callStatus){
         this.callButtonController.setCallStatus(callStatus);
-    }
-    
-    public String getPatientName() {
-        return patientName;
     }
     
 } // BedsideMonitor

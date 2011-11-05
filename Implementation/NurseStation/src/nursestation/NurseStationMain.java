@@ -1,10 +1,5 @@
 package nursestation;
 
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.RemoteException;
-
-import nursestation.notificationservice.NotificationServiceImpl;
 import nursestation.userinterface.NurseStationView;
 import nursestation.userinterface.PatientDisplay;
 
@@ -15,7 +10,14 @@ import nursestation.userinterface.PatientDisplay;
  */
 public class NurseStationMain {
 	
+    /**
+     * The view of the nurse station UI
+     */
 	private NurseStationView view;
+	
+	/**
+	 * The display of the patient UI
+	 */
 	private PatientDisplay patientDisplay;
 	
 	/**
@@ -33,21 +35,10 @@ public class NurseStationMain {
 	/**
 	 * Main method of execution to startup the nurse station.
 	 * 
-	 * @param args
+	 * @param args (ignored)
 	 */
 	public static void main(String[] args){
-		//try {
-            //NotificationServiceImpl service = new NotificationServiceImpl();
-            //Naming.rebind("nurse-station", service);
-            
-            // Instantiate the GUI
-            new NurseStationMain();
-            
-//        } catch (RemoteException ex) {
-//            ex.printStackTrace();
-//        } catch (MalformedURLException ex) {
-//            ex.printStackTrace();
-//        }
+        new NurseStationMain();
 	}
 	
 } // NurseStationMain

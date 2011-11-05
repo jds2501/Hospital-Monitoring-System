@@ -28,12 +28,4 @@ public interface NotificationService extends Remote {
      */
     public void pushVitalSign(VitalSignMessage msg) throws RemoteException;
     
-    /**
-     * Pushes a call button status to the server for a particular patient.
-     * 
-     * @param msg the CallButtonMessage to be pushed
-     */
-    public void pushCallButton(CallButtonMessage msg)
-        throws RemoteException;
-    
 } // NotificationService
