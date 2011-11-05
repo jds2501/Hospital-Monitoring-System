@@ -8,6 +8,8 @@
  */
 package bedsidemonitor;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,7 +37,8 @@ import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
  * 
  * @author Jason Smith
  */
-public class BedsideMonitor implements BedsideMonitorInterface {
+public class BedsideMonitor extends UnicastRemoteObject 
+    implements BedsideMonitorInterface {
 
     private SensorLookupInterface sensorLookup;
     private CallButtonController callButtonController;
@@ -47,11 +50,12 @@ public class BedsideMonitor implements BedsideMonitorInterface {
     /**
      * Constructs a BedsideMonitor object with a remote sensor lookup object.
      */
-    public BedsideMonitor(){
+    public BedsideMonitor() throws RemoteException {
         this(new RemoteSensorLookup());
     }
     
-    public BedsideMonitor(SensorLookupInterface sensorLookup){
+    public BedsideMonitor(SensorLookupInterface sensorLookup) throws RemoteException{
+        super();
         this.sensorLookup = sensorLookup;
         notificationServices = new ArrayList<NotificationService>();
         callButtonController = new CallButtonController();
@@ -98,13 +102,13 @@ public class BedsideMonitor implements BedsideMonitorInterface {
         }
     }
     
-    public void subscribe(NotificationService service){
+    public void subscribe(NotificationService service) throws RemoteException {
         synchronized(notificationServices) {
             notificationServices.add(service);
         }
     }
     
-    public void unsubscribe(NotificationService service){
+    public void unsubscribe(NotificationService service) throws RemoteException {
         synchronized(notificationServices) {
             notificationServices.remove(service);
         }

@@ -9,6 +9,7 @@
 
 package bedsidemonitor.test;
 
+import java.rmi.RemoteException;
 import java.util.Map;
 
 import bedsidemonitor.BedsideMonitor;
@@ -40,7 +41,7 @@ public class BedsideMonitorTest extends TestCase {
     /**
      * Sets up a bedside monitor object for each test case.
      */
-    public void setUp(){
+    public void setUp() throws RemoteException {
         this.sensorLookup = new FakeSensorLookup();
         this.bedsideMonitor = new BedsideMonitor(sensorLookup);
     }

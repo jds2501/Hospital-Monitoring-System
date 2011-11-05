@@ -9,6 +9,10 @@
 
 package bedsidemonitor;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+
 import bedsidemonitor.userinterface.BedsideMonitorView;
 import bedsidemonitor.userinterface.PatientStatsPanel;
 
@@ -36,12 +40,21 @@ public class BedsideMonitorMain {
      * Main method of execution to startup the bedside monitor system.
      * 
      * @param args[0] name of bedside monitor
-     * @param args[1] Number of sensors
      */
     public static void main(String[] args){
-        new BedsideMonitorMain();
-        
-        
+        if(args.length == 1){        
+            try {
+                BedsideMonitorInterface bedsideMonitor = new BedsideMonitor();
+                Naming.rebind(args[0], bedsideMonitor);
+                new BedsideMonitorMain();
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
+            } catch (MalformedURLException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            System.err.println("Usage: java BedsideMonitorMain patientName");
+        }
     }
     
 } // BedsideMonitorMain
