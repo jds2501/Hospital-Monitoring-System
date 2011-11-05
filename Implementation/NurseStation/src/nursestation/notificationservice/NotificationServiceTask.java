@@ -23,8 +23,19 @@ import alarm.AlarmStatus;
  */
 public class NotificationServiceTask extends Observable implements Runnable {
 
+    /**
+     * Notification service to pull incoming patient data from
+     */
     private NotificationServiceImpl notificationService;
+    
+    /**
+     * 3-D map containing patient ID --> Vital Sign ID --> Alarm Status
+     */
     private Map<Long, Map<Long, AlarmStatus>> alarmStatuses;
+    
+    /**
+     * Specifies whether this task is still alive or not
+     */
     private boolean isAlive;
     
     /**
