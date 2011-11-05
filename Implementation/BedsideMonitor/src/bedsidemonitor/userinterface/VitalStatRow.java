@@ -85,6 +85,8 @@ public class VitalStatRow extends JPanel {
 		configureButton.setIcon(gearIcon);
 		Dimension dim = new Dimension(gearIcon.getIconWidth()*2,
 				gearIcon.getIconHeight());
+		configureButton.setSize(dim);
+		configureButton.setPreferredSize(dim);
 		configureButtonPanel.setSize(dim);
 		configureButtonPanel.setPreferredSize(dim);
 		configureButton.setOpaque(false);
@@ -212,12 +214,22 @@ public class VitalStatRow extends JPanel {
 				//TODO save min/max values
 				minRangeValuePanel.setVisible(false);
 				maxRangeValuePanel.setVisible(false);
+				refresh();
 			} else {
 				//TODO save min/max values
 				minRangeValuePanel.setVisible(true);
 				maxRangeValuePanel.setVisible(true);
+				refresh();
 			}
 		}
+	}
+
+	/**
+	 * Refresh the interface to ensure correct display
+	 */
+	public void refresh() {
+		repaint();
+		validate();
 	}
 
 	/**
