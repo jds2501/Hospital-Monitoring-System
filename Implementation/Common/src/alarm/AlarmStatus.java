@@ -6,7 +6,7 @@
  * Date: Nov 2, 2011
  * 
  */
-package nursestation.enums;
+package alarm;
 
 /**
  * Enumeration defining the three major statuses of an alarm.

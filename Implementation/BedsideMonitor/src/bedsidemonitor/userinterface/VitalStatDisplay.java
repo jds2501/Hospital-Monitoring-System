@@ -1,13 +1,13 @@
 /*
- * Package: nursestation.userinterface
+ * Package: bedsidemonitor.userinterface
  *
- * File: PatientDisplay.java
+ * File: VitalStatDisplay.java
  *
- * Date: Nov 2, 2011
+ * Date: Nov 3, 2011
  * 
  */
 
-package nursestation.userinterface;
+package bedsidemonitor.userinterface;
 
 import java.awt.FlowLayout;
 
@@ -17,22 +17,22 @@ import alarm.AlarmStatus;
 
 
 /**
- * PatientDisplay - The main JPanel that individual patient panels are placed within
+ * VitalStatDisplay - The main JPanel that shows vital sign collections.
  * 
  * @author Anthony Barone
  */
 
 @SuppressWarnings("serial")
-public class PatientDisplay extends JPanel {
+public class VitalStatDisplay extends JPanel {
 
-	private NurseStationView view;
+	private BedsideMonitorView view;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param gui - Reference to the graphical user interface of the system
 	 */
-	public PatientDisplay(NurseStationView gui) {
+	public VitalStatDisplay(BedsideMonitorView gui) {
 
 		// Call parent constructor
 		super();
@@ -52,13 +52,11 @@ public class PatientDisplay extends JPanel {
 	public void paintPatientPanels(/*TODO Pass in a patient map for populating data */) {
 		// remove images before adding more to the same panel
 		removeAll();
-		add(new PatientPanel("Test Patient 1", AlarmStatus.INACTIVE.name()));
-		add(new PatientPanel("Test Patient 2", AlarmStatus.ACTIVE.name()));
-		add(new PatientPanel("Test Patient 3", AlarmStatus.INACTIVE.name()));
-		add(new PatientPanel("Test Patient 4", AlarmStatus.INACTIVE.name()));
-		add(new PatientPanel("Test Patient 5", AlarmStatus.INACTIVE.name()));
-		add(new PatientPanel("Test Patient 6", AlarmStatus.ACTIVE.name()));
-		add(new PatientPanel("Test Patient 7", AlarmStatus.ACTIVE.name()));
+		add(new VitalStatRow("Heart Rate", AlarmStatus.INACTIVE.name()));
+		add(new VitalStatRow("Systolic Blood Pressure", AlarmStatus.ACTIVE.name()));
+		add(new VitalStatRow("Respiratory Rate", AlarmStatus.INACTIVE.name()));
+		add(new VitalStatRow("Weight (kg)", AlarmStatus.INACTIVE.name()));
+		add(new VitalStatRow("Weight (lb)", AlarmStatus.INACTIVE.name()));
 		refresh();
 	}
 
