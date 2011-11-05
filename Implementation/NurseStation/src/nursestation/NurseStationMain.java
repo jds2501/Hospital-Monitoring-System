@@ -8,6 +8,8 @@ import java.rmi.registry.Registry;
 
 import bedsidemonitor.BedsideMonitorSubscribeInterface;
 import nursestation.notificationservice.NotificationService;
+import nursestation.notificationservice.NotificationServiceImpl;
+import nursestation.notificationservice.NotificationServiceTask;
 import nursestation.userinterface.NurseStationView;
 import nursestation.userinterface.PatientDisplay;
 
@@ -21,7 +23,7 @@ public class NurseStationMain {
     /**
      * The notification service used for receiving patient messages
      */
-    private NotificationService service;
+    private NotificationServiceImpl service;
     
     /**
      * The view of the nurse station UI
@@ -32,6 +34,8 @@ public class NurseStationMain {
 	 * The display of the patient UI
 	 */
 	private PatientDisplay patientDisplay;
+
+    private NotificationServiceTask serviceRunnable;
 	
 	/**
 	 * Sets up the execution of the nurses' station by subscribing
@@ -41,6 +45,11 @@ public class NurseStationMain {
 	 */
 	public NurseStationMain(String[] patientNames) {
 	    try {
+	        this.service = new NotificationServiceImpl();
+	        this.serviceRunnable = new NotificationServiceTask(service);
+	        Thread serviceTask = new Thread(serviceRunnable);
+	        serviceTask.start();
+	        
             this.subscribeToPatients(patientNames);
             this.constructNurseStationGUI();
         } catch (RemoteException ex) {
