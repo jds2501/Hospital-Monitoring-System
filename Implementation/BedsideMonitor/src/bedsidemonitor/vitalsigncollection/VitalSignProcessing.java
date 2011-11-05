@@ -10,19 +10,18 @@ package bedsidemonitor.vitalsigncollection;
 
 import historylogging.HistoryLogging;
 
-import java.util.List;
 import java.util.Observable;
 import java.util.Queue;
-
-import nursestation.notificationservice.NotificationService;
 
 import alarm.AlarmController;
 import alarm.AlarmStatus;
 
 
 /**
- * @author Jason
- *
+ * This class represents a vital sign processing class for pulling sensor
+ * data from a message queue and processing the sensor data respectively.
+ * 
+ * @author Jason Smith
  */
 public class VitalSignProcessing extends Observable implements Runnable {
 
@@ -31,34 +30,58 @@ public class VitalSignProcessing extends Observable implements Runnable {
      */
     private Queue<Integer> vitalSignMsgQueue;
     
+    /**
+     * The current vital sign reading
+     */
     private Double vitalSignValue;
     
+    /**
+     * The vital sign configuration values
+     */
     private VitalSignConfiguration configuration;
 
+    /**
+     * The controller for managing the alarm for this vital sign
+     */
     private AlarmController alarmController;
     
+    /**
+     * Specifies whether this task is still alive or not
+     */
     private boolean isActive;
     
+    /**
+     * Constructs a VitalSignProcessing object with a message queue
+     * and a vital sign configuration.
+     * 
+     * @param vitalSignMsgQueue the message queue to pull sensor data from
+     * @param configuration the vital sign configuration
+     */
     public VitalSignProcessing(Queue<Integer> vitalSignMsgQueue, 
-           VitalSignConfiguration converter){
+           VitalSignConfiguration configuration){
         this.vitalSignMsgQueue = vitalSignMsgQueue;
         this.vitalSignValue = null;
-        this.configuration = converter;
+        this.configuration = configuration;
         this.alarmController = new AlarmController();
     }
     
+    /**
+     * Pulls the vital sign from the message queue and converts it
+     * to its actual value. Then, if the vital sign is out of range,
+     * fire an alarm.
+     */
     public void pullVitalSign(){
         int rawVitalSignReading = vitalSignMsgQueue.poll();
         vitalSignValue = configuration.convertRawVitalToActual(rawVitalSignReading);
-        HistoryLogging.getInstance().logMessage("New Vital Reading: " + vitalSignValue);
+        HistoryLogging.getInstance().logMessage("New Vital Reading: " + 
+                vitalSignValue);
         
         if(!configuration.isVitalSignInRange(vitalSignValue)){
             this.alarmController.setAlarmStatus(AlarmStatus.ACTIVE);
         }
         
         this.setChanged();
-        this.notifyObservers();        
-        // TODO: Push results to notification service
+        this.notifyObservers(this);
     }
 
     /**
@@ -78,18 +101,30 @@ public class VitalSignProcessing extends Observable implements Runnable {
         this.isActive = isActive;
     }
     
+    /**
+     * @return the vital sign configuration
+     */
     public VitalSignConfiguration getConfiguration() {
         return configuration;
     }
     
+    /**
+     * Sets the vital sign configuration to specified value.
+     * 
+     * @param configuration the new vital sign configuration
+     */
     public void setConfiguration(VitalSignConfiguration configuration) {
         this.configuration = configuration;
     }
     
+    /**
+     * While this task is active, continue to pull vital signs until its
+     * shut off.
+     */
     public void run() {
         while(isActive) {
             pullVitalSign();
         }
     }
     
-}
+} // VitalSignProcessing
