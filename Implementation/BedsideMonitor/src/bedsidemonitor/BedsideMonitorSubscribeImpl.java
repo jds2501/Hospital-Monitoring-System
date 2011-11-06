@@ -12,6 +12,8 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import nursestation.notificationservice.NotificationService;
 import nursestation.notificationservice.VitalSignMessage;
@@ -32,6 +34,11 @@ public class BedsideMonitorSubscribeImpl extends UnicastRemoteObject
     private List<NotificationService> notificationServices;
 
     /**
+     * Acknowledge messages for alarms for vital signs.
+     */
+    private Queue<String> acknowledgements;
+    
+    /**
      * Constructs a BedsideMonitorSubscribeImpl object.
      * 
      * @throws RemoteException If remote construction fails
@@ -39,6 +46,7 @@ public class BedsideMonitorSubscribeImpl extends UnicastRemoteObject
     public BedsideMonitorSubscribeImpl() throws RemoteException {
         super();
         notificationServices = new ArrayList<NotificationService>();
+        acknowledgements = new LinkedBlockingQueue<String>();
     }
     
     /**
@@ -62,7 +70,7 @@ public class BedsideMonitorSubscribeImpl extends UnicastRemoteObject
             notificationServices.remove(service);
         }
     }
-
+    
     /**
      * Publishes the given vital sign message to all remote observers.
      * 
@@ -76,6 +84,16 @@ public class BedsideMonitorSubscribeImpl extends UnicastRemoteObject
                 ex.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Acknowledges the specified alarm at this bedside monitor.
+     * 
+     * @param vitalSignAlarm the vital sign alarm to acknowledge
+     */
+    public void acknowledgeAlarm(String vitalSignName) throws RemoteException {
+        System.out.println("Acknowledge received: " + vitalSignName);
+        acknowledgements.offer(vitalSignName);
     }
     
 } // BedsideMonitorSubscribeImpl

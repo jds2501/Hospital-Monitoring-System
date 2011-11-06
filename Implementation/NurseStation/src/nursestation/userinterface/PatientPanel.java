@@ -192,6 +192,11 @@ public class PatientPanel extends JPanel implements Observer {
 						String selectString = (String)selection;
 						activeAlarmsModel.removeElement(selectString);
 						acknowlAlarmsModel.addElement(selectString);
+						
+						// TODO: Need to collect the data and send it
+						//       in one chunk, rather than single calls
+						notificationTask.acknowledgeAlarm(
+						        patientName.getText(), selectString);
 					}
 				}
 			}
@@ -205,7 +210,7 @@ public class PatientPanel extends JPanel implements Observer {
 				acknowlAlarmButton.setEnabled(false);
 				acknowlAllAlarmButton.setEnabled(false);
 			}
-
+			
 			//TODO backend logic
 		}
 	}

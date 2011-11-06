@@ -8,9 +8,12 @@
  */
 package nursestation.notificationservice;
 
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
+
+import bedsidemonitor.BedsideMonitorSubscribeInterface;
 
 import alarm.AlarmStatus;
 
@@ -34,6 +37,11 @@ public class NotificationServiceTask extends Observable implements Runnable {
     private Map<String, Map<String, AlarmStatus>> alarmStatuses;
     
     /**
+     * The patient bedside monitors
+     */
+    private Map<String, BedsideMonitorSubscribeInterface> patientBedsides;
+    
+    /**
      * Specifies whether this task is still alive or not
      */
     private boolean isAlive;
@@ -47,6 +55,7 @@ public class NotificationServiceTask extends Observable implements Runnable {
         this.notificationService = service;
         this.isAlive = true;
         this.alarmStatuses = new HashMap<String, Map<String, AlarmStatus>>();
+        this.patientBedsides = new HashMap<String, BedsideMonitorSubscribeInterface>();
     }
     
     /**
@@ -54,9 +63,14 @@ public class NotificationServiceTask extends Observable implements Runnable {
      * 
      * @param patientName the patient name to add
      */
-    public void addPatient(String patientName) {
+    public void addPatient(String patientName, 
+            BedsideMonitorSubscribeInterface bedside) {
         synchronized(alarmStatuses) {
             alarmStatuses.put(patientName, new HashMap<String, AlarmStatus>());
+        }
+        
+        synchronized(patientBedsides) {
+            patientBedsides.put(patientName, bedside);
         }
     }
     
@@ -93,6 +107,12 @@ public class NotificationServiceTask extends Observable implements Runnable {
         VitalSignMessage msg = new VitalSignMessage(
                 patientName, vitalSignName, AlarmStatus.ACKNOWLEDGED);
         updateAlarm(msg);
+        
+        try {
+            patientBedsides.get(patientName).acknowledgeAlarm(vitalSignName);
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        }
     }
     
     /**

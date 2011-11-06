@@ -47,10 +47,6 @@ public class NurseStationMain {
 	        this.service = new NotificationServiceImpl();
 	        this.serviceRunnable = new NotificationServiceTask(service);
 	        
-	        for(String patientName: patientNames) {
-	            this.serviceRunnable.addPatient(patientName);
-	        }
-	        
 	        Thread serviceTask = new Thread(serviceRunnable);
 	        serviceTask.start();
 	        
@@ -81,6 +77,7 @@ public class NurseStationMain {
 	        BedsideMonitorSubscribeInterface bedsideMonitor = 
 	                (BedsideMonitorSubscribeInterface) registry.lookup(patientName);
 	        bedsideMonitor.subscribe(service);
+	        this.serviceRunnable.addPatient(patientName, bedsideMonitor);
 	    }
 	}
 	

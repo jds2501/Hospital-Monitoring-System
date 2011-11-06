@@ -38,4 +38,13 @@ public interface BedsideMonitorSubscribeInterface extends Remote {
      */
     public void unsubscribe(NotificationService service) throws RemoteException;
     
+    /**
+     * Acknowledges the specified alarm at the bedside monitor.
+     * 
+     * @param vitalSignName the vital sign alarm to acknowledge
+     * 
+     * @throws RemoteException if the remote call fails
+     */
+    public void acknowledgeAlarm(String vitalSignName) throws RemoteException;
+    
 } // BedsideMonitorSubscribeInterface
