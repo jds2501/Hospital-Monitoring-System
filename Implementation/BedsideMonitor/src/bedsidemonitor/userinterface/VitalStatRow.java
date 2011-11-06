@@ -116,8 +116,6 @@ public class VitalStatRow extends JPanel implements Observer {
 		infoPanel.add(configureButtonPanel);
 
 		// JSpinner config models
-		
-		//TODO INTEGRATION WITH CONFIG OBJECT
 		spinnerConfigMin = new SpinnerNumberModel(configuration.getMinAllowedReading(), 0.0, 100.0, .1);
 		spinnerConfigMax = new SpinnerNumberModel(configuration.getMaxAllowedReading(), 0.0, 100.0, .1);
 		spinnerConfigConvFactor = new SpinnerNumberModel(configuration.getConversionFactor(), 0.0, 100.0, .1);
@@ -179,15 +177,9 @@ public class VitalStatRow extends JPanel implements Observer {
 		alarmButtonPanel.setLayout(new BorderLayout());
 		acknowlAlarmButton = new JButton("Turn Off");
 		
-		/*if (alarmState.equals(AlarmStatus.ACTIVE.name())) {
-			acknowlAlarmButton.setEnabled(true);
-			alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
-			alarmStatus.setForeground(Color.RED);
-		} else {*/
-			acknowlAlarmButton.setEnabled(false);
-			alarmStatus.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			alarmStatus.setForeground(Color.GRAY);
-		//}
+		acknowlAlarmButton.setEnabled(false);
+		alarmStatus.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		alarmStatus.setForeground(Color.GRAY);
 		
 		acknowlAlarmButton.addActionListener(new TurnOffAlarmListener());
 		alarmButtonPanel.add(acknowlAlarmButton, BorderLayout.EAST);

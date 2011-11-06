@@ -57,7 +57,7 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 
 	// ***** Window attributes ***** //
 
-	private static final int FRAME_WIDTH = 614;
+	private static final int FRAME_WIDTH = 814;
 	private static final int FRAME_HEIGHT = 610;
 
 	// ***** Menu and Toolbar components ***** //

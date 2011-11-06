@@ -11,9 +11,7 @@ package nursestation.userinterface;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -21,9 +19,13 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 
 import alarm.AlarmStatus;
@@ -38,73 +40,98 @@ import alarm.AlarmStatus;
 @SuppressWarnings("serial")
 public class PatientPanel extends JPanel {
 
-	private JPanel alarmPanel, alarmButtonPanel, alarmPanelOuter;
-	private JButton acknowlAlarmButton;
+	private JPanel infoPanel, subInfoPatientPanel, subInfoAlarmPanel, alarmPanel, alarmButtonPanel, alarmPanelOuter;
+	private JButton acknowlAlarmButton, acknowlAllAlarmButton;
 	private JLabel alarmStatusLabel, alarmStatus, patientNameLabel, patientName;
+	private DefaultListModel activeAlarmsModel, acknowlAlarmsModel;
+	private JList activeAlarms, acknowlAlarms;
+	private JScrollPane activeAlarmScroll, acknowlAlarmScroll;
 
 	/**
 	 * Constructor
 	 */
 	public PatientPanel(String name, String alarmState) {
-		
+
 		// Call parent constructor
 		super();
 
 		// Instantiate values / construct panel
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createEtchedBorder());
-		
+
 		alarmPanelOuter = new JPanel(new BorderLayout());
 		alarmPanel = new JPanel();
-		alarmPanel.setLayout(new GridLayout(2, 1));
 
-		JPanel p1 = new JPanel();
-		p1.setLayout(new BoxLayout(p1, BoxLayout.LINE_AXIS));
-		JPanel p2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		JPanel p3 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		
-		patientNameLabel = new JLabel("  Patient Name:  ");
-		
+		infoPanel = new JPanel(new GridLayout(2, 1));
+		subInfoPatientPanel = new JPanel();
+		subInfoPatientPanel.setLayout(new BoxLayout(subInfoPatientPanel, BoxLayout.LINE_AXIS));
+		subInfoAlarmPanel = new JPanel();
+		subInfoAlarmPanel.setLayout(new BoxLayout(subInfoAlarmPanel, BoxLayout.LINE_AXIS));
+
+		patientNameLabel = new JLabel("  Patient:  ");
 		patientName = new JLabel(name);
 		patientName.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
 				Font.BOLD, UIManager.getDefaults().getFont("Label.font").getSize()));
-		p1.add(patientNameLabel);
-		p1.add(patientName);
-		
-		alarmStatusLabel = new JLabel("Alarm:  ");
-		alarmStatusLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		p2.add(alarmStatusLabel);
-		alarmPanel.add(p2);
-		
+		subInfoPatientPanel.add(patientNameLabel);
+		subInfoPatientPanel.add(patientName);
+		infoPanel.add(subInfoPatientPanel);
+
+		alarmStatusLabel = new JLabel("  Alarm State:  ");
 		alarmStatus = new JLabel(alarmState);
-		alarmStatus.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		p3.add(alarmStatus);
-		alarmPanel.add(p3);
-		
+		subInfoAlarmPanel.add(alarmStatusLabel);
+		subInfoAlarmPanel.add(alarmStatus);
+		infoPanel.add(subInfoAlarmPanel);
+
+		activeAlarmsModel = new DefaultListModel();
+		//TODO populate this array with vital stats which have an active alarm triggered
+		String[] activeAlarmVitals = {"Vital1", "Vital2", "Vital3", "Vital4"};
+		for (int i=0; i<activeAlarmVitals.length; i++) {
+			activeAlarmsModel.add(i, activeAlarmVitals[i]);
+		}
+		activeAlarms = new JList(activeAlarmsModel);
+		activeAlarms.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		activeAlarms.setLayoutOrientation(JList.VERTICAL);
+		activeAlarms.setVisibleRowCount(-1);
+		activeAlarms.setFixedCellHeight(20);
+		activeAlarmScroll = new JScrollPane(activeAlarms);
+		activeAlarmScroll.setPreferredSize(new Dimension(200, 65));
+
+		acknowlAlarmsModel = new DefaultListModel();
+		String[] acknowlVitals = {"Vital5", "Vital6"};
+		for (int i=0; i<acknowlVitals.length; i++) {
+			acknowlAlarmsModel.add(i, acknowlVitals[i]);
+		}
+		acknowlAlarms = new JList(acknowlAlarmsModel); //data has type Object[]
+		acknowlAlarms.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		acknowlAlarms.setLayoutOrientation(JList.VERTICAL);
+		acknowlAlarms.setVisibleRowCount(-1);
+		acknowlAlarms.setFixedCellHeight(20);
+		acknowlAlarmScroll = new JScrollPane(acknowlAlarms);
+		acknowlAlarmScroll.setPreferredSize(new Dimension(200, 65));
+
 		alarmPanelOuter.add(alarmPanel, BorderLayout.LINE_END);
-		
-		alarmButtonPanel = new JPanel();
+
+		alarmButtonPanel = new JPanel(new BorderLayout());
 		alarmButtonPanel.setLayout(new BorderLayout());
 		acknowlAlarmButton = new JButton("Respond");
-		if (alarmState.equals(AlarmStatus.ACTIVE.name())) {
-			acknowlAlarmButton.setEnabled(true);
-			alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
-			alarmStatus.setForeground(Color.RED);
-		} else {
-			acknowlAlarmButton.setEnabled(false);
-			alarmStatus.setFont(new Font("Tahoma", Font.PLAIN, 14));
-			alarmStatus.setForeground(Color.GRAY);
-		}
+		acknowlAllAlarmButton = new JButton("Respond All");
 		acknowlAlarmButton.addActionListener(new AcknowlAlarmListener());
-		alarmButtonPanel.add(acknowlAlarmButton, BorderLayout.EAST);
+		acknowlAllAlarmButton.addActionListener(new AcknowlAllAlarmListener());
 
+		alarmStatus.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		alarmStatus.setForeground(Color.GRAY);
 
-		
-		this.add(p1, BorderLayout.WEST);
-		this.add(alarmPanelOuter, BorderLayout.CENTER);
-		this.add(alarmButtonPanel, BorderLayout.EAST);
-		
-		this.setPreferredSize(new Dimension(600, 50));
+		alarmButtonPanel.add(acknowlAlarmButton, BorderLayout.NORTH);
+		alarmButtonPanel.add(acknowlAllAlarmButton, BorderLayout.SOUTH);
+
+		alarmPanel.add(activeAlarmScroll);
+		alarmPanel.add(alarmButtonPanel);
+		alarmPanel.add(acknowlAlarmScroll);
+
+		this.add(infoPanel, BorderLayout.WEST);
+		this.add(alarmPanel, BorderLayout.EAST);
+
+		this.setPreferredSize(new Dimension(800, 80));
 	}
 
 	/**
@@ -118,15 +145,65 @@ public class PatientPanel extends JPanel {
 	}
 
 	/**
-	 * Inner class for listener on Acknowledge Alarm button
+	 * Inner class for listener on Acknowledge All Alarms button
 	 */
-	private class AcknowlAlarmListener implements ActionListener {
+	private class AcknowlAllAlarmListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			// Obtain all vital sign objects in active alarm box
+			int numActiveAlarms = activeAlarmsModel.getSize();
+			String[] tempStorage = new String[numActiveAlarms];
+			activeAlarmsModel.copyInto(tempStorage);
+
+			// Transfer all vital sign objects
+			for (int i = 0; i < numActiveAlarms; i++) {
+				String selectString = (String)tempStorage[i];
+				acknowlAlarmsModel.addElement(selectString);
+			}
+
+			// Clear out active alarm list
+			activeAlarmsModel.removeAllElements();
+
+			// Update the alarm status to "Acknowledged" since all active alarms 
+			// have been acknowledged.
 			alarmStatus.setText(AlarmStatus.ACKNOWLEDGED.name());
 			alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
 			alarmStatus.setForeground(Color.BLUE);
 			acknowlAlarmButton.setEnabled(false);
-			//TODO logging, updating external sources, etc
+			acknowlAllAlarmButton.setEnabled(false);
+
+			//TODO backend logic
+		}
+	}
+
+	/**
+	 * Inner class for listener on Acknowledge Alarm button
+	 */
+	private class AcknowlAlarmListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			// Check for selection
+			Object[] selections = activeAlarms.getSelectedValues();
+			if (selections.length > 0) {
+				for (Object selection : selections) {
+					if (selection instanceof String) {
+						// Make the transfer
+						String selectString = (String)selection;
+						activeAlarmsModel.removeElement(selectString);
+						acknowlAlarmsModel.addElement(selectString);
+					}
+				}
+			}
+
+			// Determine if we need to change the alarm status
+			// (All active alarms being acknowledged translates to a label change)
+			if (activeAlarmsModel.isEmpty()) {
+				alarmStatus.setText(AlarmStatus.ACKNOWLEDGED.name());
+				alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+				alarmStatus.setForeground(Color.BLUE);
+				acknowlAlarmButton.setEnabled(false);
+				acknowlAllAlarmButton.setEnabled(false);
+			}
+
+			//TODO backend logic
 		}
 	}
 }

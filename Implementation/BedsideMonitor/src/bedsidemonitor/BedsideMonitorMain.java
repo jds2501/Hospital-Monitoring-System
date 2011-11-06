@@ -69,7 +69,7 @@ public class BedsideMonitorMain {
             
             new BedsideMonitorMain(args[0], sensorNames);
         } else {
-            System.err.println("Usage: java BedsideMonitorMain patientName");
+            System.err.println("Usage: java BedsideMonitorMain patientName [vital stat name]...");
         }
     }
     
