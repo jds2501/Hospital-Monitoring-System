@@ -213,34 +213,37 @@ public class PatientPanel extends JPanel implements Observer {
     public void update(Observable observable, Object pushedObject) {
         if(pushedObject instanceof VitalSignMessage) {
             VitalSignMessage msg = (VitalSignMessage) pushedObject;
-            String vitalSignName = msg.getVitalSignName();
             
-            switch(msg.getAlarmStatus()) {
-                case ACTIVE:
-                    if(!activeAlarmsModel.contains(vitalSignName) &&
-                       !acknowlAlarmsModel.contains(vitalSignName)){
-                        activeAlarmsModel.addElement(vitalSignName);
-                        triggerAlarm();
-                    }
-                    break;
-                case ACKNOWLEDGED:
-                    if(activeAlarmsModel.contains(vitalSignName)){
-                        activeAlarmsModel.removeElement(vitalSignName);
-                    }
-                    
-                    if(!acknowlAlarmsModel.contains(vitalSignName)) {
-                        acknowlAlarmsModel.addElement(vitalSignName);
-                    }
-                    break;
-                case INACTIVE:
-                    if(activeAlarmsModel.contains(vitalSignName)){
-                        activeAlarmsModel.removeElement(vitalSignName);
-                    }
-                    
-                    if(acknowlAlarmsModel.contains(vitalSignName)) {
-                        acknowlAlarmsModel.removeElement(vitalSignName);
-                    }
-                    break;
+            if(msg.getPatientName().equals(patientName.getText())) {
+                String vitalSignName = msg.getVitalSignName();
+                
+                switch(msg.getAlarmStatus()) {
+                    case ACTIVE:
+                        if(!activeAlarmsModel.contains(vitalSignName) &&
+                           !acknowlAlarmsModel.contains(vitalSignName)){
+                            activeAlarmsModel.addElement(vitalSignName);
+                            triggerAlarm();
+                        }
+                        break;
+                    case ACKNOWLEDGED:
+                        if(activeAlarmsModel.contains(vitalSignName)){
+                            activeAlarmsModel.removeElement(vitalSignName);
+                        }
+                        
+                        if(!acknowlAlarmsModel.contains(vitalSignName)) {
+                            acknowlAlarmsModel.addElement(vitalSignName);
+                        }
+                        break;
+                    case INACTIVE:
+                        if(activeAlarmsModel.contains(vitalSignName)){
+                            activeAlarmsModel.removeElement(vitalSignName);
+                        }
+                        
+                        if(acknowlAlarmsModel.contains(vitalSignName)) {
+                            acknowlAlarmsModel.removeElement(vitalSignName);
+                        }
+                        break;
+                }
             }
         }
     }
