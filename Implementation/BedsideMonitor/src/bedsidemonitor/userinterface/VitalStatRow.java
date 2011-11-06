@@ -31,7 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
-import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.border.BevelBorder;
 
 import alarm.AlarmStatus;
 import bedsidemonitor.vitalsigncollection.VitalSignConfiguration;
@@ -50,13 +50,14 @@ public class VitalStatRow extends JPanel implements Observer {
 
     private VitalSignController vitalSign;
 	private JPanel infoPanel, alarmPanel, alarmPanelTop, alarmPanelBottom, alarmButtonPanel, alarmPanelOuter,
-		minRangeValuePanel, maxRangeValuePanel, configureButtonPanel, convFactorPanel;
+		minRangeValuePanel, maxRangeValuePanel, minAndMaxComboPanel, convCollComboPanel, 
+		configureButtonPanel, convFactorPanel, collRatePanel, configurationPanel, enableBoxPanel;
 	private JButton configureButton, acknowlAlarmButton;
 	private JLabel alarmStatusLabel, alarmStatus, vitalStatNameLabel, vitalStatName, 
-		vitalValueLabel, vitalStatValue, minRangeLabel, maxRangeLabel, convFactorLabel;
+		vitalValueLabel, vitalStatValue, minRangeLabel, maxRangeLabel, convFactorLabel, collRateLabel;
 	private JCheckBox enableBox;
-	private JSpinner minRangeValue, maxRangeValue, conversionFactor;
-	private SpinnerNumberModel spinnerConfigMin, spinnerConfigMax, spinnerConfigConvFactor;
+	private JSpinner minRangeValue, maxRangeValue, conversionFactor, collectionRate;
+	private SpinnerNumberModel spinnerConfigMin, spinnerConfigMax, spinnerConfigConvFactor, spinnerConfigCollRate;
 
 	/**
 	 * Constructor
@@ -82,10 +83,13 @@ public class VitalStatRow extends JPanel implements Observer {
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.LINE_AXIS));
 
 		//TODO checkbox id should be tied to vital stat id
+		enableBoxPanel = new JPanel();
+		enableBoxPanel.setLayout(new BoxLayout(enableBoxPanel, BoxLayout.LINE_AXIS));
 		enableBox = new JCheckBox();
 		enableBox.setEnabled(false);
 		enableBox.setSelected(false);
 		enableBox.addActionListener(new EnableDisableVitalListener());
+		enableBoxPanel.add(enableBox);
 
 		//TODO configure button should be tied to vital stat id
 		configureButtonPanel = new JPanel();
@@ -106,52 +110,70 @@ public class VitalStatRow extends JPanel implements Observer {
 		vitalStatNameLabel = new JLabel("  Vital Stat:  ");
 		vitalStatName = new JLabel(configuration.getName());
 		vitalStatName.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
-				Font.BOLD, UIManager.getDefaults().getFont("Label.font").getSize()));
+				Font.BOLD, 16));
 		
 		vitalValueLabel = new JLabel();
 		vitalStatValue = new JLabel("");
 		vitalStatValue.setFont(new Font(UIManager.getDefaults().getFont("Label.font").getFontName(), 
 				Font.BOLD, 20));
-		infoPanel.add(enableBox);
+		infoPanel.add(enableBoxPanel);
 		infoPanel.add(configureButtonPanel);
 
 		// JSpinner config models
 		spinnerConfigMin = new SpinnerNumberModel(configuration.getMinAllowedReading(), 0.0, 100.0, .1);
 		spinnerConfigMax = new SpinnerNumberModel(configuration.getMaxAllowedReading(), 0.0, 100.0, .1);
 		spinnerConfigConvFactor = new SpinnerNumberModel(configuration.getConversionFactor(), 0.0, 100.0, .1);
+		spinnerConfigCollRate = new SpinnerNumberModel(configuration.getCollectionRate(), 0.0, 9999.0, 1.0);
 		
 		minRangeValuePanel = new JPanel();
 		minRangeValuePanel.setLayout(new BoxLayout(minRangeValuePanel, BoxLayout.LINE_AXIS));
 		minRangeValue = new JSpinner(spinnerConfigMin);
-		minRangeValue.setPreferredSize(new Dimension(60,minRangeValue.getPreferredSize().height));
 		
 		maxRangeValuePanel = new JPanel();
 		maxRangeValuePanel.setLayout(new BoxLayout(maxRangeValuePanel, BoxLayout.LINE_AXIS));
 		maxRangeValue = new JSpinner(spinnerConfigMax);
-		maxRangeValue.setPreferredSize(new Dimension(60,maxRangeValue.getPreferredSize().height));
 		
-		convFactorPanel = new JPanel();
+		convFactorPanel = new JPanel(new GridLayout(0, 1));
 		convFactorPanel.setLayout(new BoxLayout(convFactorPanel, BoxLayout.LINE_AXIS));
 		conversionFactor = new JSpinner(spinnerConfigConvFactor);
-		conversionFactor.setPreferredSize(new Dimension(60,conversionFactor.getPreferredSize().height));
+		
+		collRatePanel = new JPanel(new GridLayout(0, 1));
+		collRatePanel.setLayout(new BoxLayout(collRatePanel, BoxLayout.LINE_AXIS));
+		collectionRate = new JSpinner(spinnerConfigCollRate);
+		// Remove commas
+		JSpinner.NumberEditor editor = new JSpinner.NumberEditor(collectionRate, "#.#");
+		collectionRate.setEditor(editor);
 
-		minRangeLabel = new JLabel(" Min: ");
+		minRangeLabel = new JLabel("   Min:  ");
 		minRangeValuePanel.add(minRangeLabel);
-		minRangeValuePanel.setVisible(true);
 		minRangeValuePanel.add(minRangeValue);
-		infoPanel.add(minRangeValuePanel);
 
-		maxRangeLabel = new JLabel(" Max: ");
+		maxRangeLabel = new JLabel("   Max: ");
 		maxRangeValuePanel.add(maxRangeLabel);
-		maxRangeValuePanel.setVisible(true);
 		maxRangeValuePanel.add(maxRangeValue);
-		infoPanel.add(maxRangeValuePanel);
 
-		convFactorLabel = new JLabel(" Conv. Factor: ");
+		minAndMaxComboPanel = new JPanel(new BorderLayout());
+		minAndMaxComboPanel.add(minRangeValuePanel, BorderLayout.NORTH);
+		minAndMaxComboPanel.add(maxRangeValuePanel, BorderLayout.SOUTH);
+
+		convFactorLabel = new JLabel(" Factor: ");
 		convFactorPanel.add(convFactorLabel);
-		convFactorPanel.setVisible(true);
 		convFactorPanel.add(conversionFactor);
-		infoPanel.add(convFactorPanel);
+		
+		collRateLabel = new JLabel(" Collect: ");
+		collRatePanel.add(collRateLabel);
+		collRatePanel.add(collectionRate);
+		
+		convCollComboPanel = new JPanel(new BorderLayout());
+		convCollComboPanel.add(convFactorPanel, BorderLayout.NORTH);
+		convCollComboPanel.add(collRatePanel, BorderLayout.SOUTH);
+		
+		configurationPanel = new JPanel(new FlowLayout());
+		configurationPanel.add(minAndMaxComboPanel);
+		configurationPanel.add(convCollComboPanel);
+		configurationPanel.setVisible(true);
+		configurationPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+		infoPanel.add(configurationPanel);
 		
 		infoPanel.add(vitalStatNameLabel);
 		infoPanel.add(vitalStatName);
@@ -188,14 +210,14 @@ public class VitalStatRow extends JPanel implements Observer {
 		this.add(alarmPanelOuter, BorderLayout.CENTER);
 		this.add(alarmButtonPanel, BorderLayout.EAST);
 
-		this.setPreferredSize(new Dimension(700, 50));
+		this.setPreferredSize(new Dimension(700, this.getPreferredSize().height));
 	}
 
 	/**
 	 * Update display to show new sensor data for this stat
 	 */
 	public void updateVital(Double value) {
-		vitalStatValue.setText(" = " + value);
+		vitalStatValue.setText(""+value);
 	}
 
 	/**
@@ -216,9 +238,11 @@ public class VitalStatRow extends JPanel implements Observer {
 			JCheckBox box = (JCheckBox)e.getSource();
 			if (box.isSelected()) {
 				vitalSign.enableMeasurement();
+				vitalStatName.setText(vitalStatName.getText() + " = ");
 			} else {
 				vitalSign.disableMeasurement();
 				vitalStatValue.setText("");
+				vitalStatName.setText(vitalSign.getConfiguration().getName());
 			}
 		}
 	}
@@ -229,23 +253,20 @@ public class VitalStatRow extends JPanel implements Observer {
 	private class ConfigureVitalListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (!enableBox.isEnabled()) {
-				// Initial configuration, enable
+				// Initial configuration complete, allow enabling of vital stat collection
 				enableBox.setEnabled(true);
 			}
 			VitalSignConfiguration tempConfig = vitalSign.getConfiguration();
-			if (minRangeValuePanel.isVisible()) {
+			if (configurationPanel.isVisible()) {
 				tempConfig = vitalSign.getConfiguration();
 				tempConfig.setMinAllowedReading((Double)minRangeValue.getValue());
 				tempConfig.setMaxAllowedReading((Double)maxRangeValue.getValue());
 				tempConfig.setConversionFactor((Double)conversionFactor.getValue());
-				minRangeValuePanel.setVisible(false);
-				maxRangeValuePanel.setVisible(false);
-				convFactorPanel.setVisible(false);
+				tempConfig.setCollectionRate(Math.round((Double)collectionRate.getValue()));
+				configurationPanel.setVisible(false);
 				refresh();
 			} else {
-				minRangeValuePanel.setVisible(true);
-				maxRangeValuePanel.setVisible(true);
-				convFactorPanel.setVisible(true);
+				configurationPanel.setVisible(true);
 				refresh();
 			}
 		}
@@ -255,8 +276,8 @@ public class VitalStatRow extends JPanel implements Observer {
 	 * Refresh the interface to ensure correct display
 	 */
 	public void refresh() {
+		revalidate();
 		repaint();
-		validate();
 	}
 
 	/**

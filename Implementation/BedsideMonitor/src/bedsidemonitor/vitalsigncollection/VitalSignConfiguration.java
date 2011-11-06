@@ -154,4 +154,12 @@ public class VitalSignConfiguration {
         return collectionRate;
     }
     
+    /**
+     * @param collectionRate the collectionRate to set
+     */
+    public void setCollectionRate(long collectionRate) {
+    
+        this.collectionRate = collectionRate;
+    }
+    
 } // VitalSignConfiguration
