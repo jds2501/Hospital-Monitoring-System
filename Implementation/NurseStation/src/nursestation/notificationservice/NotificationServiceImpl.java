@@ -13,6 +13,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import nursestation.notificationservice.NotificationService;
 
@@ -28,7 +29,7 @@ public class NotificationServiceImpl
     /**
      * The received vital sign message updates from clients
      */
-    private Queue<VitalSignMessage> vitalSignMsgs;
+    private LinkedBlockingQueue<VitalSignMessage> vitalSignMsgs;
     
     /**
      * Constructs a NotificationServiceImpl object with a vital sign message
@@ -58,7 +59,15 @@ public class NotificationServiceImpl
      * null otherwise
      */
     public VitalSignMessage pullVitalSign() {
-        return vitalSignMsgs.poll();
+        VitalSignMessage msg = null;
+        
+        try {
+            msg = vitalSignMsgs.poll(1, TimeUnit.MINUTES);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        
+        return msg;
     }
     
 } // NotificationServiceImpl

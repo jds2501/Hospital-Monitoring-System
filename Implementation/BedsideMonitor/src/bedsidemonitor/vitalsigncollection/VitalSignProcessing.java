@@ -76,8 +76,7 @@ public class VitalSignProcessing extends Observable implements Runnable {
         Integer rawVitalSignReading = null;
         
         try {
-            rawVitalSignReading = vitalSignMsgQueue.poll(
-                    configuration.getCollectionRate(), TimeUnit.MILLISECONDS);
+            rawVitalSignReading = vitalSignMsgQueue.poll(1, TimeUnit.MINUTES);
         } catch (InterruptedException ex) {
         }
         
@@ -148,7 +147,6 @@ public class VitalSignProcessing extends Observable implements Runnable {
      */
     public void run() {
         while(isActive) {
-            System.out.println("Execute");
             pullVitalSign();
         }
     }

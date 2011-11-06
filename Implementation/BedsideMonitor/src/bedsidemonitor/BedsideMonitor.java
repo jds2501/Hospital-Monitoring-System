@@ -19,6 +19,7 @@ import java.util.Observer;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import nursestation.notificationservice.VitalSignMessage;
 
@@ -59,7 +60,7 @@ public class BedsideMonitor extends Observable implements Observer, Runnable {
      */
     private Map<String, VitalSignController> vitalSigns;
 
-    private Queue<String> acknowledgedAlarms;
+    private LinkedBlockingQueue<String> acknowledgedAlarms;
     
     /**
      * Constructs a BedsideMonitor object with a patient name and a sensor
@@ -151,7 +152,13 @@ public class BedsideMonitor extends Observable implements Observer, Runnable {
 
     public void run() {
         while(true) {
-            String vitalSignName = acknowledgedAlarms.poll();
+            String vitalSignName = null;
+            
+            try {
+                vitalSignName = acknowledgedAlarms.poll(1, TimeUnit.MINUTES);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
             
             if(vitalSignName != null) {
                 VitalSignController vitalSign = vitalSigns.get(vitalSignName);

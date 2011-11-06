@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -41,7 +42,7 @@ public class HistoryLogging extends Thread {
     /**
      * Log message queue for capturing log messages
      */
-    private Queue<String> logMessageQueue;
+    private LinkedBlockingQueue<String> logMessageQueue;
     
     /**
      * Output IO object to write log messages to
@@ -106,9 +107,18 @@ public class HistoryLogging extends Thread {
             try {
                 
                 while(!logMessageQueue.isEmpty()) {
-                    String message = logMessageQueue.poll();
-                    outputWriter.write(message + "\n");
-                    outputWriter.flush();
+                    String message = null;
+                    
+                    try {
+                        message = logMessageQueue.poll(1, TimeUnit.MINUTES);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                    
+                    if(message != null) {
+                        outputWriter.write(message + "\n");
+                        outputWriter.flush();
+                    }
                 }
                 
             } catch(IOException ex){
