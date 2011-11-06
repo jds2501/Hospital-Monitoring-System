@@ -28,6 +28,8 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 
+import nursestation.notificationservice.NotificationServiceTask;
+
 import alarm.AlarmStatus;
 
 
@@ -40,6 +42,7 @@ import alarm.AlarmStatus;
 @SuppressWarnings("serial")
 public class PatientPanel extends JPanel {
 
+    private NotificationServiceTask notificationTask;
 	private JPanel infoPanel, subInfoPatientPanel, subInfoAlarmPanel, alarmPanel, alarmButtonPanel, alarmPanelOuter;
 	private JButton acknowlAlarmButton, acknowlAllAlarmButton;
 	private JLabel alarmStatusLabel, alarmStatus, patientNameLabel, patientName;
@@ -50,11 +53,13 @@ public class PatientPanel extends JPanel {
 	/**
 	 * Constructor
 	 */
-	public PatientPanel(String name, String alarmState) {
+	public PatientPanel(String name, NotificationServiceTask notificationTask) {
 
 		// Call parent constructor
 		super();
 
+		this.notificationTask = notificationTask;
+		
 		// Instantiate values / construct panel
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createEtchedBorder());
@@ -77,7 +82,7 @@ public class PatientPanel extends JPanel {
 		infoPanel.add(subInfoPatientPanel);
 
 		alarmStatusLabel = new JLabel("  Alarm State:  ");
-		alarmStatus = new JLabel(alarmState);
+		alarmStatus = new JLabel(AlarmStatus.INACTIVE.name());
 		subInfoAlarmPanel.add(alarmStatusLabel);
 		subInfoAlarmPanel.add(alarmStatus);
 		infoPanel.add(subInfoAlarmPanel);

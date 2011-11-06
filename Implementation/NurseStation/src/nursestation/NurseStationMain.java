@@ -88,7 +88,7 @@ public class NurseStationMain {
 	 * Constructs the Nurse Station GUI and starts it up.
 	 */
 	private void constructNurseStationGUI(String[] patientNames){
-        view = new NurseStationView();
+        view = new NurseStationView(serviceRunnable);
         view.setStationNameBox("Dummy Nurse Station");
         view.setPatientDisplay(new JPanel(new FlowLayout()));
         
