@@ -137,7 +137,7 @@ public class BedsideMonitor extends Observable implements Observer, Runnable {
             
             VitalSignConfiguration configuration = processor.getConfiguration();
             String vitalSignName = configuration.getName();
-            AlarmStatus alarmStatus = processor.getAlarmStatus();s
+            AlarmStatus alarmStatus = processor.getAlarmStatus();
             
             VitalSignMessage msg = new VitalSignMessage(
                     patientName, vitalSignName, alarmStatus);
