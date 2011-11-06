@@ -16,6 +16,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -29,6 +31,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 
 import nursestation.notificationservice.NotificationServiceTask;
+import nursestation.notificationservice.VitalSignMessage;
 
 import alarm.AlarmStatus;
 
@@ -40,7 +43,7 @@ import alarm.AlarmStatus;
  */
 
 @SuppressWarnings("serial")
-public class PatientPanel extends JPanel {
+public class PatientPanel extends JPanel implements Observer {
 
     private NotificationServiceTask notificationTask;
 	private JPanel infoPanel, subInfoPatientPanel, subInfoAlarmPanel, alarmPanel, alarmButtonPanel, alarmPanelOuter;
@@ -59,6 +62,7 @@ public class PatientPanel extends JPanel {
 		super();
 
 		this.notificationTask = notificationTask;
+		this.notificationTask.addObserver(this);
 		
 		// Instantiate values / construct panel
 		this.setLayout(new BorderLayout());
@@ -88,11 +92,7 @@ public class PatientPanel extends JPanel {
 		infoPanel.add(subInfoAlarmPanel);
 
 		activeAlarmsModel = new DefaultListModel();
-		//TODO populate this array with vital stats which have an active alarm triggered
-		String[] activeAlarmVitals = {"Vital1", "Vital2", "Vital3", "Vital4"};
-		for (int i=0; i<activeAlarmVitals.length; i++) {
-			activeAlarmsModel.add(i, activeAlarmVitals[i]);
-		}
+
 		activeAlarms = new JList(activeAlarmsModel);
 		activeAlarms.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		activeAlarms.setLayoutOrientation(JList.VERTICAL);
@@ -102,10 +102,7 @@ public class PatientPanel extends JPanel {
 		activeAlarmScroll.setPreferredSize(new Dimension(200, 65));
 
 		acknowlAlarmsModel = new DefaultListModel();
-		String[] acknowlVitals = {"Vital5", "Vital6"};
-		for (int i=0; i<acknowlVitals.length; i++) {
-			acknowlAlarmsModel.add(i, acknowlVitals[i]);
-		}
+
 		acknowlAlarms = new JList(acknowlAlarmsModel); //data has type Object[]
 		acknowlAlarms.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		acknowlAlarms.setLayoutOrientation(JList.VERTICAL);
@@ -211,4 +208,38 @@ public class PatientPanel extends JPanel {
 			//TODO backend logic
 		}
 	}
+
+    public void update(Observable observable, Object pushedObject) {
+        if(pushedObject instanceof VitalSignMessage) {
+            VitalSignMessage msg = (VitalSignMessage) pushedObject;
+            String vitalSignName = msg.getVitalSignName();
+            
+            switch(msg.getAlarmStatus()) {
+                case ACTIVE:
+                    if(!activeAlarmsModel.contains(vitalSignName) &&
+                       !acknowlAlarmsModel.contains(vitalSignName)){
+                        activeAlarmsModel.addElement(vitalSignName);
+                    }
+                    break;
+                case ACKNOWLEDGED:
+                    if(activeAlarmsModel.contains(vitalSignName)){
+                        activeAlarmsModel.removeElement(vitalSignName);
+                    }
+                    
+                    if(!acknowlAlarmsModel.contains(vitalSignName)) {
+                        acknowlAlarmsModel.addElement(vitalSignName);
+                    }
+                    break;
+                case INACTIVE:
+                    if(activeAlarmsModel.contains(vitalSignName)){
+                        activeAlarmsModel.removeElement(vitalSignName);
+                    }
+                    
+                    if(acknowlAlarmsModel.contains(vitalSignName)) {
+                        acknowlAlarmsModel.removeElement(vitalSignName);
+                    }
+                    break;
+            }
+        }
+    }
 }

@@ -78,9 +78,7 @@ public class NotificationServiceTask extends Observable implements Runnable {
             VitalSignMessage msg = notificationService.pullVitalSign();
             
             if(msg != null) {
-                updateAlarm(msg.getPatientName(), msg.getVitalSignName(), 
-                            msg.getAlarmStatus());
-                notifyObservers(msg);
+                updateAlarm(msg);
             }
         }
     }
@@ -92,30 +90,28 @@ public class NotificationServiceTask extends Observable implements Runnable {
      * @param vitalSignName the vital sign to acknowledge an alarm for
      */
     public void acknowledgeAlarm(String patientName, String vitalSignName){
-        updateAlarm(patientName, vitalSignName, AlarmStatus.ACKNOWLEDGED);
+        VitalSignMessage msg = new VitalSignMessage(
+                patientName, vitalSignName, AlarmStatus.ACKNOWLEDGED);
+        updateAlarm(msg);
     }
     
     /**
      * Updates the alarm for the specific patient and vital sign to the
-     * specified status.
+     * specified status in the vital sign message.
      * 
-     * @param patientName the name of the patient
-     * @param vitalSignName the name of the vital sign
-     * @param status the status of the alarm
+     * @param msg the vital sign message to update
      */
-    private void updateAlarm(
-            String patientName, String vitalSignName, AlarmStatus status) {
+    private void updateAlarm(VitalSignMessage msg) {
         boolean illegalArgs = true;
+        String patientName = msg.getPatientName();
+        String vitalSignName = msg.getVitalSignName();
         
         synchronized(alarmStatuses) {
-            System.out.println("PATIENT NAME: " + patientName);
-            System.out.println("VITAL SIGN: " + vitalSignName);
-            System.out.println(alarmStatuses);
             
             if(alarmStatuses.containsKey(patientName)) {
                 Map<String, AlarmStatus> patientAlarms = 
                         alarmStatuses.get(patientName);                
-                patientAlarms.put(vitalSignName, status);
+                patientAlarms.put(vitalSignName, msg.getAlarmStatus());
                 illegalArgs = false;
             }
         }
@@ -127,7 +123,7 @@ public class NotificationServiceTask extends Observable implements Runnable {
         }
         
         setChanged();
-        notifyObservers(alarmStatuses);
+        notifyObservers(msg);
     }
     
 } // NotificationServiceTask
