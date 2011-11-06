@@ -50,8 +50,8 @@ public class VitalSignController extends Observable {
      * @param sensor the sensor for polling vital sign data from
      */
     public VitalSignController(String vitalSignName, SensorInterface sensor){
-        this.timer = new Timer();
-        Queue<Integer> vitalSignMsgQueue = new LinkedBlockingQueue<Integer>();
+        this.timer = GlobalTimer.getTimer();
+        LinkedBlockingQueue<Integer> vitalSignMsgQueue = new LinkedBlockingQueue<Integer>();
         this.collection = new VitalSignCollection(
                 sensor, vitalSignMsgQueue);
         VitalSignConfiguration configuration = new VitalSignConfiguration(

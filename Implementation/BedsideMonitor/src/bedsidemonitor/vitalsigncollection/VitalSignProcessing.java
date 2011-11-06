@@ -12,6 +12,8 @@ import historylogging.HistoryLogging;
 
 import java.util.Observable;
 import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import alarm.AlarmController;
 import alarm.AlarmStatus;
@@ -28,7 +30,7 @@ public class VitalSignProcessing extends Observable implements Runnable {
     /**
      * Vital sign message queue to containing gathered sensor data
      */
-    private Queue<Integer> vitalSignMsgQueue;
+    private LinkedBlockingQueue<Integer> vitalSignMsgQueue;
     
     /**
      * The current vital sign reading
@@ -57,7 +59,7 @@ public class VitalSignProcessing extends Observable implements Runnable {
      * @param vitalSignMsgQueue the message queue to pull sensor data from
      * @param configuration the vital sign configuration
      */
-    public VitalSignProcessing(Queue<Integer> vitalSignMsgQueue, 
+    public VitalSignProcessing(LinkedBlockingQueue<Integer> vitalSignMsgQueue, 
            VitalSignConfiguration configuration){
         this.vitalSignMsgQueue = vitalSignMsgQueue;
         this.vitalSignValue = null;
@@ -71,7 +73,13 @@ public class VitalSignProcessing extends Observable implements Runnable {
      * fire an alarm.
      */
     public void pullVitalSign(){
-        Integer rawVitalSignReading = vitalSignMsgQueue.poll();
+        Integer rawVitalSignReading = null;
+        
+        try {
+            rawVitalSignReading = vitalSignMsgQueue.poll(
+                    configuration.getCollectionRate(), TimeUnit.MILLISECONDS);
+        } catch (InterruptedException ex) {
+        }
         
         if(rawVitalSignReading != null) {
             vitalSignValue = configuration.convertRawVitalToActual(rawVitalSignReading);
@@ -140,6 +148,7 @@ public class VitalSignProcessing extends Observable implements Runnable {
      */
     public void run() {
         while(isActive) {
+            System.out.println("Execute");
             pullVitalSign();
         }
     }
