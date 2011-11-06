@@ -46,6 +46,11 @@ public class NurseStationMain {
 	    try {
 	        this.service = new NotificationServiceImpl();
 	        this.serviceRunnable = new NotificationServiceTask(service);
+	        
+	        for(String patientName: patientNames) {
+	            this.serviceRunnable.addPatient(patientName);
+	        }
+	        
 	        Thread serviceTask = new Thread(serviceRunnable);
 	        serviceTask.start();
 	        
