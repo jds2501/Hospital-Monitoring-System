@@ -8,6 +8,8 @@
  */
 package nursestation.notificationservice;
 
+import historylogging.HistoryLogging;
+
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
@@ -130,8 +132,11 @@ public class NotificationServiceTask extends Observable implements Runnable {
             
             if(alarmStatuses.containsKey(patientName)) {
                 Map<String, AlarmStatus> patientAlarms = 
-                        alarmStatuses.get(patientName);                
+                        alarmStatuses.get(patientName); 
                 patientAlarms.put(vitalSignName, msg.getAlarmStatus());
+                HistoryLogging.getInstance().logMessage("Vital Sign " + 
+                        vitalSignName + " alarm is now: " + 
+                        msg.getAlarmStatus());
                 illegalArgs = false;
             }
         }
