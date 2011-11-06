@@ -29,9 +29,9 @@ public class NotificationServiceTask extends Observable implements Runnable {
     private NotificationServiceImpl notificationService;
     
     /**
-     * 3-D map containing patient ID --> Vital Sign ID --> Alarm Status
+     * 3-D map containing patient Name --> Vital Sign Name --> Alarm Status
      */
-    private Map<Long, Map<Long, AlarmStatus>> alarmStatuses;
+    private Map<String, Map<String, AlarmStatus>> alarmStatuses;
     
     /**
      * Specifies whether this task is still alive or not
@@ -46,17 +46,17 @@ public class NotificationServiceTask extends Observable implements Runnable {
     public NotificationServiceTask(NotificationServiceImpl service){
         this.notificationService = service;
         this.isAlive = true;
-        this.alarmStatuses = new HashMap<Long, Map<Long, AlarmStatus>>();
+        this.alarmStatuses = new HashMap<String, Map<String, AlarmStatus>>();
     }
     
     /**
      * Adds a patient to the notification service.
      * 
-     * @param patientID the patient ID to add
+     * @param patientName the patient name to add
      */
-    public void addPatient(Long patientID) {
+    public void addPatient(String patientName) {
         synchronized(alarmStatuses) {
-            alarmStatuses.put(patientID, new HashMap<Long, AlarmStatus>());
+            alarmStatuses.put(patientName, new HashMap<String, AlarmStatus>());
         }
     }
     
@@ -78,9 +78,7 @@ public class NotificationServiceTask extends Observable implements Runnable {
             VitalSignMessage msg = notificationService.pullVitalSign();
             
             if(msg != null) {
-                updateAlarm(msg.getPatientID(), msg.getVitalSignID(), 
-                            msg.getAlarmStatus());
-                notifyObservers(msg);
+                updateAlarm(msg);
             }
         }
     }
@@ -88,44 +86,44 @@ public class NotificationServiceTask extends Observable implements Runnable {
     /**
      * Acknowledges the alarm for a specific patient and vital sign.
      * 
-     * @param patientID the patient to acknowledge an alarm for
-     * @param vitalSignID the vital sign to acknowledge an alarm for
+     * @param patientName the patient to acknowledge an alarm for
+     * @param vitalSignName the vital sign to acknowledge an alarm for
      */
-    public void acknowledgeAlarm(Long patientID, Long vitalSignID){
-        updateAlarm(patientID, vitalSignID, AlarmStatus.ACKNOWLEDGED);
+    public void acknowledgeAlarm(String patientName, String vitalSignName){
+        VitalSignMessage msg = new VitalSignMessage(
+                patientName, vitalSignName, AlarmStatus.ACKNOWLEDGED);
+        updateAlarm(msg);
     }
     
     /**
      * Updates the alarm for the specific patient and vital sign to the
-     * specified status.
+     * specified status in the vital sign message.
      * 
-     * @param patientID the ID of the patient
-     * @param vitalSignID the ID of the vital sign
-     * @param status the status of the alarm
+     * @param msg the vital sign message to update
      */
-    private void updateAlarm(
-            Long patientID, Long vitalSignID, AlarmStatus status) {
+    private void updateAlarm(VitalSignMessage msg) {
         boolean illegalArgs = true;
+        String patientName = msg.getPatientName();
+        String vitalSignName = msg.getVitalSignName();
         
-        synchronized(alarmStatuses) {            
-            if(alarmStatuses.containsKey(patientID)) {
-                Map<Long, AlarmStatus> patientAlarms = 
-                        alarmStatuses.get(patientID);
-                
-                if(patientAlarms.containsKey(vitalSignID)) {
-                    patientAlarms.put(vitalSignID, status);
-                    illegalArgs = false;
-                }
+        synchronized(alarmStatuses) {
+            
+            if(alarmStatuses.containsKey(patientName)) {
+                Map<String, AlarmStatus> patientAlarms = 
+                        alarmStatuses.get(patientName);                
+                patientAlarms.put(vitalSignName, msg.getAlarmStatus());
+                illegalArgs = false;
             }
         }
         
         if(illegalArgs) {
-            throw new IllegalArgumentException("Patient ID " + patientID + 
-                    " and vital sign ID " + vitalSignID + " does not exist");
+            throw new IllegalArgumentException("Patient name " + patientName + 
+                    " and vital sign name " + vitalSignName + 
+                    " does not exist");
         }
         
         setChanged();
-        notifyObservers(alarmStatuses);
+        notifyObservers(msg);
     }
     
 } // NotificationServiceTask

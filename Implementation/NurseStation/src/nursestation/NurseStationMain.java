@@ -46,6 +46,11 @@ public class NurseStationMain {
 	    try {
 	        this.service = new NotificationServiceImpl();
 	        this.serviceRunnable = new NotificationServiceTask(service);
+	        
+	        for(String patientName: patientNames) {
+	            this.serviceRunnable.addPatient(patientName);
+	        }
+	        
 	        Thread serviceTask = new Thread(serviceRunnable);
 	        serviceTask.start();
 	        
@@ -83,7 +88,7 @@ public class NurseStationMain {
 	 * Constructs the Nurse Station GUI and starts it up.
 	 */
 	private void constructNurseStationGUI(String[] patientNames){
-        view = new NurseStationView();
+        view = new NurseStationView(serviceRunnable);
         view.setStationNameBox("Dummy Nurse Station");
         view.setPatientDisplay(new JPanel(new FlowLayout()));
         

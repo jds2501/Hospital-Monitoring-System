@@ -41,6 +41,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
+import nursestation.notificationservice.NotificationServiceTask;
+
 import alarm.AlarmStatus;
 
 /**
@@ -51,6 +53,7 @@ import alarm.AlarmStatus;
 @SuppressWarnings("serial")
 public class NurseStationView extends JFrame implements AWTEventListener {
 
+    private NotificationServiceTask notificationTask;
 
 	//------------------------------------ Attributes -------------------------------------//
 
@@ -87,8 +90,10 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 	/**
 	 * Default constructor
 	 */
-	public NurseStationView() {
+	public NurseStationView(NotificationServiceTask task) {
 
+	    this.notificationTask = task;
+	    
 		// Set windows look'n'feel
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -349,9 +354,8 @@ public class NurseStationView extends JFrame implements AWTEventListener {
 	 * @param name Patient name
 	 */
 	public void addPatient(String patientName) {
-		//TODO Model objects/controllers
-		
-        PatientPanel newPatient = new PatientPanel(patientName, AlarmStatus.INACTIVE.name());
+        PatientPanel newPatient = new PatientPanel(
+                patientName, this.notificationTask);
 	    patientDisplay.add(newPatient);
 	    patientDisplay.validate();
 	}

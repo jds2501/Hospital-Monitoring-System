@@ -127,16 +127,13 @@ public class BedsideMonitor extends Observable implements Observer {
     public void update(Observable observable, Object arg) {
         if(observable instanceof VitalSignProcessing) {
             VitalSignProcessing processor = (VitalSignProcessing) observable;
-            long patientID = this.hashCode();
-            long vitalSignID = processor.hashCode();
             
             VitalSignConfiguration configuration = processor.getConfiguration();
             String vitalSignName = configuration.getName();
-            Double vitalSignValue = processor.getVitalSignValue();
             AlarmStatus alarmStatus = processor.getAlarmStatus();
             
-            VitalSignMessage msg = new VitalSignMessage(patientID, patientName,
-                    vitalSignName, vitalSignID, vitalSignValue, alarmStatus);
+            VitalSignMessage msg = new VitalSignMessage(
+                    patientName, vitalSignName, alarmStatus);
             
             setChanged();
             notifyObservers(msg);
