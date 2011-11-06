@@ -43,10 +43,11 @@ public class BedsideMonitorSubscribeImpl extends UnicastRemoteObject
      * 
      * @throws RemoteException If remote construction fails
      */
-    public BedsideMonitorSubscribeImpl() throws RemoteException {
+    public BedsideMonitorSubscribeImpl(Queue<String> acknowledgements) 
+            throws RemoteException {
         super();
         notificationServices = new ArrayList<NotificationService>();
-        acknowledgements = new LinkedBlockingQueue<String>();
+        this.acknowledgements = acknowledgements;
     }
     
     /**

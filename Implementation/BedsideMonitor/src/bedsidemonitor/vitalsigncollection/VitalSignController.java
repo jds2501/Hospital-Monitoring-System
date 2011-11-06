@@ -111,6 +111,10 @@ public class VitalSignController extends Observable {
         return processor.getVitalSignValue();
     }
     
+    public void acknowledgeAlarm() {
+        processor.acknowledgeAlarm();
+    }
+    
     public void resetAlarm() {
         processor.resetAlarm();
     }

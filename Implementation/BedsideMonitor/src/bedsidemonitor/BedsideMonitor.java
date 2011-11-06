@@ -37,7 +37,7 @@ import bedsidemonitor.vitalsigncollection.VitalSignProcessing;
  * 
  * @author Jason Smith
  */
-public class BedsideMonitor extends Observable implements Observer {
+public class BedsideMonitor extends Observable implements Observer, Runnable {
 
     /**
      * The name of the patient
@@ -58,6 +58,8 @@ public class BedsideMonitor extends Observable implements Observer {
      * The vital signs for bedside monitor
      */
     private Map<String, VitalSignController> vitalSigns;
+
+    private Queue<String> acknowledgedAlarms;
     
     /**
      * Constructs a BedsideMonitor object with a patient name and a sensor
@@ -72,7 +74,9 @@ public class BedsideMonitor extends Observable implements Observer {
     public BedsideMonitor(String patientName, 
             Map<String, SensorInterface> sensors) 
                     throws RemoteException, MalformedURLException {
-        this.subscribe = new BedsideMonitorSubscribeImpl();
+        this.acknowledgedAlarms = new LinkedBlockingQueue<String>();
+        
+        this.subscribe = new BedsideMonitorSubscribeImpl(acknowledgedAlarms);
         this.patientName = patientName;
         this.callButtonController = new CallButtonController();
         this.vitalSigns = new HashMap<String, VitalSignController>();
@@ -86,6 +90,9 @@ public class BedsideMonitor extends Observable implements Observer {
             vitalSign.addObserver(this);
             vitalSigns.put(sensorName, vitalSign);
         }
+        
+        Thread acknowledgeTask = new Thread(this);
+        acknowledgeTask.start();
     }
     
     /**
@@ -132,6 +139,10 @@ public class BedsideMonitor extends Observable implements Observer {
             String vitalSignName = configuration.getName();
             AlarmStatus alarmStatus = processor.getAlarmStatus();
             
+            if(alarmStatus == AlarmStatus.ACKNOWLEDGED) {
+                System.out.println("Acknowledge alarm found for " + vitalSignName);
+            }
+            
             VitalSignMessage msg = new VitalSignMessage(
                     patientName, vitalSignName, alarmStatus);
             
@@ -139,6 +150,20 @@ public class BedsideMonitor extends Observable implements Observer {
             notifyObservers(msg);
             
             this.subscribe.publishVitalSign(msg);
+        }
+    }
+
+    public void run() {
+        while(true) {
+            String vitalSignName = acknowledgedAlarms.poll();
+            
+            if(vitalSignName != null) {
+                VitalSignController vitalSign = vitalSigns.get(vitalSignName);
+                
+                if(vitalSign != null) {
+                    vitalSign.acknowledgeAlarm();
+                }
+            }
         }
     }
     

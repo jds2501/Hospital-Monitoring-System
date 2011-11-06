@@ -144,6 +144,12 @@ public class VitalSignProcessing extends Observable implements Runnable {
         }
     }
 
+    public void acknowledgeAlarm() {
+        alarmController.setAlarmStatus(AlarmStatus.ACKNOWLEDGED);
+        setChanged();
+        notifyObservers(this);
+    }
+    
     public void resetAlarm() {
         alarmController.setAlarmStatus(AlarmStatus.INACTIVE);
         setChanged();
