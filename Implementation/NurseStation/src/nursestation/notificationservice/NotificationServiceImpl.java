@@ -48,7 +48,6 @@ public class NotificationServiceImpl
      * @param msg the vital sign message to push
      */
     public void pushVitalSign(VitalSignMessage msg) throws RemoteException {
-        System.out.println("Message received");
         vitalSignMsgs.offer(msg);
     }
 

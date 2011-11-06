@@ -8,6 +8,11 @@
  */
 package nursestation.notificationservice;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import alarm.AlarmStatus;
 
 /**
@@ -16,8 +21,10 @@ import alarm.AlarmStatus;
  * 
  * @author Jason Smith
  */
-public class VitalSignMessage {
-
+public class VitalSignMessage implements Externalizable {
+    
+    public static final long serialVersionUID = 1L;
+    
     /**
      * The patient's ID
      */
@@ -47,6 +54,13 @@ public class VitalSignMessage {
      * The status of the alarm for this vital sign
      */
     private AlarmStatus alarmStatus;
+    
+    /**
+     * Constructs a VitalSignMessage object.
+     */
+    public VitalSignMessage() {
+        
+    }
     
     /**
      * Constructs a VitalSignMessage object with a patient name, vital sign
@@ -111,6 +125,37 @@ public class VitalSignMessage {
     public AlarmStatus getAlarmStatus() {
     
         return alarmStatus;
+    }
+
+    /**
+     * Writes this object into the output stream to be sent over the
+     * network.
+     * 
+     * @param out the network output stream to write to
+     */
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeLong(patientID);
+        out.writeUTF(patientName);
+        out.writeLong(vitalSignID);
+        out.writeUTF(vitalSignName);
+        out.writeDouble(vitalSignValue);
+        out.writeObject(alarmStatus);
+    }
+
+    /**
+     * Reads the object received from the input stream that was sent
+     * over the network.
+     * 
+     * @param in the network input stream to read from
+     */
+    public void readExternal(ObjectInput in) throws IOException,
+            ClassNotFoundException {
+        patientID = in.readLong();
+        patientName = in.readUTF();
+        vitalSignID = in.readLong();
+        vitalSignName = in.readUTF();
+        vitalSignValue = in.readDouble();
+        alarmStatus = (AlarmStatus) in.readObject();
     }
     
 } // VitalSignMessage
