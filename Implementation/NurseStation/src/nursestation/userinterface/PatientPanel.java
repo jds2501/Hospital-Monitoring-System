@@ -103,7 +103,7 @@ public class PatientPanel extends JPanel implements Observer {
 
 		acknowlAlarmsModel = new DefaultListModel();
 
-		acknowlAlarms = new JList(acknowlAlarmsModel); //data has type Object[]
+		acknowlAlarms = new JList(acknowlAlarmsModel);
 		acknowlAlarms.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		acknowlAlarms.setLayoutOrientation(JList.VERTICAL);
 		acknowlAlarms.setVisibleRowCount(-1);
@@ -144,6 +144,7 @@ public class PatientPanel extends JPanel implements Observer {
 		alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
 		alarmStatus.setForeground(Color.RED);
 		acknowlAlarmButton.setEnabled(true);
+		acknowlAllAlarmButton.setEnabled(true);
 	}
 
 	/**
@@ -219,6 +220,7 @@ public class PatientPanel extends JPanel implements Observer {
                     if(!activeAlarmsModel.contains(vitalSignName) &&
                        !acknowlAlarmsModel.contains(vitalSignName)){
                         activeAlarmsModel.addElement(vitalSignName);
+                        triggerAlarm();
                     }
                     break;
                 case ACKNOWLEDGED:
