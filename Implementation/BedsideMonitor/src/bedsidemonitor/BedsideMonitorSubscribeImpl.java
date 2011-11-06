@@ -92,7 +92,6 @@ public class BedsideMonitorSubscribeImpl extends UnicastRemoteObject
      * @param vitalSignAlarm the vital sign alarm to acknowledge
      */
     public void acknowledgeAlarm(String vitalSignName) throws RemoteException {
-        System.out.println("Acknowledge received: " + vitalSignName);
         acknowledgements.offer(vitalSignName);
     }
     
