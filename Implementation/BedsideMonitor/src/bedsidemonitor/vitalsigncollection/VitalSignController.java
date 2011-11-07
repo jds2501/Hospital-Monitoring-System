@@ -104,6 +104,10 @@ public class VitalSignController extends Observable {
         return processor.getConfiguration();
     }
     
+    public void setConfiguration(VitalSignConfiguration configuration) {
+        processor.setConfiguration(configuration);
+    }
+    
     /**
      * @return vital sign value
      */

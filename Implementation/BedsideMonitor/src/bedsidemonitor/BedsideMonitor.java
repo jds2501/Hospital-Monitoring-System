@@ -10,6 +10,7 @@ package bedsidemonitor;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.HashMap;
@@ -149,7 +150,7 @@ public class BedsideMonitor extends Observable implements Observer, Runnable {
             this.subscribe.publishVitalSign(msg);
         }
     }
-
+    
     public void run() {
         while(true) {
             String vitalSignName = null;
@@ -167,6 +168,18 @@ public class BedsideMonitor extends Observable implements Observer, Runnable {
                     vitalSign.acknowledgeAlarm();
                 }
             }
+        }
+    }
+
+    public void unpublish() {
+        try {
+            Naming.unbind(patientName);
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        } catch (MalformedURLException ex) {
+            ex.printStackTrace();
+        } catch (NotBoundException ex) {
+            ex.printStackTrace();
         }
     }
     
