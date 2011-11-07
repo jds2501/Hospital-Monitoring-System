@@ -6,12 +6,15 @@
  * Date: Nov 6, 2011
  * 
  */
-package bedsidemonitor.perf;
+package bedsidemonitor.perf.testcases;
 
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
+
+import bedsidemonitor.perf.framework.BedsideMonitorPerf;
+import bedsidemonitor.perf.framework.VitalSignPerf;
 
 
 /**

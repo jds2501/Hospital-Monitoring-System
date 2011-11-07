@@ -6,7 +6,7 @@
  * Date: Nov 6, 2011
  * 
  */
-package bedsidemonitor.perf;
+package bedsidemonitor.perf.framework;
 
 import bedsidemonitor.sensor.RemoteSensorLookup;
 import bedsidemonitor.sensor.SensorInterface;
