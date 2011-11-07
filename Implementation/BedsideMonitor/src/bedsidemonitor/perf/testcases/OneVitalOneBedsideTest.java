@@ -31,7 +31,7 @@ public class OneVitalOneBedsideTest {
         
         try {
             BedsideMonitorPerf bedside = new BedsideMonitorPerf(vitals, 1);
-            bedside.runCallsAndVitals(100);
+            bedside.runCallsAndVitals(10000);
         } catch (RemoteException ex) {
             ex.printStackTrace();
         } catch (MalformedURLException ex) {

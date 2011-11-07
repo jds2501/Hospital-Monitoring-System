@@ -22,19 +22,14 @@ import bedsidemonitor.BedsideMonitorSubscribeInterface;
 public class NurseStationMain {
 	
     /**
-     * The notification service used for receiving patient messages
+     * Nurse's Station
      */
-    private NotificationServiceImpl service;
+    private NurseStation nurseStation;
     
     /**
      * The view of the nurse station UI
      */
 	private NurseStationView view;
-
-	/**
-	 * The service task for collecting patient data
-	 */
-    private NotificationServiceTask serviceRunnable;
 	
 	/**
 	 * Sets up the execution of the nurses' station by subscribing
@@ -44,13 +39,7 @@ public class NurseStationMain {
 	 */
 	public NurseStationMain(String[] patientNames) {
 	    try {
-	        this.service = new NotificationServiceImpl();
-	        this.serviceRunnable = new NotificationServiceTask(service);
-	        
-	        Thread serviceTask = new Thread(serviceRunnable);
-	        serviceTask.start();
-	        
-            this.subscribeToPatients(patientNames);
+	        nurseStation = new NurseStation(patientNames);
             this.constructNurseStationGUI(patientNames);
         } catch (RemoteException ex) {
             ex.printStackTrace();
@@ -60,32 +49,10 @@ public class NurseStationMain {
 	}
 	
 	/**
-	 * Subscribes this nurse station to the specified patients.
-	 * 
-	 * @param patientNames the names of the patients to subscribe to
-	 * 
-	 * @throws RemoteException If the remote connection fails
-	 * @throws NotBoundException If the remote object does not exist in the
-	 * RMI registry
-	 */
-	private void subscribeToPatients(String[] patientNames) 
-	        throws RemoteException, NotBoundException {
-	    System.setSecurityManager(new RMISecurityManager());
-	    Registry registry = LocateRegistry.getRegistry();
-	    
-	    for(String patientName: patientNames){
-	        BedsideMonitorSubscribeInterface bedsideMonitor = 
-	                (BedsideMonitorSubscribeInterface) registry.lookup(patientName);
-	        bedsideMonitor.subscribe(service);
-	        this.serviceRunnable.addPatient(patientName, bedsideMonitor);
-	    }
-	}
-	
-	/**
 	 * Constructs the Nurse Station GUI and starts it up.
 	 */
 	private void constructNurseStationGUI(String[] patientNames){
-        view = new NurseStationView(serviceRunnable);
+        view = new NurseStationView(nurseStation.getServiceTask());
         view.setStationNameBox("Dummy Nurse Station");
         view.setPatientDisplay(new JPanel(new FlowLayout()));
         

@@ -14,6 +14,7 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Set;
 
 import bedsidemonitor.BedsideMonitorSubscribeInterface;
 
@@ -117,6 +118,10 @@ public class NotificationServiceTask extends Observable implements Runnable {
         }
     }
     
+    public void acknowledgeAlarmsByPatient(String patientname) {
+        // TODO: Allow alarm acknowledgement by patient name
+    }
+    
     /**
      * Updates the alarm for the specific patient and vital sign to the
      * specified status in the vital sign message.
@@ -149,6 +154,16 @@ public class NotificationServiceTask extends Observable implements Runnable {
         
         setChanged();
         notifyObservers(msg);
+    }
+    
+    public Set<String> getVitalNamesByPatient(String patientName) {
+        Set<String> vitalNames = null;
+        
+        if(alarmStatuses.containsKey(patientName)) {
+            vitalNames = alarmStatuses.get(patientName).keySet();
+        }
+        
+        return vitalNames;
     }
     
 } // NotificationServiceTask
