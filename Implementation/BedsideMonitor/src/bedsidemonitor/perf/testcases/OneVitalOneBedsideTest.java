@@ -21,7 +21,7 @@ import bedsidemonitor.perf.framework.VitalSignPerf;
  * @author Jason
  *
  */
-public class BedsideMonitorPerfSimpleTest {
+public class OneVitalOneBedsideTest {
 
     public static void main(String[] args) {
         Map<String, VitalSignPerf> vitals = 
