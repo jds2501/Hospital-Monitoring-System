@@ -33,8 +33,6 @@ public class SimplePerfTest {
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
-            
-            task.acknowledgeAlarmsByPatient("patient1");
         } catch (RemoteException ex) {
             ex.printStackTrace();
         } catch (NotBoundException ex) {
