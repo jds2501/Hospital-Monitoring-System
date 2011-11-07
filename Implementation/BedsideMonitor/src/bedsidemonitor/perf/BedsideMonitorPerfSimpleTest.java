@@ -18,7 +18,7 @@ import java.util.Map;
  * @author Jason
  *
  */
-public class BedsideMonitorPerfTest1 {
+public class BedsideMonitorPerfSimpleTest {
 
     public static void main(String[] args) {
         Map<String, VitalSignPerf> vitals = 
