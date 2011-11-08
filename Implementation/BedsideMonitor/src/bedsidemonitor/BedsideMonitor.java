@@ -8,6 +8,8 @@
  */
 package bedsidemonitor;
 
+import historylogging.HistoryLogging;
+
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -147,7 +149,12 @@ public class BedsideMonitor extends Observable implements Observer, Runnable {
             setChanged();
             notifyObservers(msg);
             
+            long start = System.currentTimeMillis();
             this.subscribe.publishVitalSign(msg);
+            long end = System.currentTimeMillis();
+            
+            HistoryLogging.getInstance().logMessage("Vital sign Push Time, " + 
+                    vitalSignName + ", " + (end - start));
         }
     }
     

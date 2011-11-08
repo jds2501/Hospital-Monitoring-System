@@ -80,7 +80,7 @@ public class HistoryLogging extends Thread {
      */
     public void logMessage(String message){
         long time = System.currentTimeMillis();
-        logMessageQueue.offer(time + " " + message);
+        logMessageQueue.offer(time + ", " + message);
     }
     
     /**

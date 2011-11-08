@@ -52,12 +52,12 @@ public class CallButtonController extends Observable {
      */
     public void setCallStatus(boolean callStatus){
         this.callStatus = callStatus;
-        HistoryLogging.getInstance().logMessage("Call Status Set: " 
+        HistoryLogging.getInstance().logMessage("Call Status Set, " 
                 + callStatus);
         
         if(callStatus){
             callRequestCounter++;
-            HistoryLogging.getInstance().logMessage("Call Request Counter: " 
+            HistoryLogging.getInstance().logMessage("Call Request Counter, " 
                     + callRequestCounter);
         }
         
