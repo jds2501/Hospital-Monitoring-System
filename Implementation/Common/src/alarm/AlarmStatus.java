@@ -1,5 +1,5 @@
 /*
- * Package: nursestation.enums
+a * Package: nursestation.enums
  *
  * File: AlarmStatus.java
  *

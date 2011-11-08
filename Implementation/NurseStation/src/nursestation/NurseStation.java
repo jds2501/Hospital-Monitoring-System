@@ -58,7 +58,7 @@ public class NurseStation {
     private void subscribeToPatients(String[] patientNames) 
             throws RemoteException, NotBoundException {
         System.setSecurityManager(new RMISecurityManager());
-        Registry registry = LocateRegistry.getRegistry();
+        Registry registry = LocateRegistry.getRegistry("129.21.74.47");
         
         for(String patientName: patientNames){
             BedsideMonitorSubscribeInterface bedsideMonitor = 
