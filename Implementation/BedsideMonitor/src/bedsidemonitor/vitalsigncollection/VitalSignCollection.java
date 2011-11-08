@@ -23,7 +23,7 @@ import bedsidemonitor.sensor.SensorInterface;
  * @author Jason Smith
  */
 public class VitalSignCollection extends TimerTask {
-
+    
     /**
      * Sensor interface to poll data from
      */
@@ -64,6 +64,7 @@ public class VitalSignCollection extends TimerTask {
      */
     public void pollSensorData(){
         try {
+            // TODO: Log that vital has been collected
             int reading = this.sensor.getVitalSign();
             this.vitalSignMsgQueue.offer(reading);
         } catch (RemoteException ex) {
