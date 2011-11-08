@@ -221,7 +221,9 @@ public class VitalStatRow extends JPanel implements Observer {
 	 * Update display to show new sensor data for this stat
 	 */
 	public void updateVital(Double value) {
-		vitalStatValue.setText(""+value);
+		if (enableBox.isSelected()) {
+			vitalStatValue.setText(""+value);
+		}
 	}
 
 	/**

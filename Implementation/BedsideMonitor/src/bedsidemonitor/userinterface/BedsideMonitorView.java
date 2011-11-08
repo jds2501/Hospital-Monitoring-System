@@ -62,7 +62,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 
 	// ***** Window attributes ***** //
 
-	private static final int FRAME_WIDTH = 734;
+	private static final int FRAME_WIDTH = 714;
 	private static final int FRAME_HEIGHT = 610;
 
 	// ***** Menu and Toolbar components ***** //
@@ -373,10 +373,8 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	 * @param display - the vital stat display to set to this interface
 	 */
 	public void showVitalStatDisplay() {
-		vitalStatDisplay.setPreferredSize(new Dimension(700, 2000));
-		vitalStatDisplayScroll = new JScrollPane(vitalStatDisplay);
-		vitalStatDisplayScroll.setPreferredSize(new Dimension(700, vitalStatDisplayScroll.getPreferredSize().height));
-		totalPanelSet.add(vitalStatDisplayScroll, BorderLayout.CENTER);
+		vitalStatDisplay.setPreferredSize(new Dimension(700, vitalStatDisplay.getPreferredSize().height));
+		totalPanelSet.add(vitalStatDisplay, BorderLayout.CENTER);
 		totalPanelSet.revalidate();
 		totalPanelSet.repaint();
 	}
