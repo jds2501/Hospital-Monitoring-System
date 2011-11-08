@@ -9,6 +9,8 @@
 
 package nursestation.notificationservice;
 
+import historylogging.HistoryLogging;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Queue;
@@ -49,6 +51,7 @@ public class NotificationServiceImpl
      * @param msg the vital sign message to push
      */
     public void pushVitalSign(VitalSignMessage msg) throws RemoteException {
+        HistoryLogging.getInstance().logMessage("pushVitalSign, " + msg);
         vitalSignMsgs.offer(msg);
     }
 
