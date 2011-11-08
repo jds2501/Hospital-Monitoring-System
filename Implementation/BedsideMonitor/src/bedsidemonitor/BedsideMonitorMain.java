@@ -39,7 +39,7 @@ public class BedsideMonitorMain {
             Map<String, SensorInterface> sensors = sensorLookup.getSensorsbyName(sensorNames);
             BedsideMonitor bedsideMonitor = new BedsideMonitor(patientName, sensors);
             view = new BedsideMonitorView(bedsideMonitor);
-            view.setMonitorName("Bedside Monitor for Patient: " + patientName);
+            view.setMonitorName("Bedside Monitor for " + patientName);
             
             // Add all of the sensors
             for(String sensorName: sensors.keySet()) {

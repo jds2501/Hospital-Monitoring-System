@@ -18,6 +18,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -58,6 +59,7 @@ public class VitalStatRow extends JPanel implements Observer {
 	private JCheckBox enableBox;
 	private JSpinner minRangeValue, maxRangeValue, conversionFactor, collectionRate;
 	private SpinnerNumberModel spinnerConfigMin, spinnerConfigMax, spinnerConfigConvFactor, spinnerConfigCollRate;
+	private DecimalFormat oneDecimal;
 
 	/**
 	 * Constructor
@@ -70,6 +72,8 @@ public class VitalStatRow extends JPanel implements Observer {
 		this.vitalSign = vitalSign;
 		this.vitalSign.addObserver(this);
 		VitalSignConfiguration configuration = vitalSign.getConfiguration();
+
+		oneDecimal = new DecimalFormat("#.#");
 		
 		// Instantiate values / construct panel
 		this.setLayout(new BorderLayout());
@@ -222,7 +226,7 @@ public class VitalStatRow extends JPanel implements Observer {
 	 */
 	public void updateVital(Double value) {
 		if (enableBox.isSelected()) {
-			vitalStatValue.setText(""+value);
+			vitalStatValue.setText(""+oneDecimal.format(value));
 		}
 	}
 

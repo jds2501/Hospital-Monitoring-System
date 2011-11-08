@@ -31,10 +31,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
+import javax.swing.border.TitledBorder;
 
 import nursestation.notificationservice.NotificationServiceTask;
 import nursestation.notificationservice.VitalSignMessage;
-
 import alarm.AlarmStatus;
 
 
@@ -54,6 +54,7 @@ public class PatientPanel extends JPanel implements Observer {
 	private DefaultListModel activeAlarmsModel, acknowlAlarmsModel;
 	private JList activeAlarms, acknowlAlarms;
 	private JScrollPane activeAlarmScroll, acknowlAlarmScroll;
+	private TitledBorder activeAlarmTitle, acknowlAlarmTitle;
 
 	/**
 	 * Constructor
@@ -101,7 +102,9 @@ public class PatientPanel extends JPanel implements Observer {
 		activeAlarms.setVisibleRowCount(-1);
 		activeAlarms.setFixedCellHeight(20);
 		activeAlarmScroll = new JScrollPane(activeAlarms);
-		activeAlarmScroll.setPreferredSize(new Dimension(200, 65));
+		activeAlarmScroll.setPreferredSize(new Dimension(200, 91));
+		activeAlarmTitle = BorderFactory.createTitledBorder("Active Alarms");
+		activeAlarmScroll.setBorder(activeAlarmTitle);
 
 		acknowlAlarmsModel = new DefaultListModel();
 
@@ -111,7 +114,9 @@ public class PatientPanel extends JPanel implements Observer {
 		acknowlAlarms.setVisibleRowCount(-1);
 		acknowlAlarms.setFixedCellHeight(20);
 		acknowlAlarmScroll = new JScrollPane(acknowlAlarms);
-		acknowlAlarmScroll.setPreferredSize(new Dimension(200, 65));
+		acknowlAlarmScroll.setPreferredSize(new Dimension(200, 91));
+		acknowlAlarmTitle = BorderFactory.createTitledBorder("Acknowl. Alarms");
+		acknowlAlarmScroll.setBorder(acknowlAlarmTitle);
 
 		alarmPanelOuter.add(alarmPanel, BorderLayout.LINE_END);
 
@@ -138,7 +143,7 @@ public class PatientPanel extends JPanel implements Observer {
 		this.add(infoPanel, BorderLayout.WEST);
 		this.add(alarmPanel, BorderLayout.EAST);
 
-		this.setPreferredSize(new Dimension(800, 80));
+		this.setPreferredSize(new Dimension(800, 101));
 	}
 
 	/**
