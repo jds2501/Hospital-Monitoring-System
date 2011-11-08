@@ -27,7 +27,8 @@ public class HistoryLogging extends Thread {
     /**
      * Log output filename
      */
-    public static final String LOG_FILE_NAME = "history_log.txt";
+    public static final String LOG_FILE_NAME = "history_log_startup_ " + 
+            System.currentTimeMillis() + ".txt";
     
     /**
      * Declares whether the thread is alive or not
