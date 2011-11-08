@@ -122,7 +122,7 @@ public class PatientPanel extends JPanel implements Observer {
 		acknowlAlarmButton.addActionListener(new AcknowlAlarmListener());
 		
 		acknowlAllAlarmButton = new JButton("Respond All");
-		acknowlAlarmButton.setEnabled(false);
+		acknowlAllAlarmButton.setEnabled(false);
 		acknowlAllAlarmButton.addActionListener(new AcknowlAllAlarmListener());
 
 		alarmStatus.setFont(new Font("Tahoma", Font.PLAIN, 14));
