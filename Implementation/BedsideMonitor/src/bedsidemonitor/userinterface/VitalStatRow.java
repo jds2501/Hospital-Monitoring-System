@@ -120,10 +120,10 @@ public class VitalStatRow extends JPanel implements Observer {
 		infoPanel.add(configureButtonPanel);
 
 		// JSpinner config models
-		spinnerConfigMin = new SpinnerNumberModel(configuration.getMinAllowedReading(), 0.0, 100.0, .1);
-		spinnerConfigMax = new SpinnerNumberModel(configuration.getMaxAllowedReading(), 0.0, 100.0, .1);
-		spinnerConfigConvFactor = new SpinnerNumberModel(configuration.getConversionFactor(), 0.0, 100.0, .1);
-		spinnerConfigCollRate = new SpinnerNumberModel(configuration.getCollectionRate(), 0.0, 9999.0, 1.0);
+		spinnerConfigMin = new SpinnerNumberModel(configuration.getMinAllowedReading(), Integer.MIN_VALUE, Integer.MAX_VALUE, .1);
+		spinnerConfigMax = new SpinnerNumberModel(configuration.getMaxAllowedReading(), Integer.MIN_VALUE, Integer.MAX_VALUE, .1);
+		spinnerConfigConvFactor = new SpinnerNumberModel(configuration.getConversionFactor(), Integer.MIN_VALUE, Integer.MAX_VALUE, .1);
+		spinnerConfigCollRate = new SpinnerNumberModel(configuration.getCollectionRate(), 0.0, Integer.MAX_VALUE, 1.0);
 		
 		minRangeValuePanel = new JPanel();
 		minRangeValuePanel.setLayout(new BoxLayout(minRangeValuePanel, BoxLayout.LINE_AXIS));
