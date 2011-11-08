@@ -212,21 +212,19 @@ public class PatientPanel extends JPanel implements Observer {
 				            patientName.getText(), vitals);
 				}
 			}
-
-			// Determine if we need to change the alarm status
-			// (All active alarms being acknowledged translates to a label change)
-			if (activeAlarmsModel.isEmpty()) {
-				alarmStatus.setText(AlarmStatus.ACKNOWLEDGED.name());
-				alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
-				alarmStatus.setForeground(Color.BLUE);
-				acknowlAlarmButton.setEnabled(false);
-				acknowlAllAlarmButton.setEnabled(false);
-			}
-			
-			//TODO backend logic
 		}
 	}
 
+	private void displayAcknowledged() {
+        if (activeAlarmsModel.isEmpty()) {
+            alarmStatus.setText(AlarmStatus.ACKNOWLEDGED.name());
+            alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+            alarmStatus.setForeground(Color.BLUE);
+            acknowlAlarmButton.setEnabled(false);
+            acknowlAllAlarmButton.setEnabled(false);
+        }
+	}
+	
     public void update(Observable observable, Object pushedObject) {
         if(pushedObject instanceof VitalSignMessage) {
             VitalSignMessage msg = (VitalSignMessage) pushedObject;
@@ -261,6 +259,8 @@ public class PatientPanel extends JPanel implements Observer {
                         }
                         break;
                 }
+                
+                displayAcknowledged();
             }
         }
     }
