@@ -138,9 +138,7 @@ public class NotificationServiceTask extends Observable implements Runnable {
                 Map<String, AlarmStatus> patientAlarms = 
                         alarmStatuses.get(patientName); 
                 patientAlarms.put(vitalSignName, msg.getAlarmStatus());
-                HistoryLogging.getInstance().logMessage("Vital Sign " + 
-                        vitalSignName + " alarm is now: " + 
-                        msg.getAlarmStatus());
+                HistoryLogging.getInstance().logMessage("updateAlarm, " + msg);
                 illegalArgs = false;
             }
         }

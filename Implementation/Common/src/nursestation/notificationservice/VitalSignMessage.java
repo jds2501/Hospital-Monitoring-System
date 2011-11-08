@@ -109,4 +109,8 @@ public class VitalSignMessage implements Externalizable {
         alarmStatus = (AlarmStatus) in.readObject();
     }
     
+    public String toString() {
+        return patientName + ", " + vitalSignName + ", " + alarmStatus.name();
+    }
+    
 } // VitalSignMessage

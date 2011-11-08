@@ -8,6 +8,8 @@
  */
 package nursestation;
 
+import historylogging.HistoryLogging;
+
 import java.rmi.NotBoundException;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
@@ -30,6 +32,7 @@ public class NurseStation {
     private NotificationServiceTask serviceRunnable;
 
     public NurseStation(String[] patientNames) throws RemoteException, NotBoundException{
+        long start = System.currentTimeMillis();
         this.service = new NotificationServiceImpl();
         this.serviceRunnable = new NotificationServiceTask(service);
         
@@ -37,6 +40,10 @@ public class NurseStation {
         serviceTask.start();
         
         this.subscribeToPatients(patientNames);
+        long end = System.currentTimeMillis();
+        
+        HistoryLogging.getInstance().logMessage("NurseStation constructor, " 
+                + (end - start));
     }
     
     /**
