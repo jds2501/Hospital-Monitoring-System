@@ -40,11 +40,14 @@ public class BedsideMonitorMain {
             BedsideMonitor bedsideMonitor = new BedsideMonitor(patientName, sensors);
             view = new BedsideMonitorView(bedsideMonitor);
             view.setMonitorName("Bedside Monitor for Patient: " + patientName);
-            view.setVitalStatDisplay(new JPanel(new FlowLayout()));
-
+            
+            // Add all of the sensors
             for(String sensorName: sensors.keySet()) {
                 view.addVitalSign(sensorName);
             }
+            
+            // Display the sensors
+            view.showVitalStatDisplay();
             
         } catch (RemoteException ex) {
             ex.printStackTrace();

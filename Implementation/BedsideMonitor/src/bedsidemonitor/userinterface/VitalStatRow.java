@@ -120,26 +120,30 @@ public class VitalStatRow extends JPanel implements Observer {
 		infoPanel.add(configureButtonPanel);
 
 		// JSpinner config models
-		spinnerConfigMin = new SpinnerNumberModel(configuration.getMinAllowedReading(), 0.0, 100.0, .1);
-		spinnerConfigMax = new SpinnerNumberModel(configuration.getMaxAllowedReading(), 0.0, 100.0, .1);
-		spinnerConfigConvFactor = new SpinnerNumberModel(configuration.getConversionFactor(), 0.0, 100.0, .1);
-		spinnerConfigCollRate = new SpinnerNumberModel(configuration.getCollectionRate(), 0.0, 9999.0, 1.0);
+		spinnerConfigMin = new SpinnerNumberModel(configuration.getMinAllowedReading(), Integer.MIN_VALUE, Integer.MAX_VALUE, .1);
+		spinnerConfigMax = new SpinnerNumberModel(configuration.getMaxAllowedReading(), Integer.MIN_VALUE, Integer.MAX_VALUE, .1);
+		spinnerConfigConvFactor = new SpinnerNumberModel(configuration.getConversionFactor(), Integer.MIN_VALUE, Integer.MAX_VALUE, .1);
+		spinnerConfigCollRate = new SpinnerNumberModel(configuration.getCollectionRate(), 0.0, Integer.MAX_VALUE, 1.0);
 		
 		minRangeValuePanel = new JPanel();
 		minRangeValuePanel.setLayout(new BoxLayout(minRangeValuePanel, BoxLayout.LINE_AXIS));
 		minRangeValue = new JSpinner(spinnerConfigMin);
+		minRangeValue.setPreferredSize(new Dimension(65, minRangeValue.getPreferredSize().height));
 		
 		maxRangeValuePanel = new JPanel();
 		maxRangeValuePanel.setLayout(new BoxLayout(maxRangeValuePanel, BoxLayout.LINE_AXIS));
 		maxRangeValue = new JSpinner(spinnerConfigMax);
+		maxRangeValue.setPreferredSize(new Dimension(65, minRangeValue.getPreferredSize().height));
 		
 		convFactorPanel = new JPanel(new GridLayout(0, 1));
 		convFactorPanel.setLayout(new BoxLayout(convFactorPanel, BoxLayout.LINE_AXIS));
 		conversionFactor = new JSpinner(spinnerConfigConvFactor);
+		conversionFactor.setPreferredSize(new Dimension(65, minRangeValue.getPreferredSize().height));
 		
 		collRatePanel = new JPanel(new GridLayout(0, 1));
 		collRatePanel.setLayout(new BoxLayout(collRatePanel, BoxLayout.LINE_AXIS));
 		collectionRate = new JSpinner(spinnerConfigCollRate);
+		collectionRate.setPreferredSize(new Dimension(65, minRangeValue.getPreferredSize().height));
 		// Remove commas
 		JSpinner.NumberEditor editor = new JSpinner.NumberEditor(collectionRate, "#.#");
 		collectionRate.setEditor(editor);
