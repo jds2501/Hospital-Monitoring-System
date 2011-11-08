@@ -51,18 +51,20 @@ public class CallButtonController extends Observable {
      * @param callStatus the status to set the call button to
      */
     public void setCallStatus(boolean callStatus){
-        this.callStatus = callStatus;
-        HistoryLogging.getInstance().logMessage("Call Status Set, " 
-                + callStatus);
-        
-        if(callStatus){
-            callRequestCounter++;
-            HistoryLogging.getInstance().logMessage("Call Request Counter, " 
-                    + callRequestCounter);
+        if(this.callStatus != callStatus) {
+            this.callStatus = callStatus;
+            HistoryLogging.getInstance().logMessage("Call Status Set, " 
+                    + callStatus);
+            
+            if(callStatus){
+                callRequestCounter++;
+                HistoryLogging.getInstance().logMessage("Call Request Counter, " 
+                        + callRequestCounter);
+            }
+            
+            setChanged();
+            notifyObservers(this);
         }
-        
-        setChanged();
-        notifyObservers(this);
     }
     
 } // CallButtonController
