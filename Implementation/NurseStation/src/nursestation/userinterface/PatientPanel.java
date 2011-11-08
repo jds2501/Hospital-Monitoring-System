@@ -118,8 +118,11 @@ public class PatientPanel extends JPanel implements Observer {
 		alarmButtonPanel = new JPanel(new BorderLayout());
 		alarmButtonPanel.setLayout(new BorderLayout());
 		acknowlAlarmButton = new JButton("Respond");
-		acknowlAllAlarmButton = new JButton("Respond All");
+		acknowlAlarmButton.setEnabled(false);
 		acknowlAlarmButton.addActionListener(new AcknowlAlarmListener());
+		
+		acknowlAllAlarmButton = new JButton("Respond All");
+		acknowlAlarmButton.setEnabled(false);
 		acknowlAllAlarmButton.addActionListener(new AcknowlAllAlarmListener());
 
 		alarmStatus.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -224,6 +227,16 @@ public class PatientPanel extends JPanel implements Observer {
             acknowlAllAlarmButton.setEnabled(false);
         }
 	}
+
+	private void displayInactiveCheck() {
+        if (activeAlarmsModel.isEmpty() && acknowlAlarmsModel.isEmpty()) {
+        	alarmStatus.setText(AlarmStatus.INACTIVE.name());
+    		alarmStatus.setFont(new Font("Tahoma", Font.PLAIN, 14));
+    		alarmStatus.setForeground(Color.GRAY);
+            acknowlAlarmButton.setEnabled(false);
+            acknowlAllAlarmButton.setEnabled(false);
+        }
+	}
 	
     public void update(Observable observable, Object pushedObject) {
         if(pushedObject instanceof VitalSignMessage) {
@@ -259,6 +272,8 @@ public class PatientPanel extends JPanel implements Observer {
                         if(acknowlAlarmsModel.contains(vitalSignName)) {
                             acknowlAlarmsModel.removeElement(vitalSignName);
                         }
+                        
+                        displayInactiveCheck();
                         break;
                 }
             }
