@@ -11,6 +11,7 @@ package nursestation.notificationservice;
 import historylogging.HistoryLogging;
 
 import java.rmi.RemoteException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
@@ -106,13 +107,15 @@ public class NotificationServiceTask extends Observable implements Runnable {
      * @param patientName the patient to acknowledge an alarm for
      * @param vitalSignName the vital sign to acknowledge an alarm for
      */
-    public void acknowledgeAlarm(String patientName, String vitalSignName){
-        VitalSignMessage msg = new VitalSignMessage(
-                patientName, vitalSignName, AlarmStatus.ACKNOWLEDGED);
-        updateAlarm(msg);
+    public void acknowledgeAlarms(String patientName, Collection<String> vitals){
+        for(String vital: vitals) {
+            VitalSignMessage msg = new VitalSignMessage(
+                    patientName, vital, AlarmStatus.ACKNOWLEDGED);
+            updateAlarm(msg);
+        }
         
         try {
-            patientBedsides.get(patientName).acknowledgeAlarm(vitalSignName);
+            patientBedsides.get(patientName).acknowledgeAlarm(vitals);
         } catch (RemoteException ex) {
             ex.printStackTrace();
         }

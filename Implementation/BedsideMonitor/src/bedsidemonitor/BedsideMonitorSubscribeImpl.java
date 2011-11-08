@@ -11,6 +11,7 @@ package bedsidemonitor;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -92,8 +93,10 @@ public class BedsideMonitorSubscribeImpl extends UnicastRemoteObject
      * 
      * @param vitalSignAlarm the vital sign alarm to acknowledge
      */
-    public void acknowledgeAlarm(String vitalSignName) throws RemoteException {
-        acknowledgements.offer(vitalSignName);
+    public void acknowledgeAlarm(Collection<String> vitals) throws RemoteException {
+        for(String vital: vitals){
+            acknowledgements.offer(vital);
+        }
     }
     
 } // BedsideMonitorSubscribeImpl

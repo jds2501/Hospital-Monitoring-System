@@ -10,6 +10,7 @@ package bedsidemonitor;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.Collection;
 
 import nursestation.notificationservice.NotificationService;
 
@@ -45,6 +46,6 @@ public interface BedsideMonitorSubscribeInterface extends Remote {
      * 
      * @throws RemoteException if the remote call fails
      */
-    public void acknowledgeAlarm(String vitalSignName) throws RemoteException;
+    public void acknowledgeAlarm(Collection<String> vitals) throws RemoteException;
     
 } // BedsideMonitorSubscribeInterface

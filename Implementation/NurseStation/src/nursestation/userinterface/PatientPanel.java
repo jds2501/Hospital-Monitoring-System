@@ -16,6 +16,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -186,18 +188,22 @@ public class PatientPanel extends JPanel implements Observer {
 			// Check for selection
 			Object[] selections = activeAlarms.getSelectedValues();
 			if (selections.length > 0) {
+			    Collection<String> vitals = new ArrayList<String>();
+			    
 				for (Object selection : selections) {
+				    
 					if (selection instanceof String) {
 						// Make the transfer
 						String selectString = (String)selection;
 						activeAlarmsModel.removeElement(selectString);
 						acknowlAlarmsModel.addElement(selectString);
-						
-						// TODO: Need to collect the data and send it
-						//       in one chunk, rather than single calls
-						notificationTask.acknowledgeAlarm(
-						        patientName.getText(), selectString);
+						vitals.add(selectString);
 					}
+				}
+				
+				if(vitals.size() > 0) {
+				    notificationTask.acknowledgeAlarms(
+				            patientName.getText(), vitals);
 				}
 			}
 
