@@ -248,6 +248,8 @@ public class PatientPanel extends JPanel implements Observer {
                         if(!acknowlAlarmsModel.contains(vitalSignName)) {
                             acknowlAlarmsModel.addElement(vitalSignName);
                         }
+                        
+                        displayAcknowledged();
                         break;
                     case INACTIVE:
                         if(activeAlarmsModel.contains(vitalSignName)){
@@ -259,8 +261,6 @@ public class PatientPanel extends JPanel implements Observer {
                         }
                         break;
                 }
-                
-                displayAcknowledged();
             }
         }
     }
