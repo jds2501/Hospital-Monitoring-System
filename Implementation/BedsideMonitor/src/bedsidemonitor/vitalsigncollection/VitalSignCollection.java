@@ -61,6 +61,7 @@ public class VitalSignCollection extends TimerTask {
     public VitalSignCollection(VitalSignCollection collection) {
         this.sensor = collection.sensor;
         this.vitalSignMsgQueue = collection.vitalSignMsgQueue;
+        this.config = collection.config;
     }
     
     /**
