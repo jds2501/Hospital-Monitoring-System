@@ -8,6 +8,8 @@
  */
 package bedsidemonitor.vitalsigncollection;
 
+import historylogging.HistoryLogging;
+
 import java.rmi.RemoteException;
 import java.util.Queue;
 import java.util.TimerTask;
@@ -23,6 +25,8 @@ import bedsidemonitor.sensor.SensorInterface;
  * @author Jason Smith
  */
 public class VitalSignCollection extends TimerTask {
+    
+    private VitalSignConfiguration config;
     
     /**
      * Sensor interface to poll data from
@@ -41,8 +45,9 @@ public class VitalSignCollection extends TimerTask {
      * @param sensor the sensor interface to pull sensor data from
      * @param vitalSignMsgQueue the message queue to push sensor data to
      */
-    public VitalSignCollection(SensorInterface sensor, 
-            Queue<Integer> vitalSignMsgQueue){
+    public VitalSignCollection(VitalSignConfiguration config,
+            SensorInterface sensor, Queue<Integer> vitalSignMsgQueue){
+        this.config = config;
         this.sensor = sensor;
         this.vitalSignMsgQueue = vitalSignMsgQueue;
     }
@@ -64,7 +69,8 @@ public class VitalSignCollection extends TimerTask {
      */
     public void pollSensorData(){
         try {
-            // TODO: Log that vital has been collected
+            HistoryLogging.getInstance().logMessage("pollSensorData, " + 
+                 config.getName());
             int reading = this.sensor.getVitalSign();
             this.vitalSignMsgQueue.offer(reading);
         } catch (RemoteException ex) {
