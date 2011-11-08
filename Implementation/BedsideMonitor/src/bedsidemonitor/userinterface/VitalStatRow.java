@@ -230,6 +230,12 @@ public class VitalStatRow extends JPanel implements Observer {
 		acknowlAlarmButton.setEnabled(true);
 	}
 
+	public void acknowledgeAlarm() {
+	   alarmStatus.setText(AlarmStatus.ACKNOWLEDGED.name());
+	   alarmStatus.setFont(new Font("Tahoma", Font.BOLD, 14));
+	   alarmStatus.setForeground(Color.BLUE);
+	}
+	
 	/**
 	 * Inner class for listener on Enable/Disable vital sign checkbox
 	 */
@@ -310,6 +316,8 @@ public class VitalStatRow extends JPanel implements Observer {
             
             if(processor.getAlarmStatus() == AlarmStatus.ACTIVE) {
                 triggerAlarm();
+            }else if(processor.getAlarmStatus() == AlarmStatus.ACKNOWLEDGED) {
+                acknowledgeAlarm();
             }
         }
     }

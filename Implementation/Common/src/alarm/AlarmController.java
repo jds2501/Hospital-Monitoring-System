@@ -52,18 +52,28 @@ public class AlarmController {
      * @param status the new status of the alarm
      */
     public void setAlarmStatus(AlarmStatus status){
-        this.status = status;
-        HistoryLogging.getInstance().logMessage("Alarm status changed: " + status);
-        
-        if(status == AlarmStatus.ACTIVE){
-            alarmCounter++;
-            HistoryLogging.getInstance().logMessage("Alarm counter update: " + alarmCounter);
-            alarmTriggeredTime = System.currentTimeMillis();
-            // TODO: Turn on diagnostic mode
-        }else if(status == AlarmStatus.INACTIVE){
-            long resetTime = System.currentTimeMillis();
-            long roundTripTime = resetTime - alarmTriggeredTime;
-            HistoryLogging.getInstance().logMessage("Alarm reset time: " + roundTripTime);
+        if(this.status != status) {
+            boolean activeTransition = this.status == AlarmStatus.INACTIVE && 
+                                       status == AlarmStatus.ACTIVE;
+            boolean acknowledgeTransition = this.status == AlarmStatus.ACTIVE &&
+                                            status == AlarmStatus.ACKNOWLEDGED;
+            boolean resetTransition = status == AlarmStatus.INACTIVE;
+
+            if(activeTransition || acknowledgeTransition || resetTransition) {
+                this.status = status;
+                HistoryLogging.getInstance().logMessage("Alarm status changed: " + status);
+                
+                if(status == AlarmStatus.ACTIVE){
+                    alarmCounter++;
+                    HistoryLogging.getInstance().logMessage("Alarm counter update: " + alarmCounter);
+                    alarmTriggeredTime = System.currentTimeMillis();
+                    // TODO: Turn on diagnostic mode
+                }else if(status == AlarmStatus.INACTIVE){
+                    long resetTime = System.currentTimeMillis();
+                    long roundTripTime = resetTime - alarmTriggeredTime;
+                    HistoryLogging.getInstance().logMessage("Alarm reset time: " + roundTripTime);
+                }
+            }
         }
     }
     
