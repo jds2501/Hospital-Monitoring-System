@@ -78,8 +78,7 @@ public class VitalSignController extends Observable {
         processor.setActive(true);
         Thread processorTask = new Thread(processor);
         processorTask.start();
-        timer.scheduleAtFixedRate(collection, new Date(),
-                processor.getConfiguration().getCollectionRate());
+        startCollectionTask();
         this.setChanged();
         this.notifyObservers(this);
     }
@@ -89,12 +88,26 @@ public class VitalSignController extends Observable {
      * tasks for this vital sign.
      */
     public void disableMeasurement() {
-        VitalSignCollection oldCollection = collection;
-        collection = new VitalSignCollection(oldCollection);
-        oldCollection.cancel();
+        killCollectionTask();
         processor.setActive(false);
         this.setChanged();
         this.notifyObservers(this);
+    }
+    
+    public void restartCollectionTask() {
+        killCollectionTask();
+        startCollectionTask();
+    }
+    
+    private void killCollectionTask() {
+        VitalSignCollection oldCollection = collection;
+        collection = new VitalSignCollection(oldCollection);
+        oldCollection.cancel();
+    }
+    
+    private void startCollectionTask() {
+        timer.scheduleAtFixedRate(collection, new Date(),
+                processor.getConfiguration().getCollectionRate());
     }
     
     /**

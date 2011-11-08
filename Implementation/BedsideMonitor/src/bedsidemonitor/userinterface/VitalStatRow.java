@@ -262,7 +262,15 @@ public class VitalStatRow extends JPanel implements Observer {
 				tempConfig.setMinAllowedReading((Double)minRangeValue.getValue());
 				tempConfig.setMaxAllowedReading((Double)maxRangeValue.getValue());
 				tempConfig.setConversionFactor((Double)conversionFactor.getValue());
-				tempConfig.setCollectionRate(Math.round((Double)collectionRate.getValue()));
+				
+				long oldCollectionRate = tempConfig.getCollectionRate();
+				long newCollectionRate = Math.round((Double)collectionRate.getValue());
+				tempConfig.setCollectionRate(newCollectionRate);
+				
+				if(oldCollectionRate != newCollectionRate) {
+				    vitalSign.restartCollectionTask();
+				}
+				
 				configurationPanel.setVisible(false);
 				refresh();
 			} else {
