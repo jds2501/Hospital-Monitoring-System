@@ -1,4 +1,4 @@
 .classpath
 .project
 bin/
-history_log.txt
+history_log*
