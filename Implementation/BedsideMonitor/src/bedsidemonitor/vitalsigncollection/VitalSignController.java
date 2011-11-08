@@ -8,6 +8,8 @@
  */
 package bedsidemonitor.vitalsigncollection;
 
+import historylogging.HistoryLogging;
+
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
@@ -75,12 +77,16 @@ public class VitalSignController extends Observable {
      * tasks for this vital sign.
      */
     public void enableMeasurement(){
+        long start = System.currentTimeMillis();
         processor.setActive(true);
         Thread processorTask = new Thread(processor);
         processorTask.start();
         startCollectionTask();
         this.setChanged();
         this.notifyObservers(this);
+        long end = System.currentTimeMillis();
+        HistoryLogging.getInstance().logMessage("enableMeasurement, " + 
+                processor.getConfiguration().getName() + ", " + (end - start));
     }
     
     /**
@@ -88,10 +94,14 @@ public class VitalSignController extends Observable {
      * tasks for this vital sign.
      */
     public void disableMeasurement() {
+        long start = System.currentTimeMillis();
         killCollectionTask();
         processor.setActive(false);
         this.setChanged();
         this.notifyObservers(this);
+        long end = System.currentTimeMillis();
+        HistoryLogging.getInstance().logMessage("disableMeasurement, " + 
+                processor.getConfiguration().getName() + ", " + (end - start));
     }
     
     public void restartCollectionTask() {

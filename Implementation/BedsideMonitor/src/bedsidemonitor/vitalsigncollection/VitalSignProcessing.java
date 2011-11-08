@@ -82,8 +82,8 @@ public class VitalSignProcessing extends Observable implements Runnable {
         
         if(rawVitalSignReading != null) {
             vitalSignValue = configuration.convertRawVitalToActual(rawVitalSignReading);
-            HistoryLogging.getInstance().logMessage("New Vital Reading: " + 
-                    vitalSignValue);
+            HistoryLogging.getInstance().logMessage("New Vital Reading for " 
+                    + this.configuration.getName());
             
             if(!configuration.isVitalSignInRange(vitalSignValue)){
                 this.alarmController.setAlarmStatus(AlarmStatus.ACTIVE);
