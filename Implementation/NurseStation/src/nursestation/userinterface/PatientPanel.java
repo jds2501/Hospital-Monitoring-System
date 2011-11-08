@@ -159,10 +159,13 @@ public class PatientPanel extends JPanel implements Observer {
 			String[] tempStorage = new String[numActiveAlarms];
 			activeAlarmsModel.copyInto(tempStorage);
 
+			Collection<String> vitals = new ArrayList<String>();
+			
 			// Transfer all vital sign objects
 			for (int i = 0; i < numActiveAlarms; i++) {
 				String selectString = (String)tempStorage[i];
 				acknowlAlarmsModel.addElement(selectString);
+				vitals.add(selectString);
 			}
 
 			// Clear out active alarm list
@@ -176,7 +179,10 @@ public class PatientPanel extends JPanel implements Observer {
 			acknowlAlarmButton.setEnabled(false);
 			acknowlAllAlarmButton.setEnabled(false);
 
-			//TODO backend logic
+            if(vitals.size() > 0) {
+                notificationTask.acknowledgeAlarms(
+                        patientName.getText(), vitals);
+            }
 		}
 	}
 
