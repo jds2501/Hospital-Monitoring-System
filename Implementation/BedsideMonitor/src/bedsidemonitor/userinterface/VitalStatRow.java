@@ -128,18 +128,22 @@ public class VitalStatRow extends JPanel implements Observer {
 		minRangeValuePanel = new JPanel();
 		minRangeValuePanel.setLayout(new BoxLayout(minRangeValuePanel, BoxLayout.LINE_AXIS));
 		minRangeValue = new JSpinner(spinnerConfigMin);
+		minRangeValue.setPreferredSize(new Dimension(65, minRangeValue.getPreferredSize().height));
 		
 		maxRangeValuePanel = new JPanel();
 		maxRangeValuePanel.setLayout(new BoxLayout(maxRangeValuePanel, BoxLayout.LINE_AXIS));
 		maxRangeValue = new JSpinner(spinnerConfigMax);
+		maxRangeValue.setPreferredSize(new Dimension(65, minRangeValue.getPreferredSize().height));
 		
 		convFactorPanel = new JPanel(new GridLayout(0, 1));
 		convFactorPanel.setLayout(new BoxLayout(convFactorPanel, BoxLayout.LINE_AXIS));
 		conversionFactor = new JSpinner(spinnerConfigConvFactor);
+		conversionFactor.setPreferredSize(new Dimension(65, minRangeValue.getPreferredSize().height));
 		
 		collRatePanel = new JPanel(new GridLayout(0, 1));
 		collRatePanel.setLayout(new BoxLayout(collRatePanel, BoxLayout.LINE_AXIS));
 		collectionRate = new JSpinner(spinnerConfigCollRate);
+		collectionRate.setPreferredSize(new Dimension(65, minRangeValue.getPreferredSize().height));
 		// Remove commas
 		JSpinner.NumberEditor editor = new JSpinner.NumberEditor(collectionRate, "#.#");
 		collectionRate.setEditor(editor);

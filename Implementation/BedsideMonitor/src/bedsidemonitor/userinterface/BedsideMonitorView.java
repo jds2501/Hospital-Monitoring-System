@@ -34,6 +34,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
@@ -61,7 +62,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 
 	// ***** Window attributes ***** //
 
-	private static final int FRAME_WIDTH = 714;
+	private static final int FRAME_WIDTH = 734;
 	private static final int FRAME_HEIGHT = 610;
 
 	// ***** Menu and Toolbar components ***** //
@@ -77,6 +78,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 
 	private JPanel totalPanelSet, infoPanel, subLeftInfo, statusPanel, subCallStatusPanel, 
 		monitorPanel;
+	private JScrollPane vitalStatDisplayScroll;
 
 	private JLabel monitorNameLabel, callStatus, alarmStatus;
 
@@ -102,6 +104,7 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	public BedsideMonitorView(BedsideMonitor bedsideMonitor) {
 	    
 	    this.bedsideMonitor = bedsideMonitor;
+	    vitalStatDisplay = new JPanel(new FlowLayout());
 	    
 		// Set windows look'n'feel
 		try {
@@ -369,11 +372,13 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	 * 
 	 * @param display - the vital stat display to set to this interface
 	 */
-	public void setVitalStatDisplay(JPanel display) {
-		vitalStatDisplay = display;
-		totalPanelSet.add(vitalStatDisplay, BorderLayout.CENTER);
-		vitalStatDisplay.setPreferredSize(new Dimension(vitalStatDisplay.getPreferredSize().width, 20));
-		totalPanelSet.requestFocus();
+	public void showVitalStatDisplay() {
+		vitalStatDisplay.setPreferredSize(new Dimension(700, 2000));
+		vitalStatDisplayScroll = new JScrollPane(vitalStatDisplay);
+		vitalStatDisplayScroll.setPreferredSize(new Dimension(700, vitalStatDisplayScroll.getPreferredSize().height));
+		totalPanelSet.add(vitalStatDisplayScroll, BorderLayout.CENTER);
+		totalPanelSet.revalidate();
+		totalPanelSet.repaint();
 	}
 
 	/**
@@ -477,17 +482,8 @@ public class BedsideMonitorView extends JFrame implements AWTEventListener {
 	    if(vitalSign != null) {
 	        VitalStatRow newVital = new VitalStatRow(vitalSign);
     	    vitalStatDisplay.add(newVital);
-    	    vitalStatDisplay.validate();
+    	    vitalStatDisplay.revalidate();
 	    }
-	}
-	
-	/**
-	 * Update a vital sign value
-	 * @param name   Vital sign name
-	 * @param value  Vital sign value
-	 */
-	public void updateVitalSign(String vitalName, int value) {
-		//vitalStatDisplay.updateVitalSign(vitalName, value);
 	}
 
 	/**
