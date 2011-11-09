@@ -106,20 +106,17 @@ public class HistoryLogging extends Thread {
         while(isAlive){
             
             try {
+                String message = null;
                 
-                while(!logMessageQueue.isEmpty()) {
-                    String message = null;
-                    
-                    try {
-                        message = logMessageQueue.poll(1, TimeUnit.MINUTES);
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
-                    }
-                    
-                    if(message != null) {
-                        outputWriter.write(message + "\n");
-                        outputWriter.flush();
-                    }
+                try {
+                    message = logMessageQueue.poll(1, TimeUnit.MINUTES);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                
+                if(message != null) {
+                    outputWriter.write(message + "\n");
+                    outputWriter.flush();
                 }
                 
             } catch(IOException ex){
