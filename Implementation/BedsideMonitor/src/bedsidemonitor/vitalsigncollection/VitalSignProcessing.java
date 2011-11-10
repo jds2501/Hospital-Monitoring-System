@@ -162,9 +162,13 @@ public class VitalSignProcessing extends Observable implements Runnable {
     }
     
     public void resetAlarm() {
+        long start = System.currentTimeMillis();
         alarmController.setAlarmStatus(AlarmStatus.INACTIVE);
         setChanged();
         notifyObservers(this);
+        long end = System.currentTimeMillis();
+        HistoryLogging.getInstance().logMessage("Reset Alarm Response Time, " +
+                getConfiguration().getName() + ", " + (end - start));
     }
     
 } // VitalSignProcessing

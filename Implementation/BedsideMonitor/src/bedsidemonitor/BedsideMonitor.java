@@ -169,10 +169,14 @@ public class BedsideMonitor extends Observable implements Observer, Runnable {
             }
             
             if(vitalSignName != null) {
+                long start = System.currentTimeMillis();
                 VitalSignController vitalSign = vitalSigns.get(vitalSignName);
                 
                 if(vitalSign != null) {
                     vitalSign.acknowledgeAlarm();
+                    long end = System.currentTimeMillis();
+                    HistoryLogging.getInstance().logMessage("Acknowledge Alarm Processing Time, " + 
+                            vitalSignName + ", " + (end - start));
                 }
             }
         }
