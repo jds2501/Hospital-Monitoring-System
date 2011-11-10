@@ -12,9 +12,9 @@ def parse_bedside(file)
   file = File.open(file,"r")
   file.each do |line|
     line = line.split(',')
-    timestamp  = line[0].chomp.strip
-    name       = line[1].chomp.strip
-    vital      = line[2].chomp.strip
+    timestamp  = line[0] ? line[0].chomp.strip : nil
+    name       = line[1] ? line[1].chomp.strip : nil 
+    vital      = line[2] ? line[2].chomp.strip : nil
     time       = line[3] ? line[3].chomp.strip.to_i : nil
     hash = {
       :timestamp => timestamp,
