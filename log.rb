@@ -79,5 +79,5 @@ vspt = vital_sign_push_time(bedside)
 puts "Sensor Response Time: " + srt.to_s
 puts "Vital Sign Push Time: " + vspt.to_s
 puts "Vital Sign Processing Time: " + vital_sign_processing_time(bedside).to_s
-puts "Vital Sign Polls per Second: " + (bedside.count{|i| i[:name] == "pollSensorData"}/srt.to_f).to_s
-puts "Vital Sign Processed per Second: " + (bedside.count{|i| i[:name] == "pullVitalSign"}/vspt.to_f).to_s
+puts "Vital Sign Polls per Second: " + ((bedside.count{|i| i[:name] == "pollSensorData"}/srt.to_f)*1000).to_s
+puts "Vital Sign Processed per Second: " + ((bedside.count{|i| i[:name] == "pullVitalSign"}/vspt.to_f)*1000).to_s
