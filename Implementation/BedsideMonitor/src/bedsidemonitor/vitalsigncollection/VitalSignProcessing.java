@@ -81,9 +81,10 @@ public class VitalSignProcessing extends Observable implements Runnable {
         }
         
         if(rawVitalSignReading != null) {
-            vitalSignValue = configuration.convertRawVitalToActual(rawVitalSignReading);
+            long start = System.currentTimeMillis();
             HistoryLogging.getInstance().logMessage("pullVitalSign, " 
                     + this.configuration.getName());
+            vitalSignValue = configuration.convertRawVitalToActual(rawVitalSignReading);
             
             if(!configuration.isVitalSignInRange(vitalSignValue)){
                 this.alarmController.setAlarmStatus(AlarmStatus.ACTIVE);
@@ -91,6 +92,9 @@ public class VitalSignProcessing extends Observable implements Runnable {
             
             this.setChanged();
             this.notifyObservers(this);
+            long end = System.currentTimeMillis();
+            HistoryLogging.getInstance().logMessage("Vital Sign Processing Time, " 
+                    + this.configuration.getName() + ", " + (end - start));
         }
     }
 
@@ -158,9 +162,13 @@ public class VitalSignProcessing extends Observable implements Runnable {
     }
     
     public void resetAlarm() {
+        long start = System.currentTimeMillis();
         alarmController.setAlarmStatus(AlarmStatus.INACTIVE);
         setChanged();
         notifyObservers(this);
+        long end = System.currentTimeMillis();
+        HistoryLogging.getInstance().logMessage("Reset Alarm Response Time, " +
+                getConfiguration().getName() + ", " + (end - start));
     }
     
 } // VitalSignProcessing
