@@ -108,6 +108,7 @@ public class NotificationServiceTask extends Observable implements Runnable {
      * @param vitalSignName the vital sign to acknowledge an alarm for
      */
     public void acknowledgeAlarms(String patientName, Collection<String> vitals){
+        long start = System.currentTimeMillis();
         for(String vital: vitals) {
             VitalSignMessage msg = new VitalSignMessage(
                     patientName, vital, AlarmStatus.ACKNOWLEDGED);
@@ -119,6 +120,11 @@ public class NotificationServiceTask extends Observable implements Runnable {
         } catch (RemoteException ex) {
             ex.printStackTrace();
         }
+        
+        long end = System.currentTimeMillis();
+        
+        HistoryLogging.getInstance().logMessage("acknowledgeAlarms, " +
+                vitals + ", " + (end - start));
     }
     
     /**
