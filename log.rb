@@ -67,7 +67,7 @@ end
 bedside_dir = "./Implementation/BedsideMonitor/"
 bedside_file = get_max(bedside_dir)
 
-bedside_file= "/Users/chris/Desktop/history_log.csv"
+#bedside_file= "/Users/chris/Desktop/history_log.csv"
 
 bedside = parse_bedside(bedside_file)
 
