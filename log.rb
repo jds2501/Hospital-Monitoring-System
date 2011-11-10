@@ -64,10 +64,12 @@ def vital_sign_processing_time(bedside)
   avg(bedside.find_all {|i| i[:name] == "Vital Sign Processing Time"}.collect {|i| i[:time]})
 end
 
-bedside_dir = "./Implementation/BedsideMonitor/"
-bedside_file = get_max(bedside_dir)
+#bedside_dir = "./Implementation/BedsideMonitor/"
+#bedside_file = get_max(bedside_dir)
 
-#bedside_file= "/Users/chris/Desktop/history_log.csv"
+#bedside_file = "/Users/chris/Desktop/Test4Results-Bedside.csv"
+bedside_file = ARGV[0]
+
 
 bedside = parse_bedside(bedside_file)
 
@@ -79,5 +81,17 @@ vspt = vital_sign_push_time(bedside)
 puts "Sensor Response Time: " + srt.to_s
 puts "Vital Sign Push Time: " + vspt.to_s
 puts "Vital Sign Processing Time: " + vital_sign_processing_time(bedside).to_s
+puts  "-" * 80
 puts "Vital Sign Polls per Second: " + ((bedside.count{|i| i[:name] == "pollSensorData"}/srt.to_f)*1000).to_s
 puts "Vital Sign Processed per Second: " + ((bedside.count{|i| i[:name] == "pullVitalSign"}/vspt.to_f)*1000).to_s
+
+puts "-" * 80
+def ackAlarmsPT(bedside)
+  bedside.find_all {|i| i[:name] == "Acknowledge Alarm Processing Time"}[0][:time]
+end
+
+def rart(bedside)
+  bedside.find_all {|i| i[:name] == "Reset Alarm Response Time"}[0][:time]
+end
+puts "Acknowdlege Alarm Processing Time: " + ackAlarmsPT(bedside).to_s
+puts "Reset Alarm Response Time:" + rart(bedside).to_s
