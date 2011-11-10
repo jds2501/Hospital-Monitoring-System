@@ -70,11 +70,13 @@ public class VitalSignCollection extends TimerTask {
      */
     public void pollSensorData(){
         try {
+            HistoryLogging.getInstance().logMessage("pollSensorData, " +
+                    config.getName());
             long start = System.currentTimeMillis();
             int reading = this.sensor.getVitalSign();
             this.vitalSignMsgQueue.offer(reading);
             long end = System.currentTimeMillis();
-            HistoryLogging.getInstance().logMessage("pollSensorData, " + 
+            HistoryLogging.getInstance().logMessage("Poll Sensor Response Time, " + 
                     config.getName() + ", " + (end - start));
         } catch (RemoteException ex) {
             ex.printStackTrace();
